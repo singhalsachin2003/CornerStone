@@ -1,0 +1,197 @@
+# Release checklist — Cornerstone v1.0 (Android)
+
+Everything in here needs your accounts or your judgement. The code side is done.
+
+Verified state at time of writing: `eas-cli` 21.2.0 installed, logged in as **singhalsachin2003**,
+repo is **private**, `app.json` version `1.0.0`, `versionCode` managed remotely by EAS.
+
+---
+
+## Step 0 — Prerequisites (do these first)
+
+- [ ] **Google Play Developer account** — one-time **US$25**, at
+      [play.google.com/console/signup](https://play.google.com/console/signup).
+      Identity verification can take **1–3 days**, so start it now even if you are not ready to
+      upload. Choose a *Personal* account unless you have a registered company.
+- [ ] Decide the **package name is final**: `io.cornerstone.study`. It is permanent from the
+      first upload and can never be changed. Change it in `app.json` now if you want something
+      else.
+
+---
+
+## Step 1 — Link the EAS project
+
+```bash
+cd /Users/sachin/CornerStone
+eas init
+```
+
+- Prompts: *"Would you like to create a project for @singhalsachin2003/cornerstone?"* → **Yes**
+- Writes `extra.eas.projectId` and `owner` into `app.json`
+
+Then commit that change — EAS builds from your git tree, so anything uncommitted is not included:
+
+```bash
+git add app.json && git commit -m "Link EAS project" && git push
+```
+
+---
+
+## Step 2 — Build a test APK and install it
+
+```bash
+eas build --profile preview --platform android
+```
+
+- First run prompts: *"Generate a new Android Keystore?"* → **Yes** (EAS manages it for you)
+- Build runs in the cloud; expect **10–25 minutes** including queue
+- Produces an **APK** you can install directly. Download the link it prints, or drag it onto the
+  running emulator
+
+**Test on the real build, not just the dev server** — this is where anything Hermes-specific
+shows up. Walk through: onboarding → pick exam → pick level → a snapshot set → a full quiz →
+results → review queue → switch exam. Turn the **daily reminder** on and confirm Android asks
+for notification permission.
+
+### Back up your signing key — do this once, and do not skip it
+
+```bash
+eas credentials --platform android
+```
+
+Choose **Keystore → Download**. Store the `.jks` file and its passwords somewhere you will still
+have them in five years (password manager, not just this laptop).
+
+**If you lose this key you can never update the app again.** You would have to publish a new
+listing under a new package name and lose every install and review. This is the single most
+expensive mistake available at this stage.
+
+---
+
+## Step 3 — Host the privacy policy
+
+Play will not let you submit without a **publicly reachable URL**. The source is
+`docs/PRIVACY.md` in this repo.
+
+**This repo is private, so GitHub Pages will not serve it on a free plan.** Pick one:
+
+| Option | Effort | Notes |
+| --- | --- | --- |
+| **Separate public repo + GitHub Pages** (recommended) | ~5 min | Keeps your code private |
+| Make this repo public | 1 min | Simplest, but publishes your source |
+| Netlify Drop ([app.netlify.com/drop](https://app.netlify.com/drop)) | ~2 min | Drag a folder, get a URL, no account needed to start |
+
+Recommended route:
+
+```bash
+mkdir -p ~/cornerstone-privacy && cd ~/cornerstone-privacy
+cp /Users/sachin/CornerStone/docs/PRIVACY.md index.md
+git init && git add -A && git commit -m "Privacy policy"
+gh repo create cornerstone-privacy --public --source=. --push
+```
+
+Then in that repo: **Settings → Pages → Source: main / root → Save**. Your URL will be
+`https://singhalsachin2003.github.io/cornerstone-privacy/`.
+
+- [ ] **Before publishing, replace the contact placeholder** in `PRIVACY.md`:
+      `[ADD YOUR CONTACT EMAIL BEFORE PUBLISHING]` → a real address you monitor. Play requires a
+      working contact email and will reject a placeholder.
+
+---
+
+## Step 4 — Create the app in Play Console
+
+[play.google.com/console](https://play.google.com/console) → **Create app**
+
+| Field | Value |
+| --- | --- |
+| App name | `Cornerstone: Exam Study` |
+| Default language | English (United Kingdom) or (United States) |
+| App or game | **App** |
+| Free or paid | **Free** |
+
+> Do not put CFA or FRM in the app name. See `docs/STORE_LISTING.md` for why.
+
+---
+
+## Step 5 — Complete the Play Console declarations
+
+All under **Policy → App content**. Answers for this app:
+
+| Section | Answer |
+| --- | --- |
+| App access | All functionality available without restrictions — **no login required** |
+| Ads | **No ads** |
+| Content rating | Complete questionnaire → category **Reference/Education**; answer *No* to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3** |
+| Target audience | **18+**. Do not tick any child age band — that triggers Families policy |
+| News app | **No** |
+| Data safety | **No data collected, no data shared.** See the pre-filled answers at the bottom of `docs/PRIVACY.md` |
+| Government app | **No** |
+| Financial features | **None.** This is study content *about* finance, not a financial product. Do not tick anything here |
+| Privacy policy | Paste the URL from Step 3 |
+
+---
+
+## Step 6 — Store listing
+
+**Main store listing** — copy verbatim from `docs/STORE_LISTING.md`:
+
+- [ ] App name, short description, full description
+- [ ] **App icon** — 512×512, 32-bit PNG. Alpha *is* allowed here. Downscale with:
+      `sips -z 512 512 assets/icon.png --out /tmp/icon-512.png`
+- [ ] **Feature graphic** — upload `store/feature-graphic.png` as-is. Play requires 1024×500
+      with **no alpha** here (the opposite of the icon rule); this file is already 24-bit RGB
+      and verified compliant
+- [ ] **Phone screenshots** — upload all seven from `store/screenshots/` **in numbered order**.
+      They are ordered to lead with the snapshot card rather than the dashboard
+- [ ] App category: **Education**. Tags: Education, Test Prep
+- [ ] Contact email (same one as the privacy policy)
+
+---
+
+## Step 7 — Build and upload the release AAB
+
+```bash
+eas build --profile production --platform android
+```
+
+Produces an **`.aab`** (Play requires app bundles, not APKs). `versionCode` is auto-incremented
+by EAS, so you never set it by hand.
+
+Upload to **Testing → Internal testing** first, not straight to Production:
+
+- [ ] Create a release, upload the `.aab`
+- [ ] Release notes: *"First release."*
+- [ ] Add your own Google account as a tester, install from the opt-in link, and use it for a
+      day or two on a real phone
+
+Internal testing has no review delay. Production review takes **a few days to ~2 weeks** for a
+first submission from a new developer account — budget for that.
+
+---
+
+## Step 8 — Promote to production
+
+Once you are happy with internal testing: **Production → Create new release → promote the same
+build**. Consider a **staged rollout** (start at 20%) so you can halt if something surfaces.
+
+---
+
+## After launch
+
+- **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
+  No SDK and no data leaves the app; this is why v1.0 ships without a crash reporter.
+- **Content fixes need a full release** in v1.0, because over-the-air updates are deliberately
+  disabled for zero network egress. If that becomes painful, re-add `expo-updates` — but the
+  privacy policy and Data Safety form must be updated in the same release.
+
+## Annual maintenance
+
+CFA Institute publishes new outlines around mid-year; GARP revises the FRM curriculum each
+December. When weights change, edit `src/content/syllabus.ts` and run:
+
+```bash
+npm run check:syllabus   # expected values are transcribed from the PDF, independent of the app
+npm run check:content
+npm test
+```
