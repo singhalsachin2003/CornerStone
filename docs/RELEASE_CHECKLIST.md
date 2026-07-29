@@ -19,21 +19,12 @@ repo is **private**, `app.json` version `1.0.0`, `versionCode` managed remotely 
 
 ---
 
-## Step 1 — Link the EAS project
+## Step 1 — Link the EAS project ✅ DONE
 
-```bash
-cd /Users/sachin/CornerStone
-eas init
-```
+Project: **@singhalsachin2003/cornerstone**
+`projectId` `f5f1e57a-eea4-4335-b432-2cc793f18b35`, written into `app.json` and committed.
 
-- Prompts: *"Would you like to create a project for @singhalsachin2003/cornerstone?"* → **Yes**
-- Writes `extra.eas.projectId` and `owner` into `app.json`
-
-Then commit that change — EAS builds from your git tree, so anything uncommitted is not included:
-
-```bash
-git add app.json && git commit -m "Link EAS project" && git push
-```
+Dashboard: <https://expo.dev/accounts/singhalsachin2003/projects/cornerstone>
 
 ---
 
@@ -55,12 +46,22 @@ for notification permission.
 
 ### Back up your signing key — do this once, and do not skip it
 
+EAS generated the keystore automatically on the first build and stores it on Expo's servers.
+Export your own copy. This command is **interactive only** — there are no flags to script it, so
+it has to be you:
+
 ```bash
 eas credentials --platform android
 ```
 
-Choose **Keystore → Download**. Store the `.jks` file and its passwords somewhere you will still
-have them in five years (password manager, not just this laptop).
+Navigate: **Android** → select the **preview** (or production) build profile →
+**Keystore: Manage everything needed to build your project** → **Download existing keystore**.
+
+It prints the keystore password, key alias and key password, and writes a `.jks` file into the
+current directory. Save all four together — the file alone is useless without the passwords.
+
+Put them in a password manager, not just this laptop, and then delete the `.jks` from the repo
+directory (`.gitignore` already blocks `*.jks`, but do not rely on that as your only guard).
 
 **If you lose this key you can never update the app again.** You would have to publish a new
 listing under a new package name and lose every install and review. This is the single most
