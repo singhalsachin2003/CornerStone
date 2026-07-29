@@ -187,10 +187,17 @@ Done:
   Revoking permission in system settings is detected and reflected in the toggle.
 - **Error boundary** — `src/components/ErrorBoundary.tsx`, exported from the root layout, with
   a recovery path that states progress is safe.
-- **OTA updates** — `expo-updates` configured with an `appVersion` runtime policy.
+- **Zero network egress** — v1.0 deliberately ships with no analytics, no crash reporting and
+  no over-the-air updates. `expo-updates` was removed: it pings a remote server on every
+  launch, which would have been the app's only outbound request. Nothing leaves the device, so
+  the privacy claim holds without an asterisk and the Play Data Safety form is "no data
+  collected". The cost is that fixing a content error needs a store release; re-add
+  `expo-updates` when hotfix capability outweighs that.
 - **About & legal** — in-app trademark and curriculum disclaimers at Profile → About & legal.
+- **Store assets** — `store/feature-graphic.png` (1024×500, 24-bit, no alpha) and seven phone
+  screenshots in `store/screenshots/`. Regenerate the graphic with `npm run store:graphic`.
 - **Docs** — `docs/PRIVACY.md` (with Play Data Safety answers) and `docs/STORE_LISTING.md`
-  (trademark-safe listing copy, asset checklist, content-rating guidance).
+  (trademark-safe listing copy, asset status, content-rating guidance).
 
 Still outstanding:
 - **`eas init`** — needs your Expo account; sets `owner` and `extra.eas.projectId`. Until then
@@ -198,9 +205,11 @@ Still outstanding:
 - **Signing keystore** — let EAS generate and manage it, but note the key is permanent.
 - **Privacy policy URL** — host `docs/PRIVACY.md` publicly (GitHub Pages works) and paste the
   link into Play Console.
-- **Store assets** — feature graphic (1024×500) and screenshots.
-- **Crash reporting** — no Sentry yet; `ErrorBoundary.componentDidCatch` is where it goes.
-- **Analytics** — none.
+- **Crash reporting** — none by design in v1.0. Play Console's Android vitals reports crashes
+  and ANRs for Play-distributed apps with no SDK and no egress from the app itself, which
+  covers this without compromising the privacy position. `ErrorBoundary.componentDidCatch` is
+  where an SDK would go if one is ever wanted.
+- **Analytics** — none by design.
 - **iOS** — `bundleIdentifier` is set but the app has never been run on iOS.
 - **Authentication and cross-device sync** — `src/store/persistence.ts` is the single seam;
   implement its `getItem`/`setItem`/`removeItem` against an API and nothing else changes.

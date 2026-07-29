@@ -86,23 +86,28 @@ Association of Risk Professionals.
 
 ---
 
-## Assets still needed
+## Assets
 
 | Asset | Spec | Status |
 | --- | --- | --- |
-| App icon | 512×512 PNG, 32-bit | Derive from `assets/icon.png` |
-| Feature graphic | 1024×500 PNG/JPG, no alpha | **Not created** |
-| Phone screenshots | 2–8, min 320px, 16:9 or 9:16 | Capture from device |
-| 7" tablet screenshots | optional but improves ranking | **Not created** |
-| 10" tablet screenshots | optional | **Not created** |
+| App icon | 512×512 PNG, 32-bit | ✅ `assets/icon.png` (1024², downscale on upload) |
+| Feature graphic | 1024×500 PNG/JPG, no alpha | ✅ `store/feature-graphic.png` — verified 24-bit RGB, no alpha |
+| Phone screenshots | 2–8, min 320px, 16:9 or 9:16 | ✅ `store/screenshots/` — 7 at 1080×1920 |
+| 7"/10" tablet screenshots | optional, improves ranking | Not created — reuse phone shots or skip |
 
-Suggested screenshot order — lead with the product's actual idea, not the dashboard:
-1. Snapshot card with the formula block (Fixed Income card 1)
-2. Quiz with instant feedback showing an explanation
-3. Home dashboard with the progress ring and streak
-4. Topics grid showing exam weights
-5. Review queue
-6. Results with the question breakdown
+Regenerate the feature graphic after a brand change with `npm run store:graphic`
+(then `sips -z 500 1024 store/feature-graphic@2x.png --out store/feature-graphic.png`).
+
+Screenshots are ordered to lead with the product's actual idea rather than the dashboard —
+upload them in this order:
+
+1. `01-snapshot-card` — the snapshot card with its formula block
+2. `02-snapshot-revealed` — the "in the exam" angle revealed on tap
+3. `03-quiz-feedback` — instant feedback with the explanation and LOS reference
+4. `04-home-dashboard` — progress ring, streak, resume card
+5. `05-topics-weights` — the topic grid showing published exam weights
+6. `06-review-queue` — spaced repetition
+7. `07-exam-switcher` — both programmes side by side
 
 ## Content rating questionnaire
 

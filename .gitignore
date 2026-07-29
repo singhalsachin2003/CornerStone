@@ -55,3 +55,8 @@ yarn-error.*
 
 # testing
 coverage/
+
+# Generated store assets — the SVG embeds ~1.2MB of base64 font data.
+# Regenerate with: node scripts/make-feature-graphic.mjs
+store/feature-graphic.svg
+store/feature-graphic@2x.png

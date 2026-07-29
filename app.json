@@ -10,12 +10,7 @@
     "backgroundColor": "#f7f4ee",
     "assetBundlePatterns": ["**/*"],
     "updates": {
-      "enabled": true,
-      "fallbackToCacheTimeout": 0,
-      "checkAutomatically": "ON_LOAD"
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
+      "enabled": false
     },
     "ios": {
       "supportsTablet": true,

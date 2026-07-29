@@ -6,8 +6,11 @@ Cornerstone is a study app for CFA® and FRM® candidates, published by Sachin S
 
 ## The short version
 
-**Cornerstone does not collect, transmit, or share any personal data.** There is no account,
-no sign-in, no analytics, and no advertising. Everything you do in the app stays on your device.
+**Cornerstone does not collect, transmit, or share any data. Full stop.**
+
+There is no account, no sign-in, no analytics, no crash reporting, no advertising, and no
+over-the-air update service. Version 1.0 makes **no outbound network requests of any kind** —
+all study content is bundled with the app. Everything you do stays on your device.
 
 ## What the app stores, and where
 
@@ -29,19 +32,22 @@ Because nothing is transmitted, we cannot access, recover, export or delete it o
 
 ## Permissions
 
-- **Internet** — declared by the application framework. The app bundles all of its study
-  content and does not require a network connection to function.
+- **Internet** — declared by the React Native framework as a standard capability. Version 1.0
+  does not use it: the app bundles all of its study content and makes no network requests.
+  Android classifies this as a normal permission and does not prompt for it.
 - **Notifications** — requested only if you switch on the daily study reminder in Profile.
-  It schedules a local notification on your device. Declining it, or revoking it later in
-  system settings, leaves the rest of the app fully functional.
+  It schedules a notification locally on your device; nothing is sent to a server. Declining
+  it, or revoking it later in system settings, leaves the rest of the app fully functional.
 
 ## Third parties
 
-Cornerstone contains no advertising SDKs, no analytics SDKs, and no social login. No third
-party receives data from this app.
+Cornerstone contains no advertising SDKs, no analytics SDKs, no crash-reporting SDKs and no
+social login. No third party receives anything from this app, because the app does not
+transmit anything.
 
-If a future version adds cloud sync, crash reporting or analytics, this policy will be updated
-before that version is released, and the change will be described in the release notes.
+If a future version adds cloud sync, crash reporting, analytics or over-the-air updates, this
+policy will be updated **before** that version is released and the change will be called out in
+the release notes.
 
 ## Children
 
