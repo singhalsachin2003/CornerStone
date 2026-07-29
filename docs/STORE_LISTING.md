@@ -6,14 +6,37 @@ title — that is the single most common cause of a takedown request from either
 
 ---
 
-## App title (30 chars max)
+## App title — DECIDED
+
+Paste this verbatim into Play Console → Main store listing → App name:
 
 ```
 Cornerstone: Exam Study
 ```
+(23 of 30 characters)
 
-Alternatives that stay safe: `Cornerstone Study`, `Cornerstone Finance Prep`.
-Avoid: "CFA Prep", "FRM Exam App", "Official CFA Trainer".
+**Do not put CFA or FRM in the title.** A trademark in an app *name* reads as a claim to the
+mark and is the most common trigger for a takedown request from CFA Institute or GARP. Both
+enforce actively.
+
+Rejected for that reason: "CFA Prep", "FRM Exam App", "CFA & FRM Study", "Official CFA Trainer".
+
+### The marks stay in the description, and that is deliberate
+
+Using "for CFA and FRM candidates" in the description is **nominative fair use** — naming the
+exam you help people prepare for, without implying you are the exam body. That is permitted and
+it is also the only way candidates will ever find this app; nobody searches for "exam study".
+
+So the rule is: **marks out of the title, marks in the body, disclaimer at the bottom.** Do not
+strip them everywhere — that would make the listing undiscoverable while gaining nothing.
+
+### The app's own name is different, and that is correct
+
+`expo.name` in `app.json` is `Cornerstone` — that is the launcher label under the icon on the
+device, and Android truncates long labels there. The Play listing title and the launcher label
+do not need to match, and short is better on the home screen.
+
+Unlike the package name, the store title **can** be changed later in Play Console at any time.
 
 ## Short description (80 chars max)
 
