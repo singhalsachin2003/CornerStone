@@ -36,6 +36,15 @@ export function addDays(days: number, from: Date = new Date()): string {
   return dayKey(d);
 }
 
+/**
+ * Inverse of dayKey. Never use `new Date(iso)` for these: that parses as UTC midnight,
+ * which dayKey then reads back with local getters — a day early anywhere behind UTC.
+ */
+export function parseDayKey(key: string): Date {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
 export function intervalForStep(step: number): number {
   if (step < BASE_INTERVALS.length) return BASE_INTERVALS[step];
   const beyond = step - BASE_INTERVALS.length + 1;

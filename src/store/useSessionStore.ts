@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Question, questionsFor, topicByKey } from '@/content';
 import { SessionAnswer } from './useStudyStore';
 import { ReviewItem } from './review';
+import { shuffleOptions, shuffleSession } from './shuffle';
 
 export type SessionMode = 'topic' | 'placement' | 'review';
 
@@ -79,7 +80,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   },
 
   /** Returns true when the session is finished. */
-  next: () => {
+  next: (): boolean => {
     const s = get();
     if (s.chosen === null) return false;
     if (s.qIdx + 1 >= s.questions.length) return true;
@@ -89,7 +90,15 @@ export const useSessionStore = create<SessionState>((set, get) => ({
 
   tick: () => set((s) => ({ elapsed: s.elapsed + 1 })),
 
-  restart: () => set({ qIdx: 0, chosen: null, answers: [], elapsed: 0, questionStart: 0 }),
+  /**
+   * Retake. Re-shuffles rather than replaying the identical run — otherwise the
+   * second attempt tests recall of answer positions, not of the material.
+   */
+  restart: () =>
+    set((s) => {
+      const [questions, origins] = shuffleSession(s.questions, s.origins);
+      return { questions, origins, qIdx: 0, chosen: null, answers: [], elapsed: 0, questionStart: 0 };
+    }),
 }));
 
 // ---------------------------------------------------------------------------
@@ -98,13 +107,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
 
 export function buildTopicSession(topicKey: string) {
   const topic = topicByKey(topicKey);
-  const questions = questionsFor(topicKey);
+  const bank = questionsFor(topicKey);
+  // Origins carry the question's index in the *bank*, not in the shuffled session, so
+  // review-queue ids stay stable no matter what order the candidate saw them in.
+  const [questions, origins] = shuffleSession(
+    bank,
+    bank.map((_, i) => ({ topicKey, qIdx: i })),
+  );
   return {
     mode: 'topic' as const,
     topicKey,
     title: topic?.name ?? 'Topic',
     questions,
-    origins: questions.map((_, i) => ({ topicKey, qIdx: i })),
+    origins,
   };
 }
 
@@ -128,15 +143,25 @@ export function buildPlacementSession(topics: { key: string; name: string }[], e
   };
 }
 
-/** Review: whatever is due, oldest first, capped at ten. */
+/**
+ * Review: whatever is due, oldest first, capped at ten.
+ *
+ * Selection stays oldest-first (that is the schedule doing its job), but options are
+ * shuffled — a queued question is one the candidate already got wrong, and recognising
+ * the shape of the right answer is exactly the failure mode review exists to break.
+ */
 export function buildReviewSession(due: ReviewItem[]) {
   const items = [...due].sort((a, b) => a.dueOn.localeCompare(b.dueOn)).slice(0, 10);
   const origins = items.map((i) => ({ topicKey: i.topicKey, qIdx: i.qIdx }));
+  const questions = origins
+    .map((o) => questionsFor(o.topicKey)[o.qIdx])
+    .filter(Boolean)
+    .map(shuffleOptions);
   return {
     mode: 'review' as const,
     topicKey: null,
     title: 'Review queue',
-    questions: origins.map((o) => questionsFor(o.topicKey)[o.qIdx]).filter(Boolean),
+    questions,
     origins,
   };
 }

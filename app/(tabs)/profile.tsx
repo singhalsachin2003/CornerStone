@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Toggle } from '@/components/primitives';
@@ -7,12 +7,21 @@ import { color, font, gutter, radius } from '@/theme/tokens';
 import { type } from '@/theme/type';
 import { EXAMS, PATHWAYS, formatExamDate, topicsFor } from '@/content';
 import { Settings, TopicVariant, currentStreak, useStudyStore } from '@/store/useStudyStore';
+import {
+  cancelDailyReminder,
+  reminderTimeLabel,
+  scheduleDailyReminder,
+  syncDailyReminder,
+} from '@/notifications';
 
 const SETTING_ROWS: { key: keyof Settings; name: string; note: string }[] = [
   { key: 'spacedRepetition', name: 'Spaced repetition', note: 'Resurface missed questions on a schedule' },
-  { key: 'dailyReminder', name: 'Daily reminder', note: '19:30 — after work, before dinner' },
+  {
+    key: 'dailyReminder',
+    name: 'Daily reminder',
+    note: `${reminderTimeLabel()} — after work, before dinner`,
+  },
   { key: 'timedQuizzes', name: 'Timed quizzes', note: 'Show a per-session clock while answering' },
-  { key: 'wifiOnly', name: 'Download over Wi-Fi only', note: 'Keeps snapshots available offline' },
 ];
 
 const VARIANTS: { key: TopicVariant; label: string }[] = [
@@ -28,6 +37,7 @@ export default function Profile() {
   const pathway = useStudyStore((s) => s.pathway);
   const levelByExam = useStudyStore((s) => s.levelByExam);
   const name = useStudyStore((s) => s.name);
+  const setName = useStudyStore((s) => s.setName);
   const initials = useStudyStore((s) => s.initials);
   const settings = useStudyStore((s) => s.settings);
   const toggleSetting = useStudyStore((s) => s.toggleSetting);
@@ -51,6 +61,50 @@ export default function Profile() {
   const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
   const bookmarks =
     Object.keys(bookmarkedQuestions).length + Object.keys(bookmarkedCards).length;
+
+  // The OS is the source of truth for notifications: the candidate can revoke
+  // permission in system settings at any time, and the toggle must not claim
+  // otherwise. If scheduling fails we leave the switch off.
+  const [reminderBlocked, setReminderBlocked] = useState(false);
+
+  const [editingName, setEditingName] = useState(false);
+  const [draftName, setDraftName] = useState(name);
+
+  // An empty field keeps the previous name rather than leaving a blank greeting.
+  const commitName = useCallback(() => {
+    const trimmed = draftName.trim();
+    if (trimmed) setName(trimmed);
+    setEditingName(false);
+  }, [draftName, setName]);
+
+  const onToggleReminder = useCallback(async () => {
+    if (settings.dailyReminder) {
+      await cancelDailyReminder();
+      setReminderBlocked(false);
+      toggleSetting('dailyReminder');
+      return;
+    }
+    const ok = await scheduleDailyReminder();
+    setReminderBlocked(!ok);
+    if (ok) toggleSetting('dailyReminder');
+  }, [settings.dailyReminder, toggleSetting]);
+
+  // Reconcile on mount — a reinstall or a revoked permission desyncs the two.
+  useEffect(() => {
+    let cancelled = false;
+    syncDailyReminder(settings.dailyReminder).then((active) => {
+      if (cancelled) return;
+      if (settings.dailyReminder && !active) {
+        setReminderBlocked(true);
+        toggleSetting('dailyReminder');
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+    // Intentionally mount-only: this reconciles persisted state with the OS once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // The other programme, if it has been started — surfaced so switching is discoverable.
   const otherExam = (Object.keys(levelByExam) as (keyof typeof levelByExam)[]).find(
     (k) => k !== examKey,
@@ -78,7 +132,39 @@ export default function Profile() {
             <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>{initials}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={type.serif22}>{name}</Text>
+            {editingName ? (
+              <TextInput
+                value={draftName}
+                onChangeText={setDraftName}
+                onBlur={commitName}
+                onSubmitEditing={commitName}
+                autoFocus
+                selectTextOnFocus
+                maxLength={40}
+                returnKeyType="done"
+                accessibilityLabel="Your name"
+                style={[
+                  type.serif22,
+                  {
+                    borderBottomWidth: 1,
+                    borderBottomColor: color.brass,
+                    paddingBottom: 2,
+                    padding: 0,
+                  },
+                ]}
+              />
+            ) : (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`Your name is ${name}. Tap to edit.`}
+                onPress={() => {
+                  setDraftName(name);
+                  setEditingName(true);
+                }}
+              >
+                <Text style={type.serif22}>{name}</Text>
+              </Pressable>
+            )}
             <Text style={[type.secondary, { marginTop: 4 }]}>
               {exam.name} {level?.name} · sitting {formatExamDate(exam.date)}
             </Text>
@@ -110,9 +196,18 @@ export default function Profile() {
             >
               <View style={{ flex: 1 }}>
                 <Text style={type.rowLabel}>{row.name}</Text>
-                <Text style={[type.meta, { marginTop: 3 }]}>{row.note}</Text>
+                <Text style={[type.meta, { marginTop: 3 }]}>
+                  {row.key === 'dailyReminder' && reminderBlocked
+                    ? 'Notifications are off for Cornerstone in system settings'
+                    : row.note}
+                </Text>
               </View>
-              <Toggle value={settings[row.key]} onToggle={() => toggleSetting(row.key)} />
+              <Toggle
+                value={settings[row.key]}
+                onToggle={() =>
+                  row.key === 'dailyReminder' ? onToggleReminder() : toggleSetting(row.key)
+                }
+              />
             </View>
           ))}
         </View>
@@ -179,6 +274,7 @@ export default function Profile() {
           )}
           <DisclosureRow label="Topics in this level" value={`${topics.length} areas`} />
           <DisclosureRow label="Bookmarks" value={`${bookmarks} saved`} />
+          <DisclosureRow label="About & legal" value="→" onPress={() => router.push('/about')} />
         </View>
       </ScrollView>
     </SafeAreaView>

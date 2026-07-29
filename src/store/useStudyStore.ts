@@ -25,7 +25,6 @@ export interface Settings {
   spacedRepetition: boolean;
   dailyReminder: boolean;
   timedQuizzes: boolean;
-  wifiOnly: boolean;
 }
 
 export interface SessionAnswer {
@@ -88,9 +87,11 @@ interface StudyState {
 
 const initialSettings: Settings = {
   spacedRepetition: true,
-  dailyReminder: true,
+  // Off by default: turning it on prompts for the OS notification permission, and
+  // asking on first launch before the candidate has seen anything is a good way to
+  // get denied permanently.
+  dailyReminder: false,
   timedQuizzes: false,
-  wifiOnly: true,
 };
 
 /** Mastery moves toward the session score rather than jumping to it. */

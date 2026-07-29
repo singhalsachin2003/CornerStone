@@ -32,9 +32,14 @@ npm run web
 
 ```bash
 npm run typecheck        # tsc --noEmit
+npm test                 # Jest — scheduling, streaks, progress, shuffling (47 tests)
 npm run check:content    # every topic has cards + questions; every question is well-formed
 npm run check:syllabus   # topic areas, weights and module counts match the syllabus PDF
 ```
+
+Tests target the pure logic rather than components, because that logic is what fails
+*silently*: a wrong review interval, an off-by-one streak or a shuffle that loses the answer
+index corrupts a candidate's data without ever throwing.
 
 `check:content` fails the build if a topic area has no content, if a question does not have
 exactly four distinct options with a valid answer index, or if a content bank is keyed to a topic
@@ -169,16 +174,37 @@ increments its lapse count; three clean passes retire it from the queue.
 - **Ring progress uses SVG arcs**, not conic gradients, which React Native does not support. The
   visual result is the same and anti-aliases better.
 
-## Not built
+## Release readiness
 
-- Authentication and cross-device sync. `src/store/persistence.ts` is the single seam — implement
-  its `getItem`/`setItem`/`removeItem` against an API and nothing else changes.
-- Offline download management. The "Download over Wi-Fi only" toggle persists but has no
-  downloader behind it; all content is bundled with the app, so nothing needs downloading yet.
-- Push notifications for the daily reminder. The toggle and time persist; wiring
-  `expo-notifications` is the remaining step.
-- Loading and error states, which the handoff notes are not designed yet. Nothing fetches, so
-  there is currently nothing to show them for.
+Done:
+- **Permissions** — the release manifest ships `INTERNET` and `POST_NOTIFICATIONS` only.
+  Everything Expo's defaults would otherwise add (`SYSTEM_ALERT_WINDOW`, storage, media,
+  camera, location, exact alarms) is stripped via `android.blockedPermissions`. Exact-alarm
+  permissions are deliberately blocked: Play requires a justification form for them and a
+  study reminder does not qualify.
+- **Daily reminder** — a real scheduled local notification (`src/notifications.ts`), off by
+  default so the OS prompt appears when the candidate asks for it rather than on first launch.
+  Revoking permission in system settings is detected and reflected in the toggle.
+- **Error boundary** — `src/components/ErrorBoundary.tsx`, exported from the root layout, with
+  a recovery path that states progress is safe.
+- **OTA updates** — `expo-updates` configured with an `appVersion` runtime policy.
+- **About & legal** — in-app trademark and curriculum disclaimers at Profile → About & legal.
+- **Docs** — `docs/PRIVACY.md` (with Play Data Safety answers) and `docs/STORE_LISTING.md`
+  (trademark-safe listing copy, asset checklist, content-rating guidance).
+
+Still outstanding:
+- **`eas init`** — needs your Expo account; sets `owner` and `extra.eas.projectId`. Until then
+  `eas build` cannot run.
+- **Signing keystore** — let EAS generate and manage it, but note the key is permanent.
+- **Privacy policy URL** — host `docs/PRIVACY.md` publicly (GitHub Pages works) and paste the
+  link into Play Console.
+- **Store assets** — feature graphic (1024×500) and screenshots.
+- **Crash reporting** — no Sentry yet; `ErrorBoundary.componentDidCatch` is where it goes.
+- **Analytics** — none.
+- **iOS** — `bundleIdentifier` is set but the app has never been run on iOS.
+- **Authentication and cross-device sync** — `src/store/persistence.ts` is the single seam;
+  implement its `getItem`/`setItem`/`removeItem` against an API and nothing else changes.
+- **Question bank depth** — 5 per topic area is thin for a paid public launch.
 
 ## Attribution
 

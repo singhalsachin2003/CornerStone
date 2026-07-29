@@ -21,6 +21,9 @@ import {
 import { color } from '@/theme/tokens';
 import { useStudyStore } from '@/store/useStudyStore';
 
+// expo-router renders this for any uncaught error in the route tree.
+export { ErrorBoundary } from '@/components/ErrorBoundary';
+
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
