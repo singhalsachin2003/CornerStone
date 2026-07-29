@@ -7,15 +7,12 @@ repo is **private**, `app.json` version `1.0.0`, `versionCode` managed remotely 
 
 ---
 
-## Step 0 — Prerequisites (do these first)
+## Step 0 — Prerequisites
 
-- [ ] **Google Play Developer account** — one-time **US$25**, at
-      [play.google.com/console/signup](https://play.google.com/console/signup).
-      Identity verification can take **1–3 days**, so start it now even if you are not ready to
-      upload. Choose a *Personal* account unless you have a registered company.
-- [ ] Decide the **package name is final**: `io.cornerstone.study`. It is permanent from the
+- [x] **Google Play Developer account** — done.
+- [ ] Confirm the **package name is final**: `io.cornerstone.study`. It is permanent from the
       first upload and can never be changed. Change it in `app.json` now if you want something
-      else.
+      else — this is the last moment it is free to do so.
 
 ---
 
@@ -34,10 +31,30 @@ Dashboard: <https://expo.dev/accounts/singhalsachin2003/projects/cornerstone>
 eas build --profile preview --platform android
 ```
 
-- First run prompts: *"Generate a new Android Keystore?"* → **Yes** (EAS manages it for you)
-- Build runs in the cloud; expect **10–25 minutes** including queue
-- Produces an **APK** you can install directly. Download the link it prints, or drag it onto the
-  running emulator
+- Keystore was generated automatically on the first build; `versionCode` is now tracked
+  remotely by EAS and auto-increments, so never set it by hand
+- Expect **10–35 minutes** including queue
+- Produces an **APK** you can install directly, or drag onto a running emulator
+
+### Always check the built artifact, not just the config
+
+The first build shipped **24 permissions** while the pre-merge manifest showed two:
+`expo-notifications` bundles Firebase Cloud Messaging even when only local notifications are
+used. Library manifests merge during the Gradle build, so `expo prebuild` cannot show you the
+final list. Verify against the APK:
+
+```bash
+AAPT=$(ls ~/Library/Android/sdk/build-tools/*/aapt2 | tail -1)
+"$AAPT" dump permissions your-build.apk | grep uses-permission
+```
+
+Expected for this app — anything else means a dependency added something:
+
+```
+android.permission.INTERNET
+android.permission.POST_NOTIFICATIONS
+android.permission.RECEIVE_BOOT_COMPLETED
+```
 
 **Test on the real build, not just the dev server** — this is where anything Hermes-specific
 shows up. Walk through: onboarding → pick exam → pick level → a snapshot set → a full quiz →
