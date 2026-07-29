@@ -177,14 +177,30 @@ increments its lapse count; three clean passes retire it from the queue.
 ## Release readiness
 
 Done:
-- **Permissions** — the release manifest ships `INTERNET` and `POST_NOTIFICATIONS` only.
-  Everything Expo's defaults would otherwise add (`SYSTEM_ALERT_WINDOW`, storage, media,
-  camera, location, exact alarms) is stripped via `android.blockedPermissions`. Exact-alarm
-  permissions are deliberately blocked: Play requires a justification form for them and a
-  study reminder does not qualify.
+- **Permissions** — verified from the built APK with `aapt2`, not from the config. The release
+  build ships exactly three: `INTERNET`, `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`
+  (plus an app-scoped `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` that AndroidX generates for
+  runtime-registered receivers — it grants nothing and is invisible to users).
+
+  Thirty-two others are stripped via `android.blockedPermissions`. Most came from
+  `expo-notifications`, which bundles Firebase Cloud Messaging for remote push even though
+  this app only schedules local notifications; that pulled in `c2dm.permission.RECEIVE`,
+  `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, the Play install-referrer binding and sixteen
+  launcher-badge permissions. Exact-alarm permissions are blocked deliberately too: Play
+  requires a justification form for them and a study reminder does not qualify.
+
+  **`expo prebuild` cannot show you this** — library manifests merge during the Gradle build.
+  Always check the artifact:
+  `aapt2 dump permissions build.apk | grep uses-permission`.
 - **Daily reminder** — a real scheduled local notification (`src/notifications.ts`), off by
   default so the OS prompt appears when the candidate asks for it rather than on first launch.
   Revoking permission in system settings is detected and reflected in the toggle.
+
+  Verified on a release build: after granting permission the system reports
+  `RTC_WAKEUP … origWhen=19:30:00 … io.cornerstone.study`, so blocking `WAKE_LOCK` does not
+  break delivery — the system alarm holds the wakelock, not the app. The alarm carries
+  `window=+1h`, meaning Android may batch it up to an hour late. That is the deliberate cost of
+  not requesting exact-alarm permission, and is immaterial for a study nudge.
 - **Error boundary** — `src/components/ErrorBoundary.tsx`, exported from the root layout, with
   a recovery path that states progress is safe.
 - **Zero network egress** — v1.0 deliberately ships with no analytics, no crash reporting and
