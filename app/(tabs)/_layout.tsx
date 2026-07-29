@@ -1,0 +1,33 @@
+import React from 'react';
+import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TabButton, tabBarStyle } from '@/components/TabBar';
+import { color } from '@/theme/tokens';
+
+/**
+ * Tab bar appears on Home, Topics, Review and Profile only. Snapshot, quiz and
+ * results are pushed above this layout, matching the handoff's "Shared" section.
+ */
+export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <Tabs style={{ flex: 1, backgroundColor: color.paper }}>
+      <TabSlot />
+      <TabList style={[tabBarStyle, { paddingBottom: Math.max(insets.bottom, 4) }]}>
+        <TabTrigger name="home" href="/home" asChild>
+          <TabButton label="Home" shape="square" />
+        </TabTrigger>
+        <TabTrigger name="topics" href="/topics" asChild>
+          <TabButton label="Topics" shape="circle" />
+        </TabTrigger>
+        <TabTrigger name="review" href="/review" asChild>
+          <TabButton label="Review" shape="square" />
+        </TabTrigger>
+        <TabTrigger name="profile" href="/profile" asChild>
+          <TabButton label="Profile" shape="circle" />
+        </TabTrigger>
+      </TabList>
+    </Tabs>
+  );
+}

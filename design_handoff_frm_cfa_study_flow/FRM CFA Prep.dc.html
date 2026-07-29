@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e8e3d8;font-family:Archivo,system-ui,sans-serif;color:#16233b}
+a{color:#9a6b2f}a:hover{color:#16233b}
+*{-webkit-tap-highlight-color:transparent}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:36px 40px 60px;box-sizing:border-box;display:flex;gap:40px;align-items:flex-start">
+
+  <aside style="width:212px;flex:none;position:sticky;top:36px;display:flex;flex-direction:column;gap:22px">
+    <div>
+      <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8c8578">Prototype</div>
+      <div style="font:600 25px/1.15 'Source Serif 4',Georgia,serif;margin-top:8px;color:#16233b">Cornerstone</div>
+      <div style="font:400 12.5px/1.5 Archivo,sans-serif;color:#6f7a90;margin-top:6px">FRM &amp; CFA study companion — pick an exam, skim the concept, prove it in a quiz.</div>
+    </div>
+
+    <div style="height:1px;background:rgba(22,35,59,.14)"></div>
+
+    <div>
+      <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8c8578;margin-bottom:10px">Flow</div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ rail }}" as="r" hint-placeholder-count="9">
+          <button type="button" onClick="{{ r.go }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:3px;font:500 12.5px/1 Archivo,sans-serif;background:{{ r.bg }};color:{{ r.fg }}" style-hover="background:rgba(22,35,59,.07)">
+            <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;color:{{ r.numFg }}">{{ r.num }}</span>
+            <span>{{ r.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="height:1px;background:rgba(22,35,59,.14)"></div>
+
+    <div>
+      <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8c8578;margin-bottom:10px">Topic &amp; snapshot style</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ variants }}" as="v" hint-placeholder-count="3">
+          <button type="button" onClick="{{ v.go }}" style="all:unset;cursor:pointer;padding:9px 10px;border:1px solid {{ v.bd }};background:{{ v.bg }};border-radius:4px">
+            <div style="font:600 12px/1.2 Archivo,sans-serif;color:{{ v.fg }}">{{ v.name }}</div>
+            <div style="font:400 11px/1.35 Archivo,sans-serif;color:#6f7a90;margin-top:3px">{{ v.desc }}</div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </aside>
+
+  <div style="flex:none">
+    <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" hint-size="428px,908px">
+
+      <div style="height:100%;display:flex;flex-direction:column;background:#f7f4ee;font-family:Archivo,system-ui,sans-serif">
+
+        <!-- ONBOARDING -->
+        <sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;flex-direction:column;padding:26px 24px 24px">
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:#9a6b2f">Cornerstone</div>
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:20px 0 40px">
+              <div style="width:64px;height:64px;border:2px solid #16233b;display:flex;align-items:center;justify-content:center;font:700 26px/1 'Source Serif 4',Georgia,serif">C</div>
+              <h1 style="margin:0;font:400 38px/1.1 'Source Serif 4',Georgia,serif;letter-spacing:-.01em;text-wrap:pretty">Fifteen honest minutes beats three distracted hours.</h1>
+              <p style="margin:0;font:400 15px/1.6 Archivo,sans-serif;color:#5c6478;max-width:31ch">Choose a topic, read the snapshot, then answer five questions. That's a session. We'll keep the streak for you.</p>
+              <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px">
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <span style="font:600 10px/1.6 ui-monospace,Menlo,monospace;color:#9a6b2f">01</span>
+                  <span style="font:400 13.5px/1.5 Archivo,sans-serif;color:#16233b">Snapshots are swipeable cards — front concept, back detail.</span>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <span style="font:600 10px/1.6 ui-monospace,Menlo,monospace;color:#9a6b2f">02</span>
+                  <span style="font:400 13.5px/1.5 Archivo,sans-serif;color:#16233b">Missed questions land in your review queue automatically.</span>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <span style="font:600 10px/1.6 ui-monospace,Menlo,monospace;color:#9a6b2f">03</span>
+                  <span style="font:400 13.5px/1.5 Archivo,sans-serif;color:#16233b">Bookmark anything you want to see again before exam day.</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" onClick="{{ goExam }}" style="all:unset;cursor:pointer;text-align:center;background:#16233b;color:#f7f4ee;padding:16px;border-radius:4px;font:600 15px/1 Archivo,sans-serif" style-hover="background:#26365a">Get started</button>
+            <div style="text-align:center;font:400 12px/1 Archivo,sans-serif;color:#8c8578;padding-top:14px">Already studying with us? <a href="#" style="color:#9a6b2f">Sign in</a></div>
+          </div>
+        </sc-if>
+
+        <!-- EXAM PICKER -->
+        <sc-if value="{{ isExam }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px">
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8c8578">Step 1 of 2</div>
+            <h2 style="margin:14px 0 8px;font:400 30px/1.15 'Source Serif 4',Georgia,serif">Which exam are you sitting?</h2>
+            <p style="margin:0 0 22px;font:400 14px/1.55 Archivo,sans-serif;color:#5c6478">You can switch any time from your profile.</p>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <button type="button" onClick="{{ pickCFA }}" style="all:unset;cursor:pointer;display:block;padding:20px;border:1px solid {{ cfaBd }};background:{{ cfaBg }};border-radius:5px" style-hover="border-color:#16233b">
+                <div style="display:flex;justify-content:space-between;align-items:baseline">
+                  <span style="font:600 22px/1 'Source Serif 4',Georgia,serif;color:#16233b">CFA</span>
+                  <span style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#9a6b2f">3 LEVELS</span>
+                </div>
+                <div style="font:400 13.5px/1.5 Archivo,sans-serif;color:#5c6478;margin-top:8px">Chartered Financial Analyst — investment analysis, valuation, portfolio management, ethics.</div>
+                <div style="font:500 11.5px/1 Archivo,sans-serif;color:#6f7a90;margin-top:12px">10 topic areas · 1,240 practice questions</div>
+              </button>
+              <button type="button" onClick="{{ pickFRM }}" style="all:unset;cursor:pointer;display:block;padding:20px;border:1px solid {{ frmBd }};background:{{ frmBg }};border-radius:5px" style-hover="border-color:#16233b">
+                <div style="display:flex;justify-content:space-between;align-items:baseline">
+                  <span style="font:600 22px/1 'Source Serif 4',Georgia,serif;color:#16233b">FRM</span>
+                  <span style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#9a6b2f">2 PARTS</span>
+                </div>
+                <div style="font:400 13.5px/1.5 Archivo,sans-serif;color:#5c6478;margin-top:8px">Financial Risk Manager — market, credit, operational and liquidity risk measurement.</div>
+                <div style="font:500 11.5px/1 Archivo,sans-serif;color:#6f7a90;margin-top:12px">10 topic areas · 890 practice questions</div>
+              </button>
+            </div>
+            <div style="flex:1"></div>
+            <button type="button" onClick="{{ goLevel }}" style="all:unset;cursor:{{ examCursor }};text-align:center;background:{{ examCtaBg }};color:{{ examCtaFg }};padding:16px;border-radius:4px;font:600 15px/1 Archivo,sans-serif">Continue</button>
+          </div>
+        </sc-if>
+
+        <!-- LEVEL PICKER -->
+        <sc-if value="{{ isLevel }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px">
+            <button type="button" onClick="{{ goExam }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:#6f7a90">← Change exam</button>
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8c8578;margin-top:18px">Step 2 of 2 · {{ examName }}</div>
+            <h2 style="margin:14px 0 22px;font:400 30px/1.15 'Source Serif 4',Georgia,serif">Where are you in the programme?</h2>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ levels }}" as="l" hint-placeholder-count="3">
+                <button type="button" onClick="{{ l.go }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid {{ l.bd }};background:{{ l.bg }};border-radius:5px" style-hover="border-color:#16233b">
+                  <span style="width:34px;height:34px;flex:none;border-radius:50%;border:1px solid {{ l.dotBd }};background:{{ l.dotBg }};display:flex;align-items:center;justify-content:center;font:600 12px/1 ui-monospace,Menlo,monospace;color:{{ l.dotFg }}">{{ l.short }}</span>
+                  <span style="flex:1">
+                    <span style="display:block;font:600 15.5px/1.2 Archivo,sans-serif;color:#16233b">{{ l.name }}</span>
+                    <span style="display:block;font:400 12.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:3px">{{ l.note }}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="flex:1"></div>
+            <button type="button" onClick="{{ startPlacement }}" style="all:unset;cursor:pointer;display:block;width:100%;box-sizing:border-box;border:1px solid rgba(154,107,47,.42);background:#f3ead9;padding:16px;border-radius:5px" style-hover="border-color:#9a6b2f">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#9a6b2f">NOT SURE WHERE TO START?</span>
+                <span style="font:600 10px/1 ui-monospace,Menlo,monospace;color:#8a6a3c">6 MIN</span>
+              </div>
+              <div style="font:400 18px/1.25 'Source Serif 4',Georgia,serif;color:#16233b;margin-top:9px">Take the placement quiz</div>
+              <div style="font:400 12.5px/1.5 Archivo,sans-serif;color:#8a6a3c;margin-top:5px">Five questions across the {{ examName }} syllabus. We'll recommend a level and pre-fill your topic progress.</div>
+            </button>
+            <button type="button" onClick="{{ goHome }}" style="all:unset;cursor:{{ levelCursor }};text-align:center;background:{{ levelCtaBg }};color:{{ levelCtaFg }};padding:16px;border-radius:4px;font:600 15px/1 Archivo,sans-serif;margin-top:14px">Start studying</button>
+          </div>
+        </sc-if>
+
+        <!-- HOME -->
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;overflow:auto;padding:20px 20px 90px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font:400 13px/1 Archivo,sans-serif;color:#6f7a90">Good evening, Anaya</div>
+                <div style="font:400 25px/1.2 'Source Serif 4',Georgia,serif;margin-top:5px">{{ examName }} · {{ levelName }}</div>
+              </div>
+              <button type="button" onClick="{{ goProfile }}" style="all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;background:#16233b;color:#f7f4ee;display:flex;align-items:center;justify-content:center;font:600 13px/1 Archivo,sans-serif">AK</button>
+            </div>
+
+            <div style="margin-top:18px;border:1px solid rgba(22,35,59,.12);background:#fffdfa;border-radius:6px;padding:18px;display:flex;gap:18px;align-items:center">
+              <div style="width:82px;height:82px;flex:none;border-radius:50%;background:conic-gradient(#9a6b2f {{ overallDeg }}, rgba(22,35,59,.10) 0);display:flex;align-items:center;justify-content:center">
+                <div style="width:64px;height:64px;border-radius:50%;background:#fffdfa;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                  <span style="font:600 19px/1 'Source Serif 4',Georgia,serif">{{ overallPct }}%</span>
+                  <span style="font:500 8.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8c8578;margin-top:3px">SYLLABUS</span>
+                </div>
+              </div>
+              <div style="flex:1">
+                <div style="font:600 15px/1.3 Archivo,sans-serif">{{ daysLeft }} days to exam day</div>
+                <div style="font:400 12.5px/1.5 Archivo,sans-serif;color:#6f7a90;margin-top:4px">You're pacing ahead of plan. Two topics left this week.</div>
+                <div style="display:flex;gap:14px;margin-top:12px">
+                  <div>
+                    <div style="font:600 17px/1 'Source Serif 4',Georgia,serif;color:#9a6b2f">{{ streak }}</div>
+                    <div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#8c8578;margin-top:4px">DAY STREAK</div>
+                  </div>
+                  <div style="width:1px;background:rgba(22,35,59,.12)"></div>
+                  <div>
+                    <div style="font:600 17px/1 'Source Serif 4',Georgia,serif">{{ dueCount }}</div>
+                    <div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#8c8578;margin-top:4px">CARDS DUE</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:5px;margin-top:14px">
+              <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
+                <div style="flex:1;text-align:center">
+                  <div style="height:30px;border-radius:3px;background:{{ d.bg }};border:1px solid {{ d.bd }}"></div>
+                  <div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;color:#8c8578;margin-top:5px">{{ d.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8c8578;margin:26px 0 10px">Pick up where you left off</div>
+            <button type="button" onClick="{{ resumeTopic }}" style="all:unset;cursor:pointer;display:block;width:100%;box-sizing:border-box;background:#16233b;color:#f7f4ee;border-radius:6px;padding:18px" style-hover="background:#26365a">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:rgba(247,244,238,.6)">IN PROGRESS</span>
+                <span style="font:600 11px/1 Archivo,sans-serif;color:rgba(247,244,238,.75)">{{ resumePct }}%</span>
+              </div>
+              <div style="font:400 20px/1.25 'Source Serif 4',Georgia,serif;margin-top:8px">{{ resumeName }}</div>
+              <div style="font:400 12.5px/1.45 Archivo,sans-serif;color:rgba(247,244,238,.72);margin-top:6px">{{ resumeNote }}</div>
+              <div style="height:3px;background:rgba(247,244,238,.22);margin-top:14px"><div style="height:3px;background:#e0b26a;width:{{ resumePct }}%"></div></div>
+            </button>
+
+            <div style="display:flex;gap:10px;margin-top:12px">
+              <button type="button" onClick="{{ goTopics }}" style="all:unset;cursor:pointer;flex:1;text-align:left;border:1px solid rgba(22,35,59,.14);background:#fffdfa;border-radius:6px;padding:14px" style-hover="border-color:#16233b">
+                <div style="font:600 14px/1.2 Archivo,sans-serif">All topics</div>
+                <div style="font:400 11.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:4px">{{ topicCount }} areas</div>
+              </button>
+              <button type="button" onClick="{{ goTopics }}" style="all:unset;cursor:pointer;flex:1;text-align:left;border:1px solid rgba(154,107,47,.4);background:#f3ead9;border-radius:6px;padding:14px" style-hover="border-color:#9a6b2f">
+                <div style="font:600 14px/1.2 Archivo,sans-serif;color:#7d5620">Review queue</div>
+                <div style="font:400 11.5px/1.4 Archivo,sans-serif;color:#8a6a3c;margin-top:4px">{{ dueCount }} due today</div>
+              </button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TOPICS -->
+        <sc-if value="{{ isTopics }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;overflow:auto;padding:0 0 90px">
+            <div style="padding:20px 20px 14px;position:sticky;top:0;background:#f7f4ee;z-index:2">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <button type="button" onClick="{{ goHome }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:#6f7a90">← Home</button>
+                <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#8c8578">{{ variantTag }}</span>
+              </div>
+              <h2 style="margin:12px 0 4px;font:400 27px/1.15 'Source Serif 4',Georgia,serif">Topics</h2>
+              <div style="font:400 12.5px/1.5 Archivo,sans-serif;color:#6f7a90">{{ examName }} {{ levelName }} · {{ topicCount }} areas, weighted as in the real exam</div>
+            </div>
+
+            <!-- variant A: ledger rows -->
+            <sc-if value="{{ isA }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top:1px solid rgba(22,35,59,.14)">
+                <sc-for list="{{ topics }}" as="t" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ t.go }}" style="all:unset;cursor:pointer;display:block;width:100%;box-sizing:border-box;padding:15px 20px;border-bottom:1px solid rgba(22,35,59,.1)" style-hover="background:#fffdfa">
+                    <div style="display:flex;gap:14px;align-items:baseline">
+                      <span style="font:600 10px/1.4 ui-monospace,Menlo,monospace;color:#9a6b2f">{{ t.num }}</span>
+                      <span style="flex:1">
+                        <span style="display:block;font:500 15.5px/1.25 Archivo,sans-serif;color:#16233b">{{ t.name }}</span>
+                        <span style="display:block;font:400 11.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:4px">{{ t.weight }} of exam · {{ t.cards }} cards · {{ t.qs }} questions</span>
+                      </span>
+                      <span style="font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ t.pctFg }}">{{ t.pct }}%</span>
+                    </div>
+                    <div style="height:2px;background:rgba(22,35,59,.1);margin-top:11px"><div style="height:2px;background:{{ t.barBg }};width:{{ t.pct }}%"></div></div>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- variant B: tiles with rings -->
+            <sc-if value="{{ isB }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 20px 0">
+                <sc-for list="{{ topics }}" as="t" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ t.go }}" style="all:unset;cursor:pointer;border:1px solid rgba(22,35,59,.13);background:#fffdfa;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box" style-hover="border-color:#16233b">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                      <span style="width:40px;height:40px;border-radius:50%;background:conic-gradient({{ t.barBg }} {{ t.deg }}, rgba(22,35,59,.10) 0);display:flex;align-items:center;justify-content:center">
+                        <span style="width:31px;height:31px;border-radius:50%;background:#fffdfa;display:flex;align-items:center;justify-content:center;font:600 10.5px/1 ui-monospace,Menlo,monospace;color:#16233b">{{ t.pct }}</span>
+                      </span>
+                      <span style="font:600 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#9a6b2f;padding-top:5px">{{ t.weight }}</span>
+                    </div>
+                    <span style="font:500 14px/1.25 Archivo,sans-serif;color:#16233b;text-wrap:pretty">{{ t.name }}</span>
+                    <span style="font:400 11px/1.35 Archivo,sans-serif;color:#6f7a90;margin-top:auto">{{ t.cards }} cards · {{ t.mastery }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- variant C: editorial index -->
+            <sc-if value="{{ isC }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:4px 20px 0">
+                <sc-for list="{{ topics }}" as="t" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ t.go }}" style="all:unset;cursor:pointer;display:flex;gap:16px;align-items:flex-start;width:100%;box-sizing:border-box;padding:18px 0;border-bottom:1px solid rgba(22,35,59,.12)" style-hover="opacity:.72">
+                    <span style="font:400 40px/.85 'Source Serif 4',Georgia,serif;color:{{ t.numFg }};flex:none;width:52px">{{ t.num }}</span>
+                    <span style="flex:1">
+                      <span style="display:block;font:400 19px/1.2 'Source Serif 4',Georgia,serif;color:#16233b;text-wrap:pretty">{{ t.name }}</span>
+                      <span style="display:block;font:400 11.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:6px">{{ t.blurb }}</span>
+                      <span style="display:flex;gap:3px;margin-top:10px">
+                        <sc-for list="{{ t.pips }}" as="p" hint-placeholder-count="10">
+                          <span style="width:12px;height:5px;background:{{ p.bg }}"></span>
+                        </sc-for>
+                      </span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- SNAPSHOT -->
+        <sc-if value="{{ isSnap }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;display:flex;flex-direction:column;background:{{ snapBg }}">
+            <div style="padding:18px 20px 12px;display:flex;justify-content:space-between;align-items:center">
+              <button type="button" onClick="{{ goTopics }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:{{ snapMuted }}">← Topics</button>
+              <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:{{ snapMuted }}">SNAPSHOT · {{ cardNo }}/{{ cardTotal }}</span>
+              <button type="button" onClick="{{ toggleBookmark }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:{{ bmFg }}">{{ bmLabel }}</button>
+            </div>
+
+            <div style="padding:0 20px 6px">
+              <div style="font:400 21px/1.2 'Source Serif 4',Georgia,serif;color:{{ snapFg }}">{{ topicName }}</div>
+              <div style="display:flex;gap:4px;margin-top:12px">
+                <sc-for list="{{ cardDots }}" as="d" hint-placeholder-count="4">
+                  <span style="flex:1;height:3px;background:{{ d.bg }}"></span>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1;position:relative;padding:18px 20px 0;overflow:hidden">
+              <div style="position:absolute;left:32px;right:32px;top:8px;height:100%;border:1px solid {{ stackBd }};border-radius:{{ snapRadius }};background:{{ stackBg2 }}"></div>
+              <div style="position:absolute;left:26px;right:26px;top:13px;height:100%;border:1px solid {{ stackBd }};border-radius:{{ snapRadius }};background:{{ stackBg1 }}"></div>
+              <div onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onClick="{{ flip }}" style="position:relative;height:100%;box-sizing:border-box;border:1px solid {{ cardBd }};background:{{ cardBg }};border-radius:{{ snapRadius }};padding:{{ cardPad }};cursor:grab;touch-action:pan-y;overflow:hidden;display:flex;flex-direction:column;transform:{{ dragT }};box-shadow:{{ cardShadow }}">
+                <div style="display:flex;justify-content:space-between;align-items:baseline">
+                  <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:{{ kickerFg }}">{{ card.kicker }}</span>
+                  <span style="font:400 {{ bigNumSize }}/.8 'Source Serif 4',Georgia,serif;color:{{ bigNumFg }}">{{ cardNo }}</span>
+                </div>
+                <div style="font:400 {{ cardTitleSize }}/1.15 'Source Serif 4',Georgia,serif;color:{{ snapFg }};margin-top:16px;text-wrap:pretty">{{ card.title }}</div>
+                <div style="font:400 14.5px/1.6 Archivo,sans-serif;color:{{ snapBody }};margin-top:14px;text-wrap:pretty">{{ card.body }}</div>
+                <sc-if value="{{ card.formula }}" hint-placeholder-val="{{ true }}">
+                  <div style="margin-top:16px;border:1px solid {{ formulaBd }};background:{{ formulaBg }};padding:14px 16px;border-radius:3px">
+                    <div style="font:600 8.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:{{ snapMuted }}">FORMULA</div>
+                    <div style="font:400 15.5px/1.5 ui-monospace,Menlo,monospace;color:{{ snapFg }};margin-top:8px">{{ card.formula }}</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ revealed }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:16px;padding-top:16px;border-top:1px solid {{ formulaBd }}">
+                    <div style="font:600 8.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#9a6b2f">IN THE EXAM</div>
+                    <div style="font:400 14px/1.6 Archivo,sans-serif;color:{{ snapBody }};margin-top:8px;text-wrap:pretty">{{ card.exam }}</div>
+                  </div>
+                </sc-if>
+                <div style="flex:1"></div>
+                <div style="font:500 11.5px/1 Archivo,sans-serif;color:{{ snapMuted }};padding-top:14px">{{ flipHint }}</div>
+              </div>
+            </div>
+
+            <div style="padding:14px 20px 18px;display:flex;gap:10px;align-items:center">
+              <button type="button" onClick="{{ prevCard }}" style="all:unset;cursor:pointer;width:46px;height:46px;flex:none;border:1px solid {{ cardBd }};border-radius:4px;display:flex;align-items:center;justify-content:center;font:400 17px/1 Archivo,sans-serif;color:{{ snapFg }}" style-hover="background:rgba(22,35,59,.06)">←</button>
+              <button type="button" onClick="{{ nextCard }}" style="all:unset;cursor:pointer;flex:1;text-align:center;background:{{ snapCtaBg }};color:{{ snapCtaFg }};padding:15px;border-radius:4px;font:600 14.5px/1 Archivo,sans-serif" style-hover="opacity:.9">{{ nextLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- QUIZ -->
+        <sc-if value="{{ isQuiz }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <button type="button" onClick="{{ goSnap }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:#6f7a90">← Snapshot</button>
+              <span style="display:flex;align-items:baseline;gap:6px"><span style="font:600 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#8c8578">SESSION</span><span style="font:600 12px/1 ui-monospace,Menlo,monospace;color:{{ timeFg }}">{{ timeLabel }}</span></span>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:14px">
+              <sc-for list="{{ qDots }}" as="d" hint-placeholder-count="5">
+                <span style="flex:1;height:3px;background:{{ d.bg }}"></span>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+              <span style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#8c8578">QUESTION {{ qNo }} OF {{ qTotal }} · {{ topicName }}</span>
+              <button type="button" onClick="{{ toggleQBookmark }}" style="all:unset;cursor:pointer;font:500 12px/1 Archivo,sans-serif;color:{{ qBmFg }}">{{ qBmLabel }}</button>
+            </div>
+
+            <div style="flex:1;overflow:auto;margin-top:12px">
+              <div style="font:400 20.5px/1.35 'Source Serif 4',Georgia,serif;color:#16233b;text-wrap:pretty">{{ q.text }}</div>
+              <sc-if value="{{ q.given }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:12px;border-left:2px solid #9a6b2f;padding:2px 0 2px 12px;font:400 13.5px/1.6 ui-monospace,Menlo,monospace;color:#5c6478">{{ q.given }}</div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px">
+                <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ o.go }}" style="all:unset;cursor:{{ o.cursor }};display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid {{ o.bd }};background:{{ o.bg }};border-radius:5px;min-height:44px;box-sizing:border-box" style-hover="border-color:#16233b">
+                    <span style="width:22px;height:22px;flex:none;border-radius:50%;border:1px solid {{ o.markBd }};background:{{ o.markBg }};color:{{ o.markFg }};display:flex;align-items:center;justify-content:center;font:600 10.5px/1 ui-monospace,Menlo,monospace">{{ o.mark }}</span>
+                    <span style="font:400 14px/1.45 Archivo,sans-serif;color:#16233b;text-wrap:pretty">{{ o.text }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ showFeedback }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:16px;border:1px solid {{ fbBd }};background:{{ fbBg }};border-radius:5px;padding:16px">
+                  <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:{{ fbFg }}">{{ fbTitle }}</div>
+                  <div style="font:400 13.5px/1.6 Archivo,sans-serif;color:#26365a;margin-top:9px;text-wrap:pretty">{{ q.why }}</div>
+                  <div style="font:400 12.5px/1.5 Archivo,sans-serif;color:#6f7a90;margin-top:10px">Reading: {{ q.ref }}</div>
+                </div>
+              </sc-if>
+            </div>
+
+            <button type="button" onClick="{{ advance }}" style="all:unset;cursor:{{ advCursor }};text-align:center;background:{{ advBg }};color:{{ advFg }};padding:16px;border-radius:4px;font:600 15px/1 Archivo,sans-serif;margin-top:14px">{{ advLabel }}</button>
+          </div>
+        </sc-if>
+
+        <!-- RESULTS -->
+        <sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;overflow:auto;padding:22px 20px 22px">
+            <div style="font:600 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#8c8578">SESSION COMPLETE</div>
+            <h2 style="margin:14px 0 6px;font:400 29px/1.15 'Source Serif 4',Georgia,serif;text-wrap:pretty">{{ resultHead }}</h2>
+            <p style="margin:0;font:400 13.5px/1.55 Archivo,sans-serif;color:#5c6478">{{ resultNote }}</p>
+
+            <div style="margin-top:20px;display:flex;gap:14px;align-items:center;border:1px solid rgba(22,35,59,.12);background:#fffdfa;border-radius:6px;padding:18px">
+              <div style="width:88px;height:88px;flex:none;border-radius:50%;background:conic-gradient({{ scoreRing }} {{ scoreDeg }}, rgba(22,35,59,.10) 0);display:flex;align-items:center;justify-content:center">
+                <div style="width:69px;height:69px;border-radius:50%;background:#fffdfa;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                  <span style="font:600 21px/1 'Source Serif 4',Georgia,serif">{{ correctCount }}/{{ qTotal }}</span>
+                  <span style="font:500 8.5px/1 ui-monospace,Menlo,monospace;color:#8c8578;margin-top:4px">{{ scorePct }}%</span>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:9px">
+                <div style="display:flex;justify-content:space-between;font:400 12.5px/1 Archivo,sans-serif;color:#5c6478"><span>Time on task</span><span style="font-weight:600;color:#16233b">{{ elapsedLabel }}</span></div>
+                <div style="display:flex;justify-content:space-between;font:400 12.5px/1 Archivo,sans-serif;color:#5c6478"><span>Avg per question</span><span style="font-weight:600;color:#16233b">{{ avgLabel }}</span></div>
+                <div style="display:flex;justify-content:space-between;font:400 12.5px/1 Archivo,sans-serif;color:#5c6478"><span>Topic mastery</span><span style="font-weight:600;color:#9a6b2f">{{ newMastery }}</span></div>
+              </div>
+            </div>
+
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#8c8578;margin:24px 0 10px">QUESTION BREAKDOWN</div>
+            <div style="border-top:1px solid rgba(22,35,59,.12)">
+              <sc-for list="{{ breakdown }}" as="b" hint-placeholder-count="5">
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid rgba(22,35,59,.1)">
+                  <span style="width:20px;height:20px;flex:none;border-radius:50%;background:{{ b.bg }};color:{{ b.fg }};display:flex;align-items:center;justify-content:center;font:600 10px/1 ui-monospace,Menlo,monospace">{{ b.mark }}</span>
+                  <span style="flex:1">
+                    <span style="display:block;font:400 13.5px/1.4 Archivo,sans-serif;color:#16233b;text-wrap:pretty">{{ b.text }}</span>
+                    <span style="display:block;font:400 11.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:4px">{{ b.note }}</span>
+                  </span>
+                  <span style="font:500 10.5px/1 ui-monospace,Menlo,monospace;color:#8c8578;padding-top:3px">{{ b.time }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="margin-top:18px;border:1px solid rgba(154,107,47,.38);background:#f3ead9;border-radius:5px;padding:15px 16px">
+              <div style="font:600 13.5px/1.3 Archivo,sans-serif;color:#7d5620">{{ missedCount }} questions added to your review queue</div>
+              <div style="font:400 12px/1.5 Archivo,sans-serif;color:#8a6a3c;margin-top:5px">They'll resurface tomorrow, then in four days, then in ten.</div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <button type="button" onClick="{{ retake }}" style="all:unset;cursor:pointer;flex:none;border:1px solid rgba(22,35,59,.22);padding:15px 18px;border-radius:4px;font:600 14px/1 Archivo,sans-serif;color:#16233b" style-hover="border-color:#16233b">Retake</button>
+              <button type="button" onClick="{{ goTopics }}" style="all:unset;cursor:pointer;flex:1;text-align:center;background:#16233b;color:#f7f4ee;padding:15px;border-radius:4px;font:600 14px/1 Archivo,sans-serif" style-hover="background:#26365a">Next topic</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- PROFILE -->
+        <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;overflow:auto;padding:20px 20px 90px">
+            <button type="button" onClick="{{ goHome }}" style="all:unset;cursor:pointer;font:500 12.5px/1 Archivo,sans-serif;color:#6f7a90">← Home</button>
+            <div style="display:flex;gap:14px;align-items:center;margin-top:18px">
+              <div style="width:56px;height:56px;border-radius:50%;background:#16233b;color:#f7f4ee;display:flex;align-items:center;justify-content:center;font:600 18px/1 Archivo,sans-serif">AK</div>
+              <div>
+                <div style="font:400 22px/1.2 'Source Serif 4',Georgia,serif">Anaya Kulkarni</div>
+                <div style="font:400 12.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:4px">{{ examName }} {{ levelName }} · sitting {{ examDate }}</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:20px">
+              <div style="border:1px solid rgba(22,35,59,.12);background:#fffdfa;border-radius:5px;padding:13px">
+                <div style="font:600 19px/1 'Source Serif 4',Georgia,serif;color:#9a6b2f">{{ streak }}</div>
+                <div style="font:500 9px/1.2 ui-monospace,Menlo,monospace;color:#8c8578;margin-top:5px">DAY STREAK</div>
+              </div>
+              <div style="border:1px solid rgba(22,35,59,.12);background:#fffdfa;border-radius:5px;padding:13px">
+                <div style="font:600 19px/1 'Source Serif 4',Georgia,serif">412</div>
+                <div style="font:500 9px/1.2 ui-monospace,Menlo,monospace;color:#8c8578;margin-top:5px">QUESTIONS</div>
+              </div>
+              <div style="border:1px solid rgba(22,35,59,.12);background:#fffdfa;border-radius:5px;padding:13px">
+                <div style="font:600 19px/1 'Source Serif 4',Georgia,serif">72%</div>
+                <div style="font:500 9px/1.2 ui-monospace,Menlo,monospace;color:#8c8578;margin-top:5px">ACCURACY</div>
+              </div>
+            </div>
+
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#8c8578;margin:24px 0 8px">STUDY</div>
+            <div style="border-top:1px solid rgba(22,35,59,.12)">
+              <sc-for list="{{ settings }}" as="s" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid rgba(22,35,59,.1)">
+                  <div style="flex:1">
+                    <div style="font:500 14px/1.25 Archivo,sans-serif;color:#16233b">{{ s.name }}</div>
+                    <div style="font:400 11.5px/1.4 Archivo,sans-serif;color:#6f7a90;margin-top:3px">{{ s.note }}</div>
+                  </div>
+                  <button type="button" onClick="{{ s.go }}" style="all:unset;cursor:pointer;width:44px;height:26px;flex:none;border-radius:13px;background:{{ s.trackBg }};position:relative;transition:background .18s">
+                    <span style="position:absolute;top:3px;left:{{ s.knobLeft }};width:20px;height:20px;border-radius:50%;background:#fffdfa;transition:left .18s;box-shadow:0 1px 3px rgba(22,35,59,.3)"></span>
+                  </button>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#8c8578;margin:24px 0 8px">ACCOUNT</div>
+            <div style="border-top:1px solid rgba(22,35,59,.12)">
+              <div style="display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(22,35,59,.1);font:400 14px/1 Archivo,sans-serif">Switch exam <span style="color:#6f7a90">{{ examName }} →</span></div>
+              <div style="display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(22,35,59,.1);font:400 14px/1 Archivo,sans-serif">Downloads <span style="color:#6f7a90">3 topics offline →</span></div>
+              <div style="display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(22,35,59,.1);font:400 14px/1 Archivo,sans-serif">Bookmarks <span style="color:#6f7a90">{{ bmCount }} saved →</span></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TAB BAR -->
+        <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;border-top:1px solid rgba(22,35,59,.13);background:#f7f4ee">
+            <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+              <button type="button" onClick="{{ t.go }}" style="all:unset;cursor:pointer;flex:1;padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:6px" style-hover="background:rgba(22,35,59,.04)">
+                <span style="width:18px;height:18px;border:1.5px solid {{ t.fg }};border-radius:{{ t.iconR }};background:{{ t.iconBg }}"></span>
+                <span style="font:500 10px/1 Archivo,sans-serif;color:{{ t.fg }}">{{ t.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+      </div>
+    </x-import>
+  </div>
+
+  <aside style="width:250px;flex:none;position:sticky;top:36px">
+    <div style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8c8578">Notes for review</div>
+    <div style="font:400 12.5px/1.6 Archivo,sans-serif;color:#5c6478;margin-top:12px">
+      Everything is live: pick an exam and level, open any topic, swipe or drag the snapshot cards, tap a card to reveal the exam angle, then answer the quiz. Feedback is instant with an explanation; missed questions roll into the review queue.
+    </div>
+    <div style="height:1px;background:rgba(22,35,59,.14);margin:18px 0"></div>
+    <div style="font:400 12.5px/1.6 Archivo,sans-serif;color:#5c6478">
+      Three topic/snapshot treatments are switchable on the left — <strong style="font-weight:600;color:#16233b">Ledger</strong> (dense, exam-weight forward), <strong style="font-weight:600;color:#16233b">Ring tiles</strong> (progress-led), <strong style="font-weight:600;color:#16233b">Index</strong> (editorial, dark cards).
+    </div>
+    <div style="height:1px;background:rgba(22,35,59,.14);margin:18px 0"></div>
+    <div style="font:400 12.5px/1.6 Archivo,sans-serif;color:#5c6478">
+      Open questions: should the quiz be timed per question or per session? And do you want a placement quiz at level selection?
+    </div>
+  </aside>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],&quot;default&quot;:&quot;b&quot;,&quot;tsType&quot;:&quot;'a'|'b'|'c'&quot;,&quot;section&quot;:&quot;Design direction&quot;},&quot;quizFeedback&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;instant&quot;,&quot;end&quot;],&quot;default&quot;:&quot;instant&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Quiz&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'onboard', exam: null, level: null,
+    topicKey: null, cardIdx: 0, revealed: false, dragX: 0, dragging: false,
+    qIdx: 0, chosen: null, answers: [], qTimes: [], elapsed: 0,
+    bookmarks: {}, cardBookmarks: {},
+    settings: [true, true, false, true],
+  };
+
+  DATA = {
+    CFA: {
+      name: 'CFA',
+      date: '17 May 2027',
+      levels: [
+        { key: 'L1', short: 'I', name: 'Level I', note: 'Tools and concepts — 10 topic areas, 180 questions' },
+        { key: 'L2', short: 'II', name: 'Level II', note: 'Asset valuation — item sets (vignettes)' },
+        { key: 'L3', short: 'III', name: 'Level III', note: 'Portfolio management — essay + item sets' },
+      ],
+      topics: [
+        { key: 'ethics', name: 'Ethical & Professional Standards', weight: '15%', pct: 82, cards: 12, qs: 96, blurb: 'The Code, the seven Standards, and how examiners phrase violations.' },
+        { key: 'quant', name: 'Quantitative Methods', weight: '10%', pct: 64, cards: 18, qs: 120, blurb: 'Time value, distributions, hypothesis tests, simple regression.' },
+        { key: 'econ', name: 'Economics', weight: '10%', pct: 41, cards: 14, qs: 88, blurb: 'Demand, business cycles, exchange rates, monetary policy.' },
+        { key: 'fsa', name: 'Financial Statement Analysis', weight: '15%', pct: 55, cards: 22, qs: 142, blurb: 'The three statements, inventories, long-lived assets, quality of earnings.' },
+        { key: 'fixed', name: 'Fixed Income', weight: '11%', pct: 38, cards: 20, qs: 118, blurb: 'Pricing, yield measures, duration, convexity, credit spreads.' },
+        { key: 'equity', name: 'Equity Investments', weight: '11%', pct: 27, cards: 16, qs: 104, blurb: 'Market organisation, indexes, industry analysis, dividend models.' },
+        { key: 'deriv', name: 'Derivatives', weight: '6%', pct: 14, cards: 13, qs: 72, blurb: 'Forwards, futures, swaps, options and arbitrage-free pricing.' },
+        { key: 'alt', name: 'Alternative Investments', weight: '6%', pct: 9, cards: 10, qs: 54, blurb: 'Real estate, private capital, hedge funds, commodities.' },
+        { key: 'pm', name: 'Portfolio Management', weight: '8%', pct: 31, cards: 15, qs: 86, blurb: 'Risk and return, the CAPM, IPS construction, planning.' },
+        { key: 'corp', name: 'Corporate Issuers', weight: '8%', pct: 47, cards: 12, qs: 70, blurb: 'Governance, capital structure, working capital, capital budgeting.' },
+      ],
+    },
+    FRM: {
+      name: 'FRM',
+      date: '15 Nov 2026',
+      levels: [
+        { key: 'P1', short: 'I', name: 'Part I', note: 'Tools — 100 questions, four topic areas' },
+        { key: 'P2', short: 'II', name: 'Part II', note: 'Application — 80 questions, six topic areas' },
+      ],
+      topics: [
+        { key: 'foundations', name: 'Foundations of Risk Management', weight: '20%', pct: 71, cards: 14, qs: 84, blurb: 'Risk taxonomy, CAPM, enterprise risk, governance failures.' },
+        { key: 'quantfrm', name: 'Quantitative Analysis', weight: '20%', pct: 58, cards: 20, qs: 112, blurb: 'Distributions, hypothesis testing, regression, volatility models.' },
+        { key: 'markets', name: 'Financial Markets & Products', weight: '30%', pct: 44, cards: 24, qs: 148, blurb: 'Futures, options, swaps, rates, insurance and clearing.' },
+        { key: 'valuation', name: 'Valuation & Risk Models', weight: '30%', pct: 33, cards: 22, qs: 130, blurb: 'VaR, option Greeks, bond risk, stress testing, credit scoring.' },
+        { key: 'mktrisk', name: 'Market Risk Measurement', weight: '20%', pct: 21, cards: 18, qs: 96, blurb: 'VaR methods, expected shortfall, backtesting, volatility surfaces.' },
+        { key: 'creditrisk', name: 'Credit Risk Measurement', weight: '20%', pct: 12, cards: 19, qs: 102, blurb: 'PD, LGD, EAD, counterparty exposure, CVA, securitisation.' },
+        { key: 'oprisk', name: 'Operational Risk & Resiliency', weight: '20%', pct: 8, cards: 16, qs: 88, blurb: 'Loss data, RCSA, cyber, third parties, Basel operational capital.' },
+        { key: 'liquidity', name: 'Liquidity & Treasury Risk', weight: '15%', pct: 5, cards: 15, qs: 76, blurb: 'Funding vs market liquidity, LCR, NSFR, transfer pricing.' },
+        { key: 'invrisk', name: 'Risk & Investment Management', weight: '15%', pct: 0, cards: 12, qs: 64, blurb: 'Portfolio construction, risk budgeting, hedge fund risk.' },
+        { key: 'current', name: 'Current Issues in Financial Markets', weight: '10%', pct: 0, cards: 8, qs: 40, blurb: 'This cycle\u2019s readings — climate risk, AI in finance, digital assets.' },
+      ],
+    },
+  };
+
+  CARDS = {
+    fixed: [
+      { kicker: 'CORE IDEA', title: 'A bond\u2019s price is just discounted cash flow', body: 'Price is the present value of every coupon plus the redemption amount, discounted at the market yield. Because the yield sits in the denominator, price and yield always move in opposite directions.', formula: 'P = \u03a3 C/(1+r)\u1d57 + FV/(1+r)\u207f', exam: 'If a stem tells you the coupon exceeds the market yield, the bond trades at a premium — you can often answer without computing anything.' },
+      { kicker: 'SENSITIVITY', title: 'Modified duration turns yield moves into price moves', body: 'Macaulay duration is the weighted-average time to receipt. Divide it by (1 + periodic yield) and you get modified duration — a percentage price change per 1% change in yield.', formula: '%\u0394P \u2248 \u2212ModDur \u00d7 \u0394y', exam: 'Duration is always quoted in years but behaves as an elasticity. Watch for stems that give Macaulay and ask for the price effect.' },
+      { kicker: 'SECOND ORDER', title: 'Convexity fixes what duration misses', body: 'Duration is a straight-line estimate of a curved relationship, so it understates price gains and overstates price losses. Convexity adds the curvature term back.', formula: '%\u0394P \u2248 \u2212MD\u00b7\u0394y + \u00bd\u00b7C\u00b7\u0394y\u00b2', exam: 'For large yield shocks, the duration-only answer is a distractor. The convexity-adjusted number is always the higher price.' },
+      { kicker: 'CREDIT', title: 'The spread is the price of default risk', body: 'A corporate yield decomposes into the benchmark rate plus a spread covering expected loss, liquidity and risk premium. Spreads widen in stress, so credit bonds lose more than governments.', formula: 'Spread = y(corp) \u2212 y(benchmark)', exam: 'Spread duration questions look like duration questions. Only the credit spread moves — the benchmark is held fixed.' },
+    ],
+    mktrisk: [
+      { kicker: 'DEFINITION', title: 'VaR is a quantile, not a worst case', body: 'Value at Risk is the loss that will not be exceeded over a stated horizon at a stated confidence. A 99%/1-day VaR of $4m means: on 1 day in 100, expect to lose more than $4m.', formula: 'VaR\u2090 = \u2212(\u03bc + z\u2090\u03c3) \u00b7 V', exam: 'The classic trap is calling VaR a maximum loss. It says nothing about the size of the tail beyond the quantile.' },
+      { kicker: 'PARAMETRIC', title: 'Delta-normal VaR scales with the square root of time', body: 'Assume returns are normal and you only need mean, volatility and a z-score. Horizon scaling uses \u221aT, which is why a 10-day VaR is roughly 3.16\u00d7 the 1-day figure.', formula: 'VaR(T) = VaR(1) \u00d7 \u221aT', exam: 'Scaling only holds under i.i.d. returns. If the stem mentions autocorrelation or fat tails, \u221aT understates risk.' },
+      { kicker: 'BEYOND VAR', title: 'Expected shortfall averages the tail', body: 'ES (conditional VaR) is the mean loss given that the VaR threshold is breached. It is sub-additive and coherent, which is why Basel moved market risk capital from VaR to ES at 97.5%.', formula: 'ES\u2090 = E[L | L > VaR\u2090]', exam: 'ES \u2265 VaR always. If an answer choice gives ES below VaR, eliminate it immediately.' },
+      { kicker: 'VALIDATION', title: 'Backtesting counts exceptions', body: 'Compare realised losses with the VaR forecast and count breaches. Too many and the model understates risk; the Basel traffic-light zones set green, yellow and red bands on the exception count.', formula: 'Expected breaches = (1 \u2212 a) \u00d7 N', exam: 'A Kupiec test question is a likelihood ratio against the expected breach count — clustering of breaches points to a conditional coverage failure.' },
+    ],
+    ethics: [
+      { kicker: 'STRUCTURE', title: 'Six components of the Code, seven Standards', body: 'The Code states the aspirations; the Standards are enforceable. Standard I is Professionalism, II Integrity of Capital Markets, III Duties to Clients, IV to Employers, V Investment Analysis, VI Conflicts, VII Member Responsibilities.', formula: null, exam: 'Nearly every ethics question is "which Standard is violated". Learn the numbering — it turns recall into elimination.' },
+      { kicker: 'PRIORITY', title: 'When laws conflict, follow the stricter one', body: 'Members must comply with the most strict of applicable law, the Code and Standards. Less strict local law never excuses a Standards violation.', formula: null, exam: 'Watch for a stem set in a jurisdiction with looser rules — the answer is almost always to apply the Code.' },
+      { kicker: 'DISCLOSURE', title: 'Disclose conflicts prominently and in plain language', body: 'Standard VI requires disclosure of anything that could impair independence — beneficial ownership, referral fees, additional compensation arrangements.', formula: null, exam: 'Disclosure fixes most conflict scenarios. If an answer says "abstain" where disclosure would do, be suspicious.' },
+    ],
+    quant: [
+      { kicker: 'CORE IDEA', title: 'Every yield question is a time-value question', body: 'Compounding frequency, effective annual rates and continuous compounding are the same machine with different exponents. Get comfortable moving between them.', formula: 'EAR = (1 + r/m)\u1d50 \u2212 1', exam: 'Convert to a common compounding basis before comparing two rates — that is usually the whole question.' },
+      { kicker: 'INFERENCE', title: 'A hypothesis test is a distance in standard errors', body: 'Compute the test statistic, compare with the critical value at your significance level, then reject or fail to reject. You never "accept" the null.', formula: 't = (x\u0304 \u2212 \u03bc\u2080) / (s/\u221an)', exam: 'One-tailed versus two-tailed changes the critical value, not the statistic. Read the alternative hypothesis carefully.' },
+      { kicker: 'REGRESSION', title: 'R\u00b2 explains variation, not causation', body: 'The coefficient of determination is explained sum of squares over total. It rises mechanically as you add regressors, which is why adjusted R\u00b2 exists.', formula: 'R\u00b2 = SSE_explained / SST', exam: 'If a stem adds a variable and R\u00b2 rises but adjusted R\u00b2 falls, the variable is not earning its place.' },
+    ],
+    valuation: [
+      { kicker: 'CORE IDEA', title: 'Risk models are forecasts, so validate them', body: 'Every risk number rests on assumptions about distribution, horizon and correlation. Stress testing and scenario analysis exist because those assumptions break exactly when it matters.', formula: null, exam: 'Expect a question contrasting historical simulation (no distribution assumed, needs long data) with parametric VaR (distribution assumed, data-light).' },
+      { kicker: 'OPTIONS', title: 'Greeks decompose an option\u2019s risk', body: 'Delta is sensitivity to spot, gamma to delta, vega to volatility, theta to time, rho to rates. A delta-hedged book is still exposed to gamma and vega.', formula: '\u0394P \u2248 \u03b4\u00b7\u0394S + \u00bd\u03b3\u00b7\u0394S\u00b2 + \u03bd\u00b7\u0394\u03c3', exam: 'Long gamma benefits from big moves in either direction. If a stem says the hedger rebalances rarely, gamma risk is the answer.' },
+      { kicker: 'CREDIT', title: 'Expected loss has three inputs', body: 'Probability of default, loss given default and exposure at default. Multiply them for expected loss; unexpected loss is the volatility around it, and capital covers the unexpected part.', formula: 'EL = PD \u00d7 LGD \u00d7 EAD', exam: 'Provisions cover expected loss, capital covers unexpected loss. Mixing those up is the most common wrong answer.' },
+    ],
+  };
+
+  QUIZ = {
+    fixed: [
+      { text: 'A bond with a modified duration of 7.2 is held when yields rise by 40 basis points. Using duration alone, the estimated percentage price change is closest to:', given: 'ModDur = 7.2 \u00b7 \u0394y = +0.40%', opts: ['\u22122.88%', '\u22120.29%', '+2.88%', '\u22127.20%'], a: 0, why: '\u2212ModDur \u00d7 \u0394y = \u22127.2 \u00d7 0.0040 = \u22122.88%. The sign is negative because yields rose. Convexity would make the true loss slightly smaller.', ref: 'Fixed Income \u2014 Understanding Risk & Return, LOS 2.c' },
+      { text: 'A bond pays a 6% annual coupon while the market yield on comparable bonds is 4.5%. The bond most likely trades at:', given: null, opts: ['A discount to par', 'Par value', 'A premium to par', 'Cannot be determined'], a: 2, why: 'When the coupon rate exceeds the required yield, the cash flows are richer than the market demands, so the price is bid above par — a premium bond.', ref: 'Fixed Income \u2014 Bond Prices & Discount Rates, LOS 1.b' },
+      { text: 'Compared with a duration-only estimate, adding a positive convexity adjustment for a large yield increase will:', given: null, opts: ['Lower the estimated price', 'Raise the estimated price', 'Leave the estimate unchanged', 'Reverse the sign of the estimate'], a: 1, why: 'Positive convexity means the true price\u2013yield curve lies above the tangent line, so the convexity term is additive for moves in either direction — the estimated price rises.', ref: 'Fixed Income \u2014 Convexity, LOS 2.e' },
+      { text: 'Spread duration measures the sensitivity of a corporate bond\u2019s price to a change in:', given: null, opts: ['The benchmark government yield', 'The credit spread only', 'Both benchmark and spread', 'Realised default frequency'], a: 1, why: 'Spread duration isolates the spread component, holding the benchmark curve fixed. Effective duration captures the benchmark move.', ref: 'Fixed Income \u2014 Credit Risk, LOS 4.a' },
+      { text: 'Which statement about Macaulay and modified duration is correct?', given: null, opts: ['Modified exceeds Macaulay', 'They are always equal', 'Macaulay divided by (1+y) gives modified', 'Macaulay is measured in percent'], a: 2, why: 'ModDur = MacDur / (1 + periodic yield), so modified duration is always slightly smaller. Macaulay is expressed in years.', ref: 'Fixed Income \u2014 Duration Measures, LOS 2.b' },
+    ],
+    mktrisk: [
+      { text: 'A portfolio has a 1-day 99% VaR of $2.5m. Assuming i.i.d. returns, the 10-day 99% VaR is closest to:', given: 'VaR(1) = $2.5m \u00b7 T = 10', opts: ['$7.9m', '$25.0m', '$2.5m', '$5.0m'], a: 0, why: '\u221a10 \u2248 3.162, so 2.5 \u00d7 3.162 \u2248 $7.9m. Square-root-of-time scaling requires independent, identically distributed returns.', ref: 'Market Risk \u2014 VaR Measurement, Ch. 2' },
+      { text: 'Which statement about expected shortfall is correct?', given: null, opts: ['ES is never greater than VaR', 'ES is sub-additive; VaR need not be', 'ES ignores the tail', 'ES requires normality'], a: 1, why: 'ES is a coherent risk measure and therefore sub-additive, while VaR can violate sub-additivity. ES also always exceeds or equals VaR at the same confidence.', ref: 'Market Risk \u2014 Coherent Risk Measures, Ch. 1' },
+      { text: 'A bank\u2019s 99% 1-day VaR model produced 9 exceptions in 250 trading days. This most likely indicates:', given: 'Expected exceptions = 0.01 \u00d7 250 = 2.5', opts: ['The model overstates risk', 'The model is well calibrated', 'The model understates risk', 'Nothing without ES data'], a: 2, why: 'Nine breaches against 2.5 expected is far more than chance would suggest — the model understates risk and would fall into the Basel red zone.', ref: 'Market Risk \u2014 Backtesting VaR, Ch. 6' },
+      { text: 'Historical simulation VaR differs from delta-normal VaR chiefly because it:', given: null, opts: ['Assumes normal returns', 'Requires no distributional assumption', 'Cannot handle options', 'Always gives a lower number'], a: 1, why: 'Historical simulation reorders actual past returns, so no distribution is assumed — at the cost of needing a long, representative sample.', ref: 'Market Risk \u2014 Non-parametric Approaches, Ch. 3' },
+      { text: 'The most accurate description of a 97.5% expected shortfall under Basel\u2019s market risk framework is:', given: null, opts: ['The 97.5th percentile loss', 'The average loss beyond the 97.5th percentile', 'The maximum possible loss', 'The loss on the worst single day'], a: 1, why: 'ES conditions on being in the tail and averages those losses. Basel replaced 99% VaR with 97.5% ES for exactly this tail sensitivity.', ref: 'Market Risk \u2014 FRTB, Ch. 8' },
+    ],
+    ethics: [
+      { text: 'A member works where local regulation permits front-running client orders. The Code and Standards prohibit it. The member must:', given: null, opts: ['Follow local law', 'Follow the stricter Code', 'Disclose and proceed', 'Seek employer approval'], a: 1, why: 'Members follow the most strict of applicable law, the Code and the Standards. Looser local law never lowers the bar.', ref: 'Standard I(A) \u2014 Knowledge of the Law' },
+      { text: 'An analyst accepts a paid consulting role outside her firm without informing her employer. She has most likely violated:', given: null, opts: ['Standard III(A) Loyalty to Clients', 'Standard IV(B) Additional Compensation', 'Standard V(A) Diligence', 'No standard'], a: 1, why: 'Additional compensation arrangements that could conflict with the employer\u2019s interest require written consent from all parties.', ref: 'Standard IV(B) \u2014 Additional Compensation' },
+      { text: 'A member posts a research summary omitting the fact that his firm owns 8% of the issuer. This is a violation of:', given: null, opts: ['Standard VI(A) Disclosure of Conflicts', 'Standard II(B) Market Manipulation', 'Standard III(D) Performance Presentation', 'Standard VII(A)'], a: 0, why: 'Beneficial ownership that could impair independence must be disclosed prominently. Omission breaches Standard VI(A).', ref: 'Standard VI(A) \u2014 Disclosure of Conflicts' },
+      { text: 'Which action best satisfies Standard V(B), Communication with Clients?', given: null, opts: ['Presenting projections as certainties', 'Distinguishing fact from opinion', 'Omitting the process used', 'Reporting only favourable results'], a: 1, why: 'Members must distinguish between fact and opinion and describe the basic process by which conclusions were reached.', ref: 'Standard V(B) \u2014 Communication with Clients' },
+    ],
+  };
+
+  GENERIC_CARDS(name) {
+    return [
+      { kicker: 'ORIENTATION', title: name + ' \u2014 what the examiners actually test', body: 'Start with the shape of the topic: the vocabulary, the two or three relationships that drive every calculation, and where the readings expect judgement instead of arithmetic.', formula: null, exam: 'Skim the learning outcome verbs. "Calculate" and "interpret" carry very different question styles.' },
+      { kicker: 'THE MECHANISM', title: 'One relationship does most of the work', body: 'Nearly every question in this area reduces to a single cause-and-effect chain. Learn it in words first, then in symbols — you will recognise distractors much faster.', formula: null, exam: 'When a stem gives you more data than you need, identify the relationship before you compute anything.' },
+      { kicker: 'COMMON TRAPS', title: 'Where candidates lose easy marks', how: null, body: 'Sign conventions, units and confidence levels. Write down what the question asks for before you start, and re-read the final sentence of the stem.', formula: null, exam: 'If two answer choices differ only by a sign, the question is testing direction, not magnitude.' },
+    ];
+  }
+
+  GENERIC_QUIZ(name) {
+    return [
+      { text: 'Which approach best describes how ' + name.toLowerCase() + ' questions are usually framed on the exam?', given: null, opts: ['Pure recall of definitions', 'Applying one relationship to given data', 'Long multi-page derivations', 'Opinion-based judgement only'], a: 1, why: 'The readings reward applying a single relationship to supplied data. Recall alone is rarely enough, and derivations are out of scope.', ref: name + ' \u2014 introductory reading' },
+      { text: 'Before computing, the most efficient first step in a quantitative item is to:', given: null, opts: ['Convert every input to decimals', 'Identify what the question asks for', 'Compute all intermediate values', 'Eliminate the extreme answers'], a: 1, why: 'Naming the target quantity prevents the most common error — solving correctly for the wrong thing.', ref: name + ' \u2014 exam technique' },
+      { text: 'Two answer choices are identical except for their sign. This most likely signals a question about:', given: null, opts: ['Magnitude', 'Direction of the effect', 'Rounding', 'Units'], a: 1, why: 'Mirrored answers are a direction test. Establish the sign of the relationship before you calculate.', ref: name + ' \u2014 exam technique' },
+    ];
+  }
+
+  variant() { return this.state._v ?? this.props.variant ?? 'b'; }
+
+  examObj() { return this.state.exam ? this.DATA[this.state.exam] : null; }
+
+  topicList() {
+    const e = this.examObj();
+    if (!e) return [];
+    if (this.state.exam === 'CFA') {
+      const t = e.topics;
+      return this.state.level === 'L1' ? t : this.state.level === 'L2' ? t.slice(1, 9) : t.slice(4);
+    }
+    return this.state.level === 'P1' ? e.topics.slice(0, 4) : e.topics.slice(4);
+  }
+
+  topicObj() {
+    const k = this.state.topicKey;
+    return this.topicList().find(t => t.key === k) || this.topicList()[0] || null;
+  }
+
+  cardsFor() {
+    const t = this.topicObj();
+    if (!t) return this.GENERIC_CARDS('This topic');
+    return this.CARDS[t.key] || this.GENERIC_CARDS(t.name);
+  }
+
+  quizFor() {
+    const t = this.topicObj();
+    if (!t) return this.GENERIC_QUIZ('This topic');
+    return this.QUIZ[t.key] || this.GENERIC_QUIZ(t.name);
+  }
+
+  componentDidMount() {
+    this._iv = setInterval(() => {
+      if (this.state.screen === 'quiz') this.setState(s => ({ elapsed: s.elapsed + 1 }));
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  go(screen) { return () => this.setState({ screen }); }
+
+  mmss(sec) {
+    const m = Math.floor(sec / 60), s = sec % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  answer(i) {
+    return () => {
+      if (this.state.chosen !== null) return;
+      const q = this.quizFor()[this.state.qIdx];
+      this.setState(s => ({
+        chosen: i,
+        answers: s.answers.concat([{ i, ok: i === q.a }]),
+        qTimes: s.qTimes.concat([18 + ((s.qIdx * 13) % 27)]),
+      }));
+    };
+  }
+
+  advance = () => {
+    if (this.state.chosen === null) return;
+    const total = this.quizFor().length;
+    if (this.state.qIdx + 1 >= total) { this.setState({ screen: 'results' }); return; }
+    this.setState(s => ({ qIdx: s.qIdx + 1, chosen: null }));
+  };
+
+  startQuiz = () => this.setState({ screen: 'quiz', qIdx: 0, chosen: null, answers: [], qTimes: [], elapsed: 0 });
+
+  openTopic(key) {
+    return () => this.setState({ screen: 'snapshot', topicKey: key, cardIdx: 0, revealed: false, dragX: 0 });
+  }
+
+  nextCard = () => {
+    const n = this.cardsFor().length;
+    if (this.state.cardIdx + 1 >= n) { this.startQuiz(); return; }
+    this.setState(s => ({ cardIdx: s.cardIdx + 1, revealed: false, dragX: 0 }));
+  };
+  prevCard = () => this.setState(s => ({ cardIdx: Math.max(0, s.cardIdx - 1), revealed: false, dragX: 0 }));
+
+  onDown = e => { this._x0 = e.clientX; this._moved = false; this.setState({ dragging: true }); };
+  onMove = e => {
+    if (!this.state.dragging) return;
+    const dx = e.clientX - this._x0;
+    if (Math.abs(dx) > 4) this._moved = true;
+    this.setState({ dragX: dx });
+  };
+  onUp = () => {
+    const dx = this.state.dragX;
+    this.setState({ dragging: false, dragX: 0 });
+    if (dx < -70) this.nextCard();
+    else if (dx > 70) this.prevCard();
+  };
+  flip = () => { if (!this._moved) this.setState(s => ({ revealed: !s.revealed })); };
+
+  renderVals() {
+    const st = this.state, v = this.variant();
+    const ink = '#16233b', brass = '#9a6b2f', sage = '#3f6b57', rust = '#9b3b34', muted = '#6f7a90';
+    const e = this.examObj();
+    const topics = this.topicList();
+    const topic = this.topicObj();
+    const cards = this.cardsFor();
+    const cardIdx = Math.min(st.cardIdx, cards.length - 1);
+    const card = cards[cardIdx] || { kicker: '', title: '', body: '', formula: null, exam: '' };
+    const quiz = this.quizFor();
+    const qIdx = Math.min(st.qIdx, quiz.length - 1);
+    const q = quiz[qIdx] || { text: '', opts: [], a: 0, why: '', ref: '', given: null };
+    const correct = st.answers.filter(a => a.ok).length;
+    const dark = v === 'c';
+
+    const railDef = [
+      ['01', 'Onboarding', 'onboard'], ['02', 'Choose exam', 'exam'], ['03', 'Choose level', 'level'],
+      ['04', 'Home', 'home'], ['05', 'Topics', 'topics'], ['06', 'Snapshot cards', 'snapshot'],
+      ['07', 'Quiz', 'quiz'], ['08', 'Results', 'results'], ['09', 'Profile', 'profile'],
+    ];
+
+    const variantDefs = [
+      ['a', 'A · Ledger', 'Dense rows, exam weights, hairline rules'],
+      ['b', 'B · Ring tiles', 'Two-up tiles with progress rings'],
+      ['c', 'C · Index', 'Editorial numerals, dark snapshot cards'],
+    ];
+
+    const overall = topics.length ? Math.round(topics.reduce((a, t) => a + t.pct, 0) / topics.length) : 0;
+    const resume = topics.find(t => t.pct > 0 && t.pct < 60) || topics[0] || { name: '', pct: 0, cards: 0, key: null };
+
+    const settingDefs = [
+      ['Spaced repetition', 'Resurface missed questions on a schedule'],
+      ['Daily reminder', '19:30 — after work, before dinner'],
+      ['Timed quizzes', 'Show a per-session clock while answering'],
+      ['Download over Wi-Fi only', 'Keeps snapshots available offline'],
+    ];
+
+    const missed = st.answers.length ? st.answers.length - correct : 0;
+    const pct = st.answers.length ? Math.round((correct / st.answers.length) * 100) : 0;
+
+    return {
+      rail: railDef.map(([num, label, s]) => ({
+        num, label, go: this.go(s),
+        bg: st.screen === s ? ink : 'transparent',
+        fg: st.screen === s ? '#f7f4ee' : ink,
+        numFg: st.screen === s ? 'rgba(247,244,238,.55)' : brass,
+      })),
+      variants: variantDefs.map(([k, name, desc]) => ({
+        name, desc, go: () => this.setState({ _v: k }),
+        bd: v === k ? ink : 'rgba(22,35,59,.16)',
+        bg: v === k ? '#fffdfa' : 'transparent',
+        fg: ink,
+      })),
+
+      isOnboard: st.screen === 'onboard', isExam: st.screen === 'exam', isLevel: st.screen === 'level',
+      isHome: st.screen === 'home', isTopics: st.screen === 'topics', isSnap: st.screen === 'snapshot',
+      isQuiz: st.screen === 'quiz', isResults: st.screen === 'results', isProfile: st.screen === 'profile',
+      isA: v === 'a', isB: v === 'b', isC: v === 'c',
+      variantTag: v === 'a' ? 'LEDGER' : v === 'b' ? 'RING TILES' : 'INDEX',
+
+      goExam: this.go('exam'), goLevel: st.exam ? this.go('level') : () => {}, goHome: st.level ? this.go('home') : () => {},
+      goTopics: this.go('topics'), goProfile: this.go('profile'), goSnap: this.go('snapshot'),
+      retake: this.startQuiz,
+      startPlacement: () => this.setState({
+        level: st.level || (e ? e.levels[0].key : null), topicKey: null,
+        screen: 'quiz', qIdx: 0, chosen: null, answers: [], qTimes: [], elapsed: 0,
+      }),
+
+      pickCFA: () => this.setState({ exam: 'CFA', level: null }),
+      pickFRM: () => this.setState({ exam: 'FRM', level: null }),
+      cfaBd: st.exam === 'CFA' ? ink : 'rgba(22,35,59,.16)', cfaBg: st.exam === 'CFA' ? '#fffdfa' : 'transparent',
+      frmBd: st.exam === 'FRM' ? ink : 'rgba(22,35,59,.16)', frmBg: st.exam === 'FRM' ? '#fffdfa' : 'transparent',
+      examCtaBg: st.exam ? ink : 'rgba(22,35,59,.14)', examCtaFg: st.exam ? '#f7f4ee' : '#8c8578',
+      examCursor: st.exam ? 'pointer' : 'not-allowed',
+
+      examName: e ? e.name : 'CFA', examDate: e ? e.date : '',
+      levelName: st.level && e ? (e.levels.find(l => l.key === st.level) || {}).name : '',
+      levels: (e ? e.levels : []).map(l => ({
+        short: l.short, name: l.name, note: l.note,
+        go: () => this.setState({ level: l.key, topicKey: null }),
+        bd: st.level === l.key ? ink : 'rgba(22,35,59,.16)',
+        bg: st.level === l.key ? '#fffdfa' : 'transparent',
+        dotBd: st.level === l.key ? ink : 'rgba(22,35,59,.2)',
+        dotBg: st.level === l.key ? ink : 'transparent',
+        dotFg: st.level === l.key ? '#f7f4ee' : muted,
+      })),
+      levelCtaBg: st.level ? ink : 'rgba(22,35,59,.14)', levelCtaFg: st.level ? '#f7f4ee' : '#8c8578',
+      levelCursor: st.level ? 'pointer' : 'not-allowed',
+
+      overallPct: overall, overallDeg: (overall * 3.6) + 'deg',
+      daysLeft: 112, streak: 9, dueCount: 14, topicCount: topics.length,
+      week: ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((label, i) => ({
+        label,
+        bg: i < 5 ? brass : i === 5 ? 'rgba(154,107,47,.35)' : 'transparent',
+        bd: i < 6 ? 'transparent' : 'rgba(22,35,59,.16)',
+      })),
+      resumeName: resume.name, resumePct: resume.pct, resumeNote: resume.cards + ' snapshot cards · quiz unlocked',
+      resumeTopic: this.openTopic(resume.key),
+
+      topics: topics.map((t, i) => ({
+        name: t.name, weight: t.weight, pct: t.pct, cards: t.cards, qs: t.qs, blurb: t.blurb,
+        num: String(i + 1).padStart(2, '0'),
+        go: this.openTopic(t.key),
+        deg: (t.pct * 3.6) + 'deg',
+        barBg: t.pct >= 70 ? sage : t.pct >= 35 ? brass : 'rgba(22,35,59,.45)',
+        pctFg: t.pct >= 70 ? sage : t.pct >= 35 ? brass : muted,
+        numFg: t.pct > 0 ? brass : 'rgba(22,35,59,.22)',
+        mastery: t.pct >= 70 ? 'strong' : t.pct >= 35 ? 'building' : t.pct > 0 ? 'shaky' : 'not started',
+        pips: Array.from({ length: 10 }, (_, k) => ({
+          bg: k < Math.round(t.pct / 10) ? ink : 'rgba(22,35,59,.14)',
+        })),
+      })),
+
+      topicName: topic ? topic.name : '',
+      card, cardNo: cardIdx + 1, cardTotal: cards.length,
+      cardDots: cards.map((_, i) => ({ bg: i <= cardIdx ? (dark ? '#e0b26a' : ink) : (dark ? 'rgba(247,244,238,.22)' : 'rgba(22,35,59,.14)') })),
+      revealed: st.revealed,
+      flipHint: st.revealed ? 'Tap to hide · drag to move on' : 'Tap the card for the exam angle',
+      dragT: 'translateX(' + st.dragX + 'px) rotate(' + (st.dragX / 40) + 'deg)',
+      onDown: this.onDown, onMove: this.onMove, onUp: this.onUp, flip: this.flip,
+      nextCard: this.nextCard, prevCard: this.prevCard,
+      nextLabel: cardIdx + 1 >= cards.length ? 'Start the quiz →' : 'Next card',
+      toggleBookmark: () => this.setState(s => ({ cardBookmarks: Object.assign({}, s.cardBookmarks, { [cardIdx]: !s.cardBookmarks[cardIdx] }) })),
+      bmLabel: st.cardBookmarks[cardIdx] ? '★ Saved' : '☆ Save',
+      bmFg: st.cardBookmarks[cardIdx] ? brass : (dark ? 'rgba(247,244,238,.6)' : muted),
+
+      snapBg: dark ? '#131c2e' : (v === 'a' ? '#f7f4ee' : '#f2eee5'),
+      snapFg: dark ? '#f4f1ea' : ink,
+      snapBody: dark ? 'rgba(244,241,234,.78)' : '#3d4a63',
+      snapMuted: dark ? 'rgba(244,241,234,.5)' : muted,
+      cardBg: dark ? '#1c2740' : '#fffdfa',
+      cardBd: dark ? 'rgba(244,241,234,.16)' : 'rgba(22,35,59,.14)',
+      stackBg1: dark ? '#182238' : '#fbf8f2', stackBg2: dark ? '#151e32' : '#f7f3ea',
+      stackBd: dark ? 'rgba(244,241,234,.1)' : 'rgba(22,35,59,.09)',
+      snapRadius: v === 'a' ? '2px' : v === 'b' ? '10px' : '6px',
+      cardPad: v === 'a' ? '20px' : '24px',
+      cardShadow: v === 'b' ? '0 8px 26px rgba(22,35,59,.12)' : 'none',
+      kickerFg: dark ? '#e0b26a' : brass,
+      bigNumSize: dark ? '52px' : '30px',
+      bigNumFg: dark ? 'rgba(244,241,234,.22)' : 'rgba(22,35,59,.16)',
+      cardTitleSize: dark ? '27px' : '24px',
+      formulaBd: dark ? 'rgba(244,241,234,.16)' : 'rgba(22,35,59,.12)',
+      formulaBg: dark ? 'rgba(244,241,234,.05)' : '#f5f1e7',
+      snapCtaBg: dark ? '#e0b26a' : ink, snapCtaFg: dark ? '#131c2e' : '#f7f4ee',
+
+      q, qNo: qIdx + 1, qTotal: quiz.length,
+      qDots: quiz.map((_, i) => ({ bg: i < qIdx ? (st.answers[i] && st.answers[i].ok ? sage : rust) : i === qIdx ? ink : 'rgba(22,35,59,.14)' })),
+      options: q.opts.map((text, i) => {
+        const done = st.chosen !== null, isPick = st.chosen === i, isAns = q.a === i;
+        return {
+          text, go: this.answer(i), cursor: done ? 'default' : 'pointer',
+          bd: done && isAns ? sage : done && isPick ? rust : 'rgba(22,35,59,.16)',
+          bg: done && isAns ? 'rgba(63,107,87,.08)' : done && isPick ? 'rgba(155,59,52,.07)' : '#fffdfa',
+          mark: done && isAns ? '✓' : done && isPick ? '✕' : String.fromCharCode(65 + i),
+          markBd: done && isAns ? sage : done && isPick ? rust : 'rgba(22,35,59,.2)',
+          markBg: done && isAns ? sage : done && isPick ? rust : 'transparent',
+          markFg: done && (isAns || isPick) ? '#fffdfa' : muted,
+        };
+      }),
+      showFeedback: st.chosen !== null,
+      fbTitle: st.chosen === q.a ? 'CORRECT — NICE WORK' : 'NOT QUITE',
+      fbFg: st.chosen === q.a ? sage : rust,
+      fbBd: st.chosen === q.a ? 'rgba(63,107,87,.35)' : 'rgba(155,59,52,.3)',
+      fbBg: st.chosen === q.a ? 'rgba(63,107,87,.07)' : 'rgba(155,59,52,.06)',
+      advLabel: st.chosen === null ? 'Choose an answer' : (qIdx + 1 >= quiz.length ? 'See results' : 'Next question'),
+      advBg: st.chosen === null ? 'rgba(22,35,59,.14)' : ink,
+      advFg: st.chosen === null ? '#8c8578' : '#f7f4ee',
+      advCursor: st.chosen === null ? 'not-allowed' : 'pointer',
+      advance: this.advance,
+      timeLabel: this.mmss(st.elapsed), timeFg: st.elapsed > 300 ? rust : muted,
+      toggleQBookmark: () => this.setState(s => ({ bookmarks: Object.assign({}, s.bookmarks, { [qIdx]: !s.bookmarks[qIdx] }) })),
+      qBmLabel: st.bookmarks[qIdx] ? '★ Bookmarked' : '☆ Bookmark',
+      qBmFg: st.bookmarks[qIdx] ? brass : muted,
+
+      correctCount: correct, scorePct: pct,
+      scoreDeg: (pct * 3.6) + 'deg', scoreRing: pct >= 70 ? sage : pct >= 40 ? brass : rust,
+      resultHead: pct >= 80 ? 'That topic is holding up well.' : pct >= 50 ? 'Solid — two ideas need another pass.' : 'Worth a second run at this one.',
+      resultNote: pct >= 80 ? 'You are ahead of the average candidate here. Keep it warm with the review queue.' : 'Nothing unusual — this is exactly what the review queue is for.',
+      elapsedLabel: this.mmss(st.elapsed),
+      avgLabel: st.answers.length ? this.mmss(Math.round(st.elapsed / st.answers.length)) : '0:00',
+      newMastery: topic ? (topic.pct + 8) + '% (+8)' : '',
+      breakdown: quiz.map((qq, i) => {
+        const a = st.answers[i];
+        return {
+          text: qq.text.length > 74 ? qq.text.slice(0, 74) + '…' : qq.text,
+          mark: a ? (a.ok ? '✓' : '✕') : '–',
+          bg: a ? (a.ok ? sage : rust) : 'rgba(22,35,59,.14)',
+          fg: a ? '#fffdfa' : muted,
+          note: a ? (a.ok ? 'Correct · ' + qq.ref : 'Missed · ' + qq.ref) : 'Not answered',
+          time: st.qTimes[i] ? st.qTimes[i] + 's' : '—',
+        };
+      }),
+      missedCount: missed,
+
+      showTabs: ['home', 'topics', 'profile'].indexOf(st.screen) > -1,
+      tabs: [
+        { label: 'Home', s: 'home', r: '3px' },
+        { label: 'Topics', s: 'topics', r: '50%' },
+        { label: 'Review', s: 'topics', r: '3px' },
+        { label: 'Profile', s: 'profile', r: '50%' },
+      ].map(t => ({
+        label: t.label, go: this.go(t.s), iconR: t.r,
+        fg: st.screen === t.s ? ink : '#9aa1af',
+        iconBg: st.screen === t.s ? ink : 'transparent',
+      })),
+
+      settings: settingDefs.map(([name, note], i) => ({
+        name, note,
+        go: () => this.setState(s => { const n = s.settings.slice(); n[i] = !n[i]; return { settings: n }; }),
+        trackBg: st.settings[i] ? sage : 'rgba(22,35,59,.2)',
+        knobLeft: st.settings[i] ? '21px' : '3px',
+      })),
+      bmCount: Object.values(st.bookmarks).filter(Boolean).length + Object.values(st.cardBookmarks).filter(Boolean).length,
+    };
+  }
+}
+</script>
+</body>
+</html>
