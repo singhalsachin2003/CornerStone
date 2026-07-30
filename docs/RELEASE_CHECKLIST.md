@@ -188,6 +188,19 @@ eas build --profile production --platform android
 Produces an **`.aab`** (Play requires app bundles, not APKs). `versionCode` is auto-incremented
 by EAS, so you never set it by hand.
 
+**Build queued 30 July 2026** — `versionCode` 1 → 2, signed with the same keystore as the preview
+builds (`Build Credentials Tmy0coIebz`, the default), so it is upgrade-compatible with what you
+already installed.
+
+<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/af8a5edf-0e23-4b4c-bf5e-c6554fe6d953>
+
+```bash
+eas build:list --limit 1 --platform android   # status + the .aab download URL when finished
+```
+
+Both preview builds spent **4–5 hours** in the free-tier queue, so expect the same here rather
+than the 10–35 minutes a paid plan sees.
+
 Upload to **Testing → Internal testing** first, not straight to Production:
 
 - [ ] Create a release, upload the `.aab`
