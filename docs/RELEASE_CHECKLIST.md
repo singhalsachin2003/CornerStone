@@ -92,6 +92,23 @@ current directory. Save all four together — the file alone is useless without 
 Put them in a password manager, not just this laptop, and then delete the `.jks` from the repo
 directory (`.gitignore` already blocks `*.jks`, but do not rely on that as your only guard).
 
+**Downloaded 30 July 2026.** The identifiers below are *not* secret — they are derivable from any
+signed artifact and Play Console displays them — so they live here as a verification anchor. The
+keystore password and key password are secret and belong only in a password manager.
+
+| | |
+| --- | --- |
+| Key alias | `d003461026a518e508da4affee7387c8` |
+| SHA256 | `E7:CD:2E:98:74:0C:D8:46:2C:92:E7:80:2C:D2:85:14:B1:E8:ED:B6:8E:C0:CE:B3:84:91:49:EA:26:03:2D:A6` |
+| Certificate validity | 29 Jul 2026 → 14 Dec 2053 |
+
+After the first upload, Play Console → **App integrity** shows the upload certificate
+fingerprint. It must equal the SHA256 above. To check a local keystore matches:
+
+```bash
+keytool -list -v -keystore @singhalsachin2003__cornerstone.jks | grep SHA256
+```
+
 **If you lose this key you can never update the app again.** You would have to publish a new
 listing under a new package name and lose every install and review. This is the single most
 expensive mistake available at this stage.
