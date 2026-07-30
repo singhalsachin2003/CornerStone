@@ -214,13 +214,17 @@ Done:
   screenshots in `store/screenshots/`. Regenerate the graphic with `npm run store:graphic`.
 - **Docs** — `docs/PRIVACY.md` (with Play Data Safety answers) and `docs/STORE_LISTING.md`
   (trademark-safe listing copy, asset status, content-rating guidance).
+- **EAS project linked** — `@singhalsachin2003/cornerstone`; `owner` and `extra.eas.projectId`
+  are in `app.json`, and `versionCode` is tracked remotely so it auto-increments.
+- **Package name frozen** — `io.cornerstone.study`, confirmed final. Permanent from the first
+  Play upload.
+- **Privacy policy published** — <https://singhalsachin2003.github.io/CornerStone/PRIVACY.html>,
+  served by GitHub Pages from `main` → `/docs`. This is the URL Play Console links to.
 
 Still outstanding:
-- **`eas init`** — needs your Expo account; sets `owner` and `extra.eas.projectId`. Until then
-  `eas build` cannot run.
-- **Signing keystore** — let EAS generate and manage it, but note the key is permanent.
-- **Privacy policy URL** — host `docs/PRIVACY.md` publicly (GitHub Pages works) and paste the
-  link into Play Console.
+- **Signing keystore backup** — EAS generated and stores it, but export your own copy via
+  `eas credentials --platform android`. Interactive only; see the release checklist. Losing this
+  key means never being able to update the app.
 - **Crash reporting** — none by design in v1.0. Play Console's Android vitals reports crashes
   and ANRs for Play-distributed apps with no SDK and no egress from the app itself, which
   covers this without compromising the privacy position. `ErrorBoundary.componentDidCatch` is

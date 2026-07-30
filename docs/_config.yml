@@ -1,0 +1,9 @@
+title: Cornerstone
+description: A study app for CFA and FRM candidates. Nothing leaves your device.
+
+# The public site exists to serve the privacy policy Play Console links to.
+# The release checklist and store-listing draft are working notes, not pages —
+# still readable in the repo, just not published as a website.
+exclude:
+  - RELEASE_CHECKLIST.md
+  - STORE_LISTING.md

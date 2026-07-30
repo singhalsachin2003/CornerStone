@@ -1,6 +1,6 @@
 # Privacy Policy — Cornerstone
 
-**Last updated: 29 July 2026**
+**Last updated: 30 July 2026**
 
 Cornerstone is a study app for CFA® and FRM® candidates, published by Sachin Singhal.
 
@@ -65,7 +65,7 @@ Professionals.
 
 ## Contact
 
-Questions about this policy: **[ADD YOUR CONTACT EMAIL BEFORE PUBLISHING]**
+Questions about this policy: **singhalsachin2003@gmail.com**
 
 ---
 

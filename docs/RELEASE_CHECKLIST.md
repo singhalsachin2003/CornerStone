@@ -3,16 +3,15 @@
 Everything in here needs your accounts or your judgement. The code side is done.
 
 Verified state at time of writing: `eas-cli` 21.2.0 installed, logged in as **singhalsachin2003**,
-repo is **private**, `app.json` version `1.0.0`, `versionCode` managed remotely by EAS.
+repo is **public**, `app.json` version `1.0.0`, `versionCode` managed remotely by EAS.
 
 ---
 
-## Step 0 — Prerequisites
+## Step 0 — Prerequisites ✅ DONE
 
 - [x] **Google Play Developer account** — done.
-- [ ] Confirm the **package name is final**: `io.cornerstone.study`. It is permanent from the
-      first upload and can never be changed. Change it in `app.json` now if you want something
-      else — this is the last moment it is free to do so.
+- [x] **Package name is final**: `io.cornerstone.study`. Confirmed 30 July 2026. It is now
+      permanent from the first upload and can never be changed.
 
 ---
 
@@ -99,34 +98,34 @@ expensive mistake available at this stage.
 
 ---
 
-## Step 3 — Host the privacy policy
+## Step 3 — Host the privacy policy ✅ DONE
 
-Play will not let you submit without a **publicly reachable URL**. The source is
-`docs/PRIVACY.md` in this repo.
+Play will not let you submit without a **publicly reachable URL**. The repo was made public on
+30 July 2026 and GitHub Pages serves `main` → `/docs`.
 
-**This repo is private, so GitHub Pages will not serve it on a free plan.** Pick one:
+**Paste this into Play Console → Policy → App content → Privacy policy:**
 
-| Option | Effort | Notes |
-| --- | --- | --- |
-| **Separate public repo + GitHub Pages** (recommended) | ~5 min | Keeps your code private |
-| Make this repo public | 1 min | Simplest, but publishes your source |
-| Netlify Drop ([app.netlify.com/drop](https://app.netlify.com/drop)) | ~2 min | Drag a folder, get a URL, no account needed to start |
-
-Recommended route:
-
-```bash
-mkdir -p ~/cornerstone-privacy && cd ~/cornerstone-privacy
-cp /Users/sachin/CornerStone/docs/PRIVACY.md index.md
-git init && git add -A && git commit -m "Privacy policy"
-gh repo create cornerstone-privacy --public --source=. --push
+```
+https://singhalsachin2003.github.io/CornerStone/PRIVACY.html
 ```
 
-Then in that repo: **Settings → Pages → Source: main / root → Save**. Your URL will be
-`https://singhalsachin2003.github.io/cornerstone-privacy/`.
+- [x] Contact email set to `singhalsachin2003@gmail.com` in `PRIVACY.md`. Play rejects a
+      placeholder, and the address must be one you actually monitor — replies to the policy
+      and the listing both land there.
+- [x] `docs/index.md` gives the site root a landing page instead of a 404, since Play and
+      users will both trim the URL.
+- [x] `docs/_config.yml` keeps this checklist and the store-listing draft out of the built
+      site. They stay readable in the repo; they just are not published as web pages.
 
-- [ ] **Before publishing, replace the contact placeholder** in `PRIVACY.md`:
-      `[ADD YOUR CONTACT EMAIL BEFORE PUBLISHING]` → a real address you monitor. Play requires a
-      working contact email and will reject a placeholder.
+Pages redeploys on every push to `main` and takes a minute or two. After changing `PRIVACY.md`,
+confirm the live copy actually updated before relying on it:
+
+```bash
+curl -s https://singhalsachin2003.github.io/CornerStone/PRIVACY.html | grep -i 'last updated'
+```
+
+**Use the same contact email everywhere** — privacy policy, Play Console listing, and the
+developer account. A mismatch is a common review query.
 
 ---
 
