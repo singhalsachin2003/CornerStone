@@ -214,10 +214,16 @@ already installed.
 **Superseded — do not upload.** It shipped the design mock's placeholder name as the profile
 default, so a fresh install greeted every candidate as "Anaya Kulkarni".
 
-**Build queued 31 July 2026** — `versionCode` 2 → 3, same keystore. Carries the guest-name fix.
-This is the one to upload.
+**Cancelled 31 July 2026** — `versionCode` 3, `2aa8c7b3`. Queued with only the guest-name fix,
+then cancelled a few minutes in to review the rest of the app first. Cancelling still burns the
+`versionCode`, which is why the next one is 4 and not 3; that is harmless, Play only requires
+the number to increase.
 
-<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/2aa8c7b3-56b8-447c-8af6-5579668636cd>
+**Build queued 31 July 2026** — `versionCode` 3 → 4, same keystore. Carries the guest-name fix
+plus the pre-launch review fixes (dead sign-in link, exam countdown past its sitting date,
+review-queue plural, unreadable-store recovery). **This is the one to upload.**
+
+<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/3ee936d5-4115-4be4-b3b6-c81573dff707>
 
 ```bash
 eas build:list --limit 1 --platform android   # status + the .aab download URL when finished
