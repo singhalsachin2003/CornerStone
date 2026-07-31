@@ -1,4 +1,4 @@
-import { currentStreak, weekStrip, weightedProgress } from '@/store/useStudyStore';
+import { GUEST_NAME, currentStreak, initialsFor, weekStrip, weightedProgress } from '@/store/useStudyStore';
 import { addDays, dayKey } from '@/store/review';
 import { formatExamDate, parseISODate, topicsFor } from '@/content';
 
@@ -44,6 +44,33 @@ describe('currentStreak', () => {
       d.setDate(d.getDate() - 1);
     }
     expect(count).toBe(3);
+  });
+});
+
+describe('initialsFor', () => {
+  it('takes the first letter of the first two words', () => {
+    expect(initialsFor('Anaya Kulkarni')).toBe('AK');
+  });
+
+  it('ignores words past the second', () => {
+    expect(initialsFor('Jean Baptiste Grenouille')).toBe('JB');
+  });
+
+  it('handles a single name', () => {
+    expect(initialsFor('Prakash')).toBe('P');
+  });
+
+  it('tolerates stray whitespace', () => {
+    expect(initialsFor('  mei   chen  ')).toBe('MC');
+  });
+
+  it('falls back to the guest initial for unusable input', () => {
+    expect(initialsFor('   ')).toBe('G');
+    expect(initialsFor('')).toBe('G');
+  });
+
+  it('gives the guest placeholder a single initial', () => {
+    expect(initialsFor(GUEST_NAME)).toBe('G');
   });
 });
 

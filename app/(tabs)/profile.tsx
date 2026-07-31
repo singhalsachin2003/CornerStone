@@ -6,7 +6,13 @@ import { BackLink, Eyebrow, Toggle } from '@/components/primitives';
 import { color, font, gutter, radius } from '@/theme/tokens';
 import { type } from '@/theme/type';
 import { EXAMS, PATHWAYS, formatExamDate, topicsFor } from '@/content';
-import { Settings, TopicVariant, currentStreak, useStudyStore } from '@/store/useStudyStore';
+import {
+  GUEST_NAME,
+  Settings,
+  TopicVariant,
+  currentStreak,
+  useStudyStore,
+} from '@/store/useStudyStore';
 import {
   cancelDailyReminder,
   reminderTimeLabel,
@@ -67,13 +73,17 @@ export default function Profile() {
   // otherwise. If scheduling fails we leave the switch off.
   const [reminderBlocked, setReminderBlocked] = useState(false);
 
-  const [editingName, setEditingName] = useState(false);
-  const [draftName, setDraftName] = useState(name);
+  // Until the candidate names themselves the store holds the guest placeholder,
+  // which is a prompt rather than a value: the field opens empty so they type over
+  // nothing, and clearing the field puts them back to guest.
+  const isGuest = name === GUEST_NAME;
 
-  // An empty field keeps the previous name rather than leaving a blank greeting.
+  const [editingName, setEditingName] = useState(false);
+  const [draftName, setDraftName] = useState('');
+
   const commitName = useCallback(() => {
     const trimmed = draftName.trim();
-    if (trimmed) setName(trimmed);
+    setName(trimmed || GUEST_NAME);
     setEditingName(false);
   }, [draftName, setName]);
 
@@ -142,6 +152,8 @@ export default function Profile() {
                 selectTextOnFocus
                 maxLength={40}
                 returnKeyType="done"
+                placeholder="Your name"
+                placeholderTextColor={color.muted}
                 accessibilityLabel="Your name"
                 style={[
                   type.serif22,
@@ -156,13 +168,15 @@ export default function Profile() {
             ) : (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`Your name is ${name}. Tap to edit.`}
+                accessibilityLabel={
+                  isGuest ? 'Add your name.' : `Your name is ${name}. Tap to edit.`
+                }
                 onPress={() => {
-                  setDraftName(name);
+                  setDraftName(isGuest ? '' : name);
                   setEditingName(true);
                 }}
               >
-                <Text style={type.serif22}>{name}</Text>
+                <Text style={[type.serif22, isGuest && { color: color.muted }]}>{name}</Text>
               </Pressable>
             )}
             <Text style={[type.secondary, { marginTop: 4 }]}>

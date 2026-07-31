@@ -97,13 +97,35 @@ const initialSettings: Settings = {
 /** Mastery moves toward the session score rather than jumping to it. */
 const LEARNING_RATE = 0.35;
 
+/**
+ * Shown until the candidate names themselves on the profile screen. The app never
+ * asks for a name, so this is what the greeting and avatar render on a fresh
+ * install — it has to read as a placeholder, not as somebody else's account.
+ */
+export const GUEST_NAME = 'Guest';
+
+/** The design mock's placeholder, shipped as the default through versionCode 2. */
+const LEGACY_PLACEHOLDER_NAME = 'Anaya Kulkarni';
+
+/** Up to two initials, falling back to the guest initial for unusable input. */
+export function initialsFor(name: string): string {
+  return (
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase() ?? '')
+      .join('') || GUEST_NAME[0]
+  );
+}
+
 export const useStudyStore = create<StudyState>()(
   persist(
     (set, get) => ({
       hydrated: false,
       onboarded: false,
-      name: 'Anaya Kulkarni',
-      initials: 'AK',
+      name: GUEST_NAME,
+      initials: initialsFor(GUEST_NAME),
 
       exam: null,
       level: null,
@@ -138,17 +160,7 @@ export const useStudyStore = create<StudyState>()(
         set((s) => ({ exam, level, levelByExam: { ...s.levelByExam, [exam]: level } })),
       setPathway: (pathway) => set({ pathway }),
       setVariant: (variant) => set({ variant }),
-      setName: (name) =>
-        set({
-          name,
-          initials:
-            name
-              .split(/\s+/)
-              .filter(Boolean)
-              .slice(0, 2)
-              .map((w) => w[0]?.toUpperCase() ?? '')
-              .join('') || 'C',
-        }),
+      setName: (name) => set({ name, initials: initialsFor(name) }),
 
       toggleSetting: (key) =>
         set((s) => ({ settings: { ...s.settings, [key]: !s.settings[key] } })),
@@ -240,6 +252,14 @@ export const useStudyStore = create<StudyState>()(
         // current selection survives the first exam switch.
         if (state.exam && state.level && !state.levelByExam[state.exam]) {
           state.levelByExam = { ...state.levelByExam, [state.exam]: state.level };
+        }
+        // Anyone who installed a build before the guest default has the design
+        // mock's placeholder persisted. Nothing ever wrote that name deliberately —
+        // the app has no field that asks for one at install time — so treat it as
+        // the unset value and show the guest placeholder instead.
+        if (state.name === LEGACY_PLACEHOLDER_NAME) {
+          state.name = GUEST_NAME;
+          state.initials = initialsFor(GUEST_NAME);
         }
         state.setHydrated();
       },
