@@ -219,11 +219,19 @@ then cancelled a few minutes in to review the rest of the app first. Cancelling 
 `versionCode`, which is why the next one is 4 and not 3; that is harmless, Play only requires
 the number to increase.
 
-**Build queued 31 July 2026** — `versionCode` 3 → 4, same keystore. Carries the guest-name fix
-plus the pre-launch review fixes (dead sign-in link, exam countdown past its sitting date,
-review-queue plural, unreadable-store recovery). **This is the one to upload.**
+**Cancelled 31 July 2026** — `versionCode` 4, `3ee936d5`. Superseded by the trademark review
+before it left the queue.
 
-<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/3ee936d5-4115-4be4-b3b6-c81573dff707>
+**Build queued 31 July 2026** — `versionCode` 4 → 5, same keystore, commit `7929da7`. Carries
+everything: the guest-name fix, the pre-launch review fixes (dead sign-in link, exam countdown
+past its sitting date, review-queue plural, unreadable-store recovery) and the trademark
+hardening. **This is the one to upload.**
+
+<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/138813ba-4302-4f7e-8c80-91dc6884f2b2>
+
+Three cancelled `versionCode`s in a row is the cost of queueing before the review was done —
+cheap against the free plan's 15 Android builds a month, but the lesson is to batch the review
+in before queueing rather than after.
 
 ```bash
 eas build:list --limit 1 --platform android   # status + the .aab download URL when finished
