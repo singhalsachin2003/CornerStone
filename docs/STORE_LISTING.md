@@ -41,9 +41,14 @@ Unlike the package name, the store title **can** be changed later in Play Consol
 ## Short description (80 chars max)
 
 ```
-Snapshot cards and quizzes for CFA and FRM candidates. Fifteen honest minutes.
+Snapshot cards and quizzes for CFA® and FRM® candidates. Fifteen honest minutes
 ```
-(77 characters)
+(79 characters)
+
+The ® symbols matter more here than anywhere else in the listing: the short description and
+the feature graphic are the two places a reviewer or a trademark agent sees the marks first,
+and they were the only marketing surfaces carrying them bare. The trailing full stop is gone
+to keep a character in hand — with it the line is exactly 80 and any future tweak overflows.
 
 ## Full description (4000 chars max)
 

@@ -758,9 +758,13 @@ export const EXAMS: Record<ExamKey, Exam> = {
   CFA: {
     key: 'CFA',
     name: 'CFA',
-    fullName: 'Chartered Financial Analyst',
+    fullName: 'Chartered Financial Analyst®',
+    // The setup screen is the first prominent use of the marks in the app, and both
+    // bodies' trademark guidelines ask for the symbol there. The bare "CFA" used as
+    // a label elsewhere stays bare on purpose — it reads as the exam being studied,
+    // which is what nominative use is, and ® on every screen would be noise.
     description:
-      'Chartered Financial Analyst — investment analysis, valuation, portfolio management, ethics.',
+      'Chartered Financial Analyst® — investment analysis, valuation, portfolio management, ethics.',
     levelWord: '3 LEVELS',
     date: '2027-05-17',
     levels: [
@@ -791,9 +795,9 @@ export const EXAMS: Record<ExamKey, Exam> = {
   FRM: {
     key: 'FRM',
     name: 'FRM',
-    fullName: 'Financial Risk Manager',
+    fullName: 'Financial Risk Manager®',
     description:
-      'Financial Risk Manager — market, credit, operational and liquidity risk measurement.',
+      'Financial Risk Manager® — market, credit, operational and liquidity risk measurement.',
     levelWord: '2 PARTS',
     date: '2026-11-15',
     levels: [

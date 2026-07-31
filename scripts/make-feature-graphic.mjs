@@ -64,7 +64,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" v
 <text x="64" y="196" font-family="CSSerif" font-size="44" fill="${ink}">Fifteen honest minutes</text>
 <text x="64" y="248" font-family="CSSerif" font-size="44" fill="${ink}">beats three distracted hours.</text>
 
-<text x="64" y="306" font-family="CSSans" font-size="17" font-weight="500" fill="${muted}">Snapshot cards and quizzes for CFA and FRM candidates.</text>
+<text x="64" y="306" font-family="CSSans" font-size="17" font-weight="500" fill="${muted}">Snapshot cards and quizzes for CFA® and FRM® candidates.</text>
 
 <text x="64" y="444" font-family="CSSans" font-size="15" font-weight="600" fill="${ink}">38 topic areas</text>
 <text x="196" y="444" font-family="CSSans" font-size="15" font-weight="500" fill="${meta}">·</text>

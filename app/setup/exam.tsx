@@ -55,6 +55,15 @@ export default function ExamPicker() {
 
         <View style={{ flex: 1 }} />
 
+        {/* Both bodies enforce their marks actively. The full statement lives in
+            About, but this is where a candidate first sees the marks used, so the
+            non-affiliation has to be legible here too rather than only two taps away. */}
+        <Text style={[type.meta, { marginBottom: 14 }]}>
+          Not affiliated with, endorsed by or sponsored by CFA Institute or GARP. CFA® and
+          Chartered Financial Analyst® are registered trademarks owned by CFA Institute. FRM® is
+          a trademark owned by the Global Association of Risk Professionals.
+        </Text>
+
         <PrimaryButton
           label={knownLevel ? `Continue to ${EXAMS[exam!].levels.find((l) => l.key === knownLevel)?.name}` : 'Continue'}
           disabled={!exam}

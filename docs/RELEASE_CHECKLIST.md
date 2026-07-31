@@ -251,6 +251,65 @@ build**. Consider a **staged rollout** (start at 20%) so you can halt if somethi
 
 ---
 
+## Takedown risk — reviewed 31 July 2026
+
+For an exam-prep app the realistic removal scenario is an **intellectual-property complaint**,
+not a policy sweep. Google acts on IP complaints from the rights holder without adjudicating
+them, so the goal is to give CFA Institute and GARP nothing worth complaining about.
+
+### Trademarks — the live risk, and what was changed
+
+The title was already clean and that is the single most important thing. The gap was that the
+two most *prominent* marketing surfaces used the marks bare while every other surface carried
+the symbol:
+
+- **Feature graphic** — now reads "for CFA® and FRM® candidates". Regenerate with
+  `npm run store:graphic` if the strapline changes; it is the first asset anyone sees.
+- **Short description** — now carries both symbols, at 79 of 80 characters.
+- **Exam picker** (`app/setup/exam.tsx`) — this is the first screen where a candidate sees the
+  marks, and the non-affiliation statement was two taps away in About. It is now on the screen
+  itself, and the exam descriptions use "Chartered Financial Analyst®" / "Financial Risk
+  Manager®".
+
+The bare "CFA" and "FRM" used as labels throughout the rest of the app stay bare deliberately.
+That is nominative use — naming the exam being studied — and a ® on every screen would be
+noise, not protection.
+
+### Copyright — checked, no action needed
+
+Cards and questions are original prose about standard finance concepts. Formulas, Type I/II
+errors and the standard-error identity are facts, and facts are not copyrightable. The `ref`
+fields cite readings and LOS numbers rather than reproducing them, which is a citation, not a
+copy. Nothing is reproduced from either body's curriculum.
+
+The one place worth watching is ethics: the Standards are referred to by number and short title
+because teaching ethics requires naming them. Keep it to references — never paste the text of a
+Standard or a Guidance passage.
+
+### Security
+
+- No `WebView`, no `eval`, no dynamic `require`, no native modules of our own.
+- No secrets tracked; `.gitignore` covers `*.jks`, `*.keystore`, `*.p12`, `.env`.
+- Four permissions, all justified above, none in the dangerous class except notifications.
+- Data Safety answers match reality because the app makes no network requests at all.
+
+**`npm audit` reports advisories — ignore them, and do not run `npm audit fix --force`.** Every
+one traces to a single `uuid@7.0.3` advisory reached through
+`expo-splash-screen → @expo/config-plugins → xcode`. `xcode` parses iOS project files during
+prebuild; it never runs on an Android device and is not in the shipped bundle. The suggested
+"fix" downgrades to `expo@46`, which would break the app.
+
+### Not fixed, on purpose
+
+- `store/screenshots/04-home-dashboard.png` still shows "Good afternoon, Anaya" and an "AK"
+  avatar from before the guest-name change. It depicts a state the app can still reach — a
+  candidate who has entered that name — so it is not a misleading-listing problem, but recapture
+  it if you want the listing to match a first launch.
+- `expo-doctor` reports 8 packages a patch behind. Not a security finding; batch it with the
+  next functional change rather than adding dependency churn to a release build.
+
+---
+
 ## After launch
 
 - **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
