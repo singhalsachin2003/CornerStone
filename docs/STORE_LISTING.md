@@ -126,6 +126,19 @@ Association of Risk Professionals.
 Regenerate the feature graphic after a brand change with `npm run store:graphic`
 (then `sips -z 500 1024 store/feature-graphic@2x.png --out store/feature-graphic.png`).
 
+`04-home-dashboard` is regenerated, not hand-staged — it is the only shot needing a populated
+store (a streak, a part-finished syllabus, a review queue), and hand-staging is why it still
+showed the old placeholder profile name after that default changed:
+
+```bash
+npx expo export --platform web --output-dir .expo-web
+npm run store:screenshot
+```
+
+The seeded state lives at the top of `scripts/capture-home-screenshot.mjs` — the date is pinned
+so the countdown, streak and week strip stay consistent with each other and rerunning next month
+produces the same image. The other six are still captured by hand.
+
 Screenshots are ordered to lead with the product's actual idea rather than the dashboard —
 upload them in this order:
 

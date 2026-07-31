@@ -309,12 +309,15 @@ prebuild; it never runs on an Android device and is not in the shipped bundle. T
 
 ### Not fixed, on purpose
 
-- `store/screenshots/04-home-dashboard.png` still shows "Good afternoon, Anaya" and an "AK"
-  avatar from before the guest-name change. It depicts a state the app can still reach — a
-  candidate who has entered that name — so it is not a misleading-listing problem, but recapture
-  it if you want the listing to match a first launch.
 - `expo-doctor` reports 8 packages a patch behind. Not a security finding; batch it with the
   next functional change rather than adding dependency churn to a release build.
+
+### Fixed since
+
+`store/screenshots/04-home-dashboard.png` showed "Good afternoon, Anaya" and an "AK" avatar from
+before the guest-name change. Recaptured with the shipped default, and the staging is now a
+script (`npm run store:screenshot`) rather than a hand-built device state — see
+`docs/STORE_LISTING.md`. Hand-staging is the reason it went stale unnoticed in the first place.
 
 ---
 

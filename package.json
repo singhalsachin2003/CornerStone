@@ -49,7 +49,8 @@
     "run:android": "expo run:android",
     "check:syllabus": "tsx scripts/verify-syllabus.ts",
     "test": "jest",
-    "store:graphic": "node scripts/make-feature-graphic.mjs"
+    "store:graphic": "node scripts/make-feature-graphic.mjs",
+    "store:screenshot": "node scripts/capture-home-screenshot.mjs"
   },
   "overrides": {
     "react-dom": "19.2.3"
