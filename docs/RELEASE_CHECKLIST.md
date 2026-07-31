@@ -211,6 +211,14 @@ already installed.
 
 <https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/af8a5edf-0e23-4b4c-bf5e-c6554fe6d953>
 
+**Superseded — do not upload.** It shipped the design mock's placeholder name as the profile
+default, so a fresh install greeted every candidate as "Anaya Kulkarni".
+
+**Build queued 31 July 2026** — `versionCode` 2 → 3, same keystore. Carries the guest-name fix.
+This is the one to upload.
+
+<https://expo.dev/accounts/singhalsachin2003/projects/cornerstone/builds/2aa8c7b3-56b8-447c-8af6-5579668636cd>
+
 ```bash
 eas build:list --limit 1 --platform android   # status + the .aab download URL when finished
 ```
@@ -244,6 +252,27 @@ build**. Consider a **staged rollout** (start at 20%) so you can halt if somethi
 - **Content fixes need a full release** in v1.0, because over-the-air updates are deliberately
   disabled for zero network egress. If that becomes painful, re-add `expo-updates` — but the
   privacy policy and Data Safety form must be updated in the same release.
+
+  Costed out on 31 July 2026 and **rejected for v1.0**. What it actually takes:
+
+  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, which is on our blocked
+    list. It has to come off — blocking it strips the permission from a library that calls
+    `ConnectivityManager`. It is normal-protection-level, so no user-facing prompt, but it
+    changes the documented APK permission list above from three entries to four.
+  - `PRIVACY.md` is published and states "no outbound network requests of any kind" and "no
+    over-the-air update service", and promises the policy will be updated *before* any release
+    that adds them. The app would contact `u.expo.dev` on every launch.
+  - Play **Data Safety** currently answers "no data collected" and would need revisiting.
+  - Use `runtimeVersion.policy: "fingerprint"`, not the `appVersion` default that
+    `eas update:configure` writes. With `version` pinned at 1.0.0 and `appVersionSource: remote`,
+    `appVersion` holds the runtime constant across native changes — so forgetting to bump
+    `version` after adding a native module pushes JS onto a build that cannot run it.
+  - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
+    without deduping. Check `app.json` by hand afterwards.
+
+  The build quota is not the reason to want this: the free plan allows 15 Android builds a
+  month, far more than this app ships. The only real cost of staying build-only is the 4–5 hour
+  free-tier queue.
 
 ## Annual maintenance
 
