@@ -119,7 +119,7 @@ export default function Home() {
           </Ring>
 
           <View style={{ flex: 1 }}>
-            <Text style={type.statLead}>{days} days to exam day</Text>
+            <Text style={type.statLead}>{countdownLine(days)}</Text>
             <Text style={[type.secondary, { marginTop: 4 }]}>{pacingLine(overall, days, topics.length)}</Text>
             <View style={{ flexDirection: 'row', gap: 14, marginTop: 12 }}>
               <View>
@@ -244,9 +244,22 @@ export default function Home() {
   );
 }
 
+/**
+ * The sitting date ships hardcoded and is revised annually, so a build that stays
+ * installed past its exam window has to say so rather than counting down to a zero
+ * it will sit on forever.
+ */
+function countdownLine(days: number): string {
+  if (days > 1) return `${days} days to exam day`;
+  if (days === 1) return 'Tomorrow is exam day';
+  if (days === 0) return 'Exam day';
+  return 'That sitting has passed';
+}
+
 /** Honest pacing copy derived from actual progress, not a fixed string. */
 function pacingLine(overall: number, days: number, topicCount: number): string {
   if (topicCount === 0) return 'Pick a level to start tracking progress.';
+  if (days < 0) return 'Check the official calendar for your next sitting date.';
   if (overall === 0) return 'Nothing studied yet. One topic today is a good start.';
   const expected = days > 0 ? Math.round(100 - (days / (days + 120)) * 100) : 100;
   const remaining = topicCount - Math.round((overall / 100) * topicCount);

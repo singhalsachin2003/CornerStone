@@ -247,7 +247,13 @@ export const useStudyStore = create<StudyState>()(
       storage: createJSONStorage(() => storage),
       partialize: ({ hydrated, ...rest }) => rest,
       onRehydrateStorage: () => (state) => {
-        if (!state) return;
+        // No state means the persisted JSON was unreadable. The splash screen is
+        // held until `hydrated` flips, so returning early here strands the app on a
+        // blank screen permanently — start fresh instead of never starting.
+        if (!state) {
+          useStudyStore.setState({ hydrated: true });
+          return;
+        }
         // Seed levelByExam for anyone who installed before it existed, so their
         // current selection survives the first exam switch.
         if (state.exam && state.level && !state.levelByExam[state.exam]) {
@@ -290,13 +296,21 @@ export function weightedProgress(
   return Math.round(earned / totalWeight);
 }
 
+/**
+ * Days until the next published sitting — negative once that date has passed.
+ *
+ * Sitting dates are hardcoded and revised annually, so this *will* go negative on
+ * a released build before the next content update lands. It is deliberately not
+ * clamped to zero: "0 days to exam day" shown forever is a worse lie than saying
+ * the date is stale, and only the caller knows how to phrase it.
+ */
 export function daysToExam(exam: ExamKey | null): number {
   if (!exam) return 0;
   const target = parseISODate(EXAMS[exam].date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const days = Math.round((target.getTime() - today.getTime()) / 86_400_000);
-  return Number.isFinite(days) ? Math.max(0, days) : 0;
+  return Number.isFinite(days) ? days : 0;
 }
 
 /** Consecutive study days ending today or yesterday. */

@@ -1,4 +1,11 @@
-import { GUEST_NAME, currentStreak, initialsFor, weekStrip, weightedProgress } from '@/store/useStudyStore';
+import {
+  GUEST_NAME,
+  currentStreak,
+  daysToExam,
+  initialsFor,
+  weekStrip,
+  weightedProgress,
+} from '@/store/useStudyStore';
 import { addDays, dayKey } from '@/store/review';
 import { formatExamDate, parseISODate, topicsFor } from '@/content';
 
@@ -147,6 +154,33 @@ describe('exam dates', () => {
   it('format for display without leaking NaN', () => {
     expect(formatExamDate('2027-05-17')).toBe('17 May 2027');
     expect(formatExamDate('2026-11-15')).toBe('15 November 2026');
+  });
+
+  it('go negative once the sitting has passed, rather than clamping to zero', () => {
+    // The sitting dates ship hardcoded, so a build outliving its exam window is a
+    // certainty, not an edge case. Clamping made the home screen read "0 days to
+    // exam day" indefinitely; the sign is what lets it say the date is stale.
+    // Fake timers, not a Date.now stub — daysToExam builds today with `new Date()`.
+    jest.useFakeTimers({ now: new Date('2099-01-01T12:00:00Z') });
+    try {
+      expect(daysToExam('CFA')).toBeLessThan(0);
+      expect(daysToExam('FRM')).toBeLessThan(0);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('counts down to a sitting that has not happened yet', () => {
+    jest.useFakeTimers({ now: new Date('2026-11-05T12:00:00Z') });
+    try {
+      expect(daysToExam('FRM')).toBe(10); // 2026-11-15
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('is zero when no exam is selected', () => {
+    expect(daysToExam(null)).toBe(0);
   });
 });
 

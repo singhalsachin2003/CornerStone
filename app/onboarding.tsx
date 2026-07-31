@@ -72,16 +72,20 @@ export default function Onboarding() {
 
         <PrimaryButton label="Get started" onPress={start} />
 
+        {/* No "Sign in" here: there is no account to sign into, and the mock's link
+            went to the same place as Get started. Offering it promised returning
+            candidates that their progress could be restored, which it cannot be. */}
         <View style={{ alignItems: 'center', paddingTop: 14 }}>
-          <Text style={{ fontFamily: font.sans, fontSize: 12, lineHeight: 16, color: color.meta }}>
-            Already studying with us?{' '}
-            <Text
-              onPress={start}
-              accessibilityRole="link"
-              style={{ color: color.brass, fontFamily: font.sansSemi }}
-            >
-              Sign in
-            </Text>
+          <Text
+            style={{
+              fontFamily: font.sans,
+              fontSize: 12,
+              lineHeight: 16,
+              color: color.meta,
+              textAlign: 'center',
+            }}
+          >
+            No account needed. Everything stays on your device.
           </Text>
         </View>
       </View>

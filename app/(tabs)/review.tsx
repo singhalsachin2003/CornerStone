@@ -28,6 +28,9 @@ export default function Review() {
     router.push('/quiz');
   };
 
+  // buildReviewSession takes the 10 earliest, so the button promises that many.
+  const dueThisSession = Math.min(due.length, 10);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top']}>
       <ScrollView
@@ -96,7 +99,11 @@ export default function Review() {
               </View>
 
               <PrimaryButton
-                label={due.length > 0 ? `Review ${Math.min(due.length, 10)} questions` : 'Nothing due today'}
+                label={
+                  dueThisSession > 0
+                    ? `Review ${dueThisSession} ${dueThisSession === 1 ? 'question' : 'questions'}`
+                    : 'Nothing due today'
+                }
                 disabled={due.length === 0}
                 onPress={start}
                 style={{ marginTop: 16 }}
