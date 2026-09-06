@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ExternalLink, LineChart } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Toggle } from '@/components/primitives';
@@ -13,6 +14,8 @@ import {
   currentStreak,
   useStudyStore,
 } from '@/store/useStudyStore';
+import { OTC_LEARN_PLAY_URL } from '@/links';
+import { openExternal } from '@/share';
 import {
   cancelDailyReminder,
   reminderTimeLabel,
@@ -290,8 +293,66 @@ export default function Profile() {
           <DisclosureRow label="Bookmarks" value={`${bookmarks} saved`} />
           <DisclosureRow label="About & legal" value="→" onPress={() => router.push('/about')} />
         </View>
+
+        <Eyebrow size={10} tracking={0.14} style={{ marginTop: 26, marginBottom: 10 }}>
+          MORE FROM US
+        </Eyebrow>
+        <MoreFromUs />
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+/**
+ * The other app on the same developer account.
+ *
+ * Derivatives are a syllabus topic here rather than a different subject, so the
+ * two audiences are close to the same people — and until now neither app had
+ * ever mentioned the other. It sits at the bottom of Profile rather than
+ * anywhere on the study path: an advertisement between a card set and a quiz
+ * would cost more than the install it might win.
+ */
+function MoreFromUs() {
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel="OTC Learn on Google Play"
+      onPress={() => void openExternal(OTC_LEARN_PLAY_URL)}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 13,
+        borderWidth: 1,
+        borderColor: 'rgba(22,35,59,.12)',
+        backgroundColor: color.surface,
+        borderRadius: radius.card,
+        padding: 15,
+        opacity: pressed ? 0.6 : 1,
+      })}
+    >
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: radius.row,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: color.paper,
+        }}
+      >
+        <LineChart size={20} strokeWidth={2} color={color.ink} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontFamily: font.sansSemi, fontSize: 13.5, color: color.ink }}>
+          OTC Learn
+        </Text>
+        <Text style={[type.meta, { marginTop: 3 }]}>
+          Our app for over-the-counter derivatives — 36 products, each with a lesson,
+          a worked example and a question bank.
+        </Text>
+      </View>
+      <ExternalLink size={16} strokeWidth={2} color={color.muted} />
+    </Pressable>
   );
 }
 

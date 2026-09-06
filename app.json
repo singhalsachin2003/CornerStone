@@ -20,6 +20,7 @@
     },
     "android": {
       "package": "io.cornerstone.study",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=io.cornerstone.study",
       "adaptiveIcon": {
         "backgroundColor": "#f7f4ee",
         "foregroundImage": "./assets/android-icon-foreground.png",

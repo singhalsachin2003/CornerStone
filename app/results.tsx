@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Share2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, OutlineButton, PrimaryButton } from '@/components/primitives';
@@ -9,6 +10,8 @@ import { type } from '@/theme/type';
 import { EXAMS, topicByKey } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useSessionStore } from '@/store/useSessionStore';
+import { resultShareMessage, shareText } from '@/share';
+import { maybeAskForReview } from '@/storeReview';
 
 export default function Results() {
   const router = useRouter();
@@ -47,6 +50,21 @@ export default function Results() {
   const ringColor = pct >= 70 ? color.sage : pct >= 40 ? color.brass : color.rust;
 
   const topic = topicKey ? topicByKey(topicKey) : undefined;
+  const shareTitle = topic?.name ?? title ?? 'a practice session';
+
+  /**
+   * Ask for a store review after a session that went well, and only then —
+   * `maybeAskForReview` decides both halves of that. The delay is not
+   * decoration: the sheet covers the screen, and appearing on the same frame as
+   * the score would hide what the reader came to see. Leaving first cancels it.
+   */
+  useEffect(() => {
+    if (answers.length === 0) return;
+    const timer = setTimeout(() => {
+      void maybeAskForReview(answers.filter((a) => a.ok).length, questions.length);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [answers, questions.length]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
@@ -213,6 +231,27 @@ export default function Results() {
             </Text>
           </View>
         )}
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Share this result"
+          onPress={() => {
+            void shareText(resultShareMessage(shareTitle, correct, total));
+          }}
+          hitSlop={12}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'center',
+            gap: 8,
+            marginTop: 18,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+          }}
+        >
+          <Share2 size={16} strokeWidth={2} color={color.meta} />
+          <Text style={[type.meta, { color: color.meta }]}>Share this result</Text>
+        </Pressable>
 
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
           <OutlineButton
