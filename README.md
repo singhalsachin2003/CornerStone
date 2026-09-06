@@ -168,9 +168,11 @@ increments its lapse count; three clean passes retire it from the queue.
 - **Progress is earned, not seeded.** The prototype shipped hard-coded mastery percentages; here
   every topic starts at 0 and mastery moves toward each session's score at a 0.35 learning rate.
   The results screen reports the actual delta rather than the prototype's fixed "+8".
-- **Tab-bar icons are placeholders**, as the handoff specifies. They are bordered squares and
-  circles. Swap in a real icon set (Lucide: home, layers, repeat, user) by editing
-  `src/components/TabBar.tsx` only.
+- **Tab-bar icons are Lucide** — home, layers, repeat, user — drawn at 18px with a stroke of 2,
+  which against Lucide's 24-unit viewBox renders at exactly the 1.5px the handoff specifies.
+  They replaced the handoff's placeholder squares and circles, which had reached four of the
+  seven store screenshots. `src/components/TabBar.tsx` takes the icon as a component, so the set
+  is chosen in `app/(tabs)/_layout.tsx` and nowhere else.
 - **Ring progress uses SVG arcs**, not conic gradients, which React Native does not support. The
   visual result is the same and anti-aliases better.
 
