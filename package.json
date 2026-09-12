@@ -65,7 +65,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json}\"",
     "verify": "npm run lint && npm run format:check && npm run typecheck && npm run check:content && npm run check:syllabus && npm run check:applinks && npm test",
     "preview:access": "node scripts/preview-access-screens.mjs",
-    "check:applinks": "tsx scripts/check-applinks.ts"
+    "check:applinks": "tsx scripts/check-applinks.ts",
+    "check:pristine": "tsx scripts/check-node-modules-pristine.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"

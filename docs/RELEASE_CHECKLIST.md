@@ -397,6 +397,39 @@ The code is done and verified; everything below needs the Console, an account, o
    from the RevenueCat key — so a build with no key still declares it and is still enough
    to unblock product creation in the Console.
 
+   ### A local Android build breaks the next EAS build — run `npm ci` in between
+
+   **This cost a failed EAS build and it will do so again.** `runtimeVersion.policy` is
+   `fingerprint`, so the runtime version is a hash over the project including dependency
+   sources. A local `./gradlew assembleRelease` **edits files inside `node_modules`**: AGP 8
+   forbids the `package` attribute in a library manifest, so the build strips it from every
+   dependency that still declares one.
+
+   ```
+   published:  <manifest package="org.reactnative.maskedview" xmlns:android="...">
+   after build: <manifest  xmlns:android="...">
+   ```
+
+   EAS then computes a different runtime version from its own clean install and fails:
+
+   ```
+   Runtime version calculated on local machine not equal to runtime version
+   calculated during build.
+   ```
+
+   That failure is correct — updates published from a mutated tree would never reach the
+   binary. Measured on build `5d2e32d8`: a one-package diff in
+   `@react-native-masked-view/masked-view`. After `npm ci` the local fingerprint matched EAS
+   exactly (`e2c7f2d6196ed093b9f6cde208cb3522efae8e88`).
+
+   **`.fingerprintignore` cannot fix this** — the mutated file is a legitimate input, being
+   the dependency's own manifest. Only `npm ci` restores it.
+
+   ```bash
+   npm run check:pristine   # fails if a local build has mutated node_modules
+   npm ci                   # the fix
+   ```
+
    ### A full local release build was run on 2026-09-12, and it passed
 
    ```bash
