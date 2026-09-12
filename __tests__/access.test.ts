@@ -13,7 +13,7 @@ import {
   promoActive,
   promoDaysRemaining,
   shouldShowUpsell,
-} from '@/access';
+} from '@/access/rules';
 
 const NOW = Date.UTC(2026, 8, 12);
 const DAY = 86_400_000;
