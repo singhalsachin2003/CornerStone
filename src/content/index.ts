@@ -103,22 +103,69 @@ export function coreSegment(topicKey: string): Segment {
     tier: 'free',
     cards: cardsFor(topicKey),
     questions: questionsFor(topicKey),
+    // Core is always first in the canonical bank, which is what keeps every
+    // pre-paywall review-queue id pointing at the question it always pointed at.
+    questionOffset: 0,
+    cardOffset: 0,
   };
 }
 
 /** The premium segments of a topic area, in the order they were authored. */
 export function premiumSegmentsFor(topicKey: string): Segment[] {
-  return (PREMIUM_SEGMENTS[topicKey] ?? []).map((spec) => ({
-    key: `${topicKey}/${spec.slug}`,
-    topicKey,
-    slug: spec.slug,
-    name: spec.name,
-    blurb: spec.blurb,
-    modules: spec.modules,
-    tier: 'premium' as const,
-    cards: spec.cards,
-    questions: spec.questions,
-  }));
+  let questionOffset = questionCount(topicKey);
+  let cardOffset = cardCount(topicKey);
+  return (PREMIUM_SEGMENTS[topicKey] ?? []).map((spec) => {
+    const segment: Segment = {
+      key: `${topicKey}/${spec.slug}`,
+      topicKey,
+      slug: spec.slug,
+      name: spec.name,
+      blurb: spec.blurb,
+      modules: spec.modules,
+      tier: 'premium' as const,
+      cards: spec.cards,
+      questions: spec.questions,
+      questionOffset,
+      cardOffset,
+    };
+    questionOffset += spec.questions.length;
+    cardOffset += spec.cards.length;
+    return segment;
+  });
+}
+
+/**
+ * The canonical question bank for a topic: core first, then premium in authored
+ * order. Indices into this array are what the review queue stores, so appending
+ * is the only safe way to add content and reordering is never safe.
+ */
+export function allQuestionsFor(topicKey: string): Question[] {
+  return segmentsFor(topicKey).flatMap((s) => s.questions);
+}
+
+export function allCardsFor(topicKey: string): SnapshotCard[] {
+  return segmentsFor(topicKey).flatMap((s) => s.cards);
+}
+
+/** Is the question at this canonical index behind the paywall? */
+export function isPremiumQuestion(topicKey: string, qIdx: number): boolean {
+  return qIdx >= questionCount(topicKey);
+}
+
+/**
+ * The questions this install may study, each paired with its canonical index.
+ *
+ * Returning the pair rather than the array is deliberate: every caller needs the
+ * index for the review queue, and every caller that recomputes it from the
+ * filtered array gets it wrong the moment premium content is filtered out.
+ */
+export function accessibleQuestionEntries(
+  topicKey: string,
+  hasPremium: boolean,
+): { question: Question; qIdx: number }[] {
+  return accessibleSegmentsFor(topicKey, hasPremium).flatMap((segment) =>
+    segment.questions.map((question, i) => ({ question, qIdx: segment.questionOffset + i })),
+  );
 }
 
 /** Every segment of a topic area, free first. */

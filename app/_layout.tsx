@@ -84,6 +84,13 @@ export default function RootLayout() {
             name="switch"
             options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
           />
+          {/* The subscription screen is always reached deliberately — from a
+              locked segment or from Profile — so it slides up over what you were
+              doing rather than replacing it. */}
+          <Stack.Screen
+            name="paywall"
+            options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+          />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

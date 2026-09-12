@@ -13,16 +13,21 @@ import Animated, {
 import { BackLink, Eyebrow, SegmentedBar } from '@/components/primitives';
 import { color, font, gutter, radius, shadow } from '@/theme/tokens';
 import { monoBlock, type } from '@/theme/type';
-import { cardsFor, questionsFor, topicByKey } from '@/content';
+import { accessibleCardsFor, accessibleQuestionEntries, segmentByKey, topicByKey } from '@/content';
+import { useAccess } from '@/access';
 import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
-import { buildTopicSession, useSessionStore } from '@/store/useSessionStore';
+import { buildSegmentSession, buildTopicSession, useSessionStore } from '@/store/useSessionStore';
 
 /** Release beyond ±70px commits the card, per the interaction spec. */
 const COMMIT = 70;
 
 export default function Snapshot() {
   const router = useRouter();
-  const { topic: topicKey } = useLocalSearchParams<{ topic: string }>();
+  const { topic: topicKey, segment: segmentSlug } = useLocalSearchParams<{
+    topic: string;
+    segment?: string;
+  }>();
+  const access = useAccess();
   const variant = useStudyStore((s) => s.variant);
   const markCardProgress = useStudyStore((s) => s.markCardProgress);
   const bookmarkedCards = useStudyStore((s) => s.bookmarkedCards);
@@ -30,7 +35,30 @@ export default function Snapshot() {
   const startSession = useSessionStore((s) => s.start);
 
   const topic = topicKey ? topicByKey(topicKey) : undefined;
-  const cards = useMemo(() => (topicKey ? cardsFor(topicKey) : []), [topicKey]);
+
+  // Opened from a segment row, this shows that segment alone. Opened from a topic
+  // it shows everything this install may study, core first.
+  const segment = useMemo(
+    () => (topicKey && segmentSlug ? segmentByKey(`${topicKey}/${segmentSlug}`) : undefined),
+    [topicKey, segmentSlug],
+  );
+  const cards = useMemo(
+    () => (segment ? segment.cards : topicKey ? accessibleCardsFor(topicKey, access.premium) : []),
+    [segment, topicKey, access.premium],
+  );
+  /**
+   * Bookmarks are keyed by the card's index in the topic's canonical deck, not by
+   * its position in whatever subset is on screen. A bookmark made inside a segment
+   * has to be the same bookmark when the whole topic is opened.
+   */
+  const cardOffset = segment ? segment.cardOffset : 0;
+
+  /** What the final card's button promises, and it has to be the truth. */
+  const quizCount = segment
+    ? segment.questions.length
+    : topicKey
+      ? accessibleQuestionEntries(topicKey, access.premium).length
+      : 0;
 
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -41,17 +69,20 @@ export default function Snapshot() {
   const card = cards[idx];
   const total = cards.length;
   const isLast = idx + 1 >= total;
-  const bookmarked = !!bookmarkedCards[`${topicKey}#${idx}`];
+  const canonicalIdx = cardOffset + idx;
+  const bookmarked = !!bookmarkedCards[`${topicKey}#${canonicalIdx}`];
 
   useEffect(() => {
-    if (topicKey) markCardProgress(topicKey, idx);
-  }, [topicKey, idx, markCardProgress]);
+    if (topicKey) markCardProgress(topicKey, canonicalIdx);
+  }, [topicKey, canonicalIdx, markCardProgress]);
 
   const startQuiz = useCallback(() => {
     if (!topicKey) return;
-    startSession(buildTopicSession(topicKey));
+    startSession(
+      segment ? buildSegmentSession(segment) : buildTopicSession(topicKey, access.premium),
+    );
     router.push('/quiz');
-  }, [topicKey, startSession, router]);
+  }, [topicKey, segment, access.premium, startSession, router]);
 
   const goNext = useCallback(() => {
     if (isLast) {
@@ -128,7 +159,7 @@ export default function Snapshot() {
           <Pressable
             accessibilityRole="button"
             accessibilityState={{ selected: bookmarked }}
-            onPress={() => topicKey && toggleCardBookmark(topicKey, idx)}
+            onPress={() => topicKey && toggleCardBookmark(topicKey, canonicalIdx)}
             hitSlop={10}
           >
             <Text style={[type.navLink, { color: bookmarked ? color.brass : t.muted }]}>
@@ -138,7 +169,7 @@ export default function Snapshot() {
         </View>
 
         <View style={{ paddingHorizontal: gutter.screen, paddingBottom: 6 }}>
-          <Text style={[type.serif21, { color: t.fg }]}>{topic.name}</Text>
+          <Text style={[type.serif21, { color: t.fg }]}>{segment ? segment.name : topic.name}</Text>
           <SegmentedBar
             segments={total}
             colors={(i) => (i <= idx ? t.dotOn : t.dotOff)}
@@ -342,9 +373,7 @@ export default function Snapshot() {
             })}
           >
             <Text style={{ fontFamily: font.sansSemi, fontSize: 14.5, color: t.ctaFg }}>
-              {isLast
-                ? `Start the quiz → ${questionsFor(topicKey!).length} questions`
-                : 'Next card'}
+              {isLast ? `Start the quiz → ${quizCount} questions` : 'Next card'}
             </Text>
           </Pressable>
         </View>

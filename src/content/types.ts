@@ -61,6 +61,17 @@ export interface Segment {
   tier: SegmentTier;
   cards: SnapshotCard[];
   questions: Question[];
+  /**
+   * Index of this segment's first question within the topic's canonical bank
+   * (core first, then premium in authored order).
+   *
+   * The review queue keys items as `topicKey#index`, so those indices must mean
+   * the same question forever — including for somebody whose subscription lapses
+   * and whose queue still holds premium items. Carrying the offset here is what
+   * lets a segment build a session without ever re-deriving an index.
+   */
+  questionOffset: number;
+  cardOffset: number;
 }
 
 /**

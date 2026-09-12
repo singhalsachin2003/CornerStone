@@ -15,6 +15,8 @@ import {
   useStudyStore,
 } from '@/store/useStudyStore';
 import { OTC_LEARN_PLAY_URL } from '@/links';
+import { useAccess } from '@/access';
+import { premiumTotals } from '@/content';
 import { openExternal } from '@/share';
 import {
   cancelDailyReminder,
@@ -56,6 +58,7 @@ export default function Profile() {
   const toggleSetting = useStudyStore((s) => s.toggleSetting);
   const variant = useStudyStore((s) => s.variant);
   const setVariant = useStudyStore((s) => s.setVariant);
+  const access = useAccess();
   const studyDays = useStudyStore((s) => s.studyDays);
   const answered = useStudyStore((s) => s.questionsAnswered);
   const correct = useStudyStore((s) => s.questionsCorrect);
@@ -204,6 +207,34 @@ export default function Profile() {
           <StatTile value={String(answered)} label="QUESTIONS" />
           <StatTile value={`${accuracy}%`} label="ACCURACY" />
         </View>
+
+        {/* ACCESS — shown only when there is something true to say. A build with
+            nothing for sale says nothing rather than advertising an empty shop. */}
+        {access.gating && (
+          <>
+            <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
+              ACCESS
+            </Eyebrow>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/paywall')}
+              style={({ pressed }) => ({
+                borderWidth: 1,
+                borderColor: pressed ? color.brass : color.brassTintBorder,
+                backgroundColor: color.brassTintBg,
+                borderRadius: radius.card,
+                padding: 16,
+              })}
+            >
+              <Text style={[type.rowLabel, { color: color.brassText }]}>
+                {accessHeadline(access)}
+              </Text>
+              <Text style={[type.meta, { marginTop: 5, color: color.brassBody }]}>
+                {accessDetail(access)}
+              </Text>
+            </Pressable>
+          </>
+        )}
 
         {/* STUDY */}
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
@@ -425,4 +456,44 @@ function DisclosureRow({
       <Text style={{ fontFamily: font.sans, fontSize: 14, color: color.muted }}>{value}</Text>
     </Pressable>
   );
+}
+
+/**
+ * One line per access state, all of them true.
+ *
+ * `not-gating` never reaches here — the block is rendered only when gating is on —
+ * but it is handled rather than defaulted, so adding a state to the rule fails the
+ * typecheck instead of quietly showing the wrong sentence.
+ */
+function accessHeadline(access: ReturnType<typeof useAccess>): string {
+  switch (access.reason) {
+    case 'grandfathered':
+      return 'You have everything, permanently';
+    case 'subscribed':
+      return 'Cornerstone Plus is active';
+    case 'promo':
+      return access.promoDaysRemaining === 1
+        ? 'One day of full access left'
+        : `${access.promoDaysRemaining} days of full access left`;
+    case 'locked':
+      return 'Cornerstone Plus';
+    case 'not-gating':
+      return 'Everything is open';
+  }
+}
+
+function accessDetail(access: ReturnType<typeof useAccess>): string {
+  const totals = premiumTotals();
+  switch (access.reason) {
+    case 'grandfathered':
+      return 'You were here before the subscription existed, so every segment is yours.';
+    case 'subscribed':
+      return 'Manage or cancel through Google Play.';
+    case 'promo':
+      return 'The core of every topic area stays free when it runs out.';
+    case 'locked':
+      return `${totals.segments} further segments · ${totals.questions} questions`;
+    case 'not-gating':
+      return 'Nothing in this build is behind a paywall.';
+  }
 }

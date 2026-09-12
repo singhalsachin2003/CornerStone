@@ -14,8 +14,16 @@ import {
   radius,
 } from '@/theme/tokens';
 import { type } from '@/theme/type';
-import { EXAMS, TopicArea, cardsFor, questionsFor, topicsFor } from '@/content';
+import {
+  EXAMS,
+  TopicArea,
+  accessibleCardsFor,
+  accessibleQuestionEntries,
+  premiumSegmentsFor,
+  topicsFor,
+} from '@/content';
 import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
+import { useAccess } from '@/access';
 
 const VARIANT_TAG: Record<TopicVariant, string> = {
   a: 'LEDGER',
@@ -30,6 +38,7 @@ export default function Topics() {
   const pathway = useStudyStore((s) => s.pathway);
   const mastery = useStudyStore((s) => s.mastery);
   const variant = useStudyStore((s) => s.variant);
+  const access = useAccess();
 
   const topics = useMemo(
     () => (examKey && levelKey ? topicsFor(examKey, levelKey, pathway) : []),
@@ -63,9 +72,15 @@ export default function Topics() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {variant === 'a' && <LedgerList topics={topics} mastery={mastery} onOpen={open} />}
-        {variant === 'b' && <TileGrid topics={topics} mastery={mastery} onOpen={open} />}
-        {variant === 'c' && <IndexList topics={topics} mastery={mastery} onOpen={open} />}
+        {variant === 'a' && (
+          <LedgerList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
+        )}
+        {variant === 'b' && (
+          <TileGrid topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
+        )}
+        {variant === 'c' && (
+          <IndexList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -75,15 +90,27 @@ interface ListProps {
   topics: TopicArea[];
   mastery: Record<string, number>;
   onOpen: (t: TopicArea) => void;
+  /** Whether the paid segments count toward what this install can actually study. */
+  premium: boolean;
+}
+
+/** Counts shown on a row are always the counts this install can open. */
+function countsFor(topicKey: string, premium: boolean) {
+  return {
+    cards: accessibleCardsFor(topicKey, premium).length,
+    questions: accessibleQuestionEntries(topicKey, premium).length,
+    lockedSegments: premium ? 0 : premiumSegmentsFor(topicKey).length,
+  };
 }
 
 // --- A · Ledger --------------------------------------------------------------
 
-function LedgerList({ topics, mastery, onOpen }: ListProps) {
+function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
   return (
     <View style={{ borderTopWidth: 1, borderTopColor: color.rule }}>
       {topics.map((t, i) => {
         const pct = mastery[t.key] ?? 0;
+        const counts = countsFor(t.key, premium);
         return (
           <Pressable
             key={t.key}
@@ -112,8 +139,8 @@ function LedgerList({ topics, mastery, onOpen }: ListProps) {
               <View style={{ flex: 1 }}>
                 <Text style={type.rowTitle}>{t.name}</Text>
                 <Text style={[type.meta, { marginTop: 4 }]}>
-                  {t.weight} of exam · {cardsFor(t.key).length} cards · {questionsFor(t.key).length}{' '}
-                  questions
+                  {t.weight} of exam · {counts.cards} cards · {counts.questions} questions
+                  {counts.lockedSegments > 0 ? ` · +${counts.lockedSegments} locked` : ''}
                 </Text>
               </View>
               <Text
@@ -143,7 +170,7 @@ function LedgerList({ topics, mastery, onOpen }: ListProps) {
 
 // --- B · Ring tiles (default) ------------------------------------------------
 
-function TileGrid({ topics, mastery, onOpen }: ListProps) {
+function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
   return (
     <View
       style={{
@@ -156,6 +183,7 @@ function TileGrid({ topics, mastery, onOpen }: ListProps) {
     >
       {topics.map((t) => {
         const pct = mastery[t.key] ?? 0;
+        const counts = countsFor(t.key, premium);
         return (
           <Pressable
             key={t.key}
@@ -199,7 +227,8 @@ function TileGrid({ topics, mastery, onOpen }: ListProps) {
             </View>
             <Text style={[type.rowLabel, { fontFamily: font.sansMedium }]}>{t.name}</Text>
             <Text style={[type.tileMeta, { marginTop: 'auto' }]}>
-              {cardsFor(t.key).length} cards · {masteryWord(pct)}
+              {counts.cards} cards · {masteryWord(pct)}
+              {counts.lockedSegments > 0 ? ` · +${counts.lockedSegments} locked` : ''}
             </Text>
           </Pressable>
         );
@@ -210,12 +239,13 @@ function TileGrid({ topics, mastery, onOpen }: ListProps) {
 
 // --- C · Index ---------------------------------------------------------------
 
-function IndexList({ topics, mastery, onOpen }: ListProps) {
+function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
   return (
     <View style={{ paddingHorizontal: gutter.screen, paddingTop: 4 }}>
       {topics.map((t, i) => {
         const pct = mastery[t.key] ?? 0;
         const filled = Math.round(pct / 10);
+        const counts = countsFor(t.key, premium);
         return (
           <Pressable
             key={t.key}
@@ -245,6 +275,10 @@ function IndexList({ topics, mastery, onOpen }: ListProps) {
             <View style={{ flex: 1 }}>
               <Text style={type.serif19}>{t.name}</Text>
               <Text style={[type.meta, { marginTop: 6 }]}>{t.blurb}</Text>
+              <Text style={[type.tileMeta, { marginTop: 6 }]}>
+                {counts.questions} questions
+                {counts.lockedSegments > 0 ? ` · +${counts.lockedSegments} locked` : ''}
+              </Text>
               <View style={{ flexDirection: 'row', gap: 3, marginTop: 10 }}>
                 {Array.from({ length: 10 }, (_, k) => (
                   <View

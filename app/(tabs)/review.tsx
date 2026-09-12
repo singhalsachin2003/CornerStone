@@ -7,6 +7,7 @@ import { color, font, gutter, radius } from '@/theme/tokens';
 import { type } from '@/theme/type';
 import { questionsFor, topicByKey } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
+import { useAccess } from '@/access';
 import { BASE_INTERVALS, dayKey, dueItems, intervalForStep } from '@/store/review';
 import { buildReviewSession, useSessionStore } from '@/store/useSessionStore';
 
@@ -15,6 +16,7 @@ export default function Review() {
   const queue = useStudyStore((s) => s.reviewQueue);
   const spacedRepetition = useStudyStore((s) => s.settings.spacedRepetition);
   const startSession = useSessionStore((s) => s.start);
+  const access = useAccess();
 
   const today = dayKey();
   const due = useMemo(() => dueItems(queue, today), [queue, today]);
@@ -24,7 +26,7 @@ export default function Review() {
   );
 
   const start = () => {
-    startSession(buildReviewSession(due));
+    startSession(buildReviewSession(due, access.premium));
     router.push('/quiz');
   };
 
