@@ -173,7 +173,15 @@ export function buildPlacementSession(topics: { key: string; name: string }[], e
     mode: 'placement' as const,
     topicKey: null,
     title: `${examName} placement`,
-    questions: picked.map((p) => questionsFor(p.topicKey)[p.qIdx]),
+    // Options are shuffled here as they are everywhere else. This was the one
+    // builder that did not, and it is the one where it mattered most: placement
+    // always draws question 0 from the same five areas, so without shuffling a
+    // candidate sees an identical paper on every retake — and across the authored
+    // banks the correct answer sits in the second slot about four times in five,
+    // which made "pick B" a better placement strategy than reading the question.
+    // Question *selection* stays deterministic on purpose: a placement test that
+    // asks different things each time cannot place anyone.
+    questions: picked.map((p) => shuffleOptions(questionsFor(p.topicKey)[p.qIdx])),
     origins: picked,
   };
 }

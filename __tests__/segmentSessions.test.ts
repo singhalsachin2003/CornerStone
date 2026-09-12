@@ -16,7 +16,11 @@ import {
   segmentsFor,
 } from '@/content';
 import { ALL_TOPICS } from '@/content/syllabus';
-import { buildReviewSession, buildSegmentSession } from '@/store/useSessionStore';
+import {
+  buildPlacementSession,
+  buildReviewSession,
+  buildSegmentSession,
+} from '@/store/useSessionStore';
 
 const WITH_PREMIUM = ALL_TOPICS.filter((t) => premiumSegmentsFor(t.key).length > 0);
 
@@ -131,5 +135,47 @@ describe('building a review session', () => {
   it('still caps a session at ten', () => {
     const items = Array.from({ length: 30 }, (_, i) => due(i % questionsFor(topicKey).length));
     expect(buildReviewSession(items, false).questions).toHaveLength(10);
+  });
+});
+
+/**
+ * Placement always draws question 0 from the same five areas, so it is the one
+ * session a candidate can see repeatedly in identical form. It was also the one
+ * builder that never shuffled its options — and across the authored banks the
+ * correct answer sits in the second slot about four times in five, because that
+ * is how the questions were written. Every other session shuffles at build time,
+ * which hides that; placement did not.
+ */
+describe('placement sessions', () => {
+  const topics = ALL_TOPICS.slice(0, 10).map((t) => ({ key: t.key, name: t.name }));
+
+  it('draws one question from up to five areas, deterministically', () => {
+    const a = buildPlacementSession(topics, 'CFA');
+    const b = buildPlacementSession(topics, 'CFA');
+    expect(a.questions.length).toBeGreaterThan(0);
+    expect(a.questions.length).toBeLessThanOrEqual(5);
+    // Selection is stable: the same areas and the same bank indices every time.
+    expect(a.origins).toEqual(b.origins);
+  });
+
+  it('serves each question with its options in some order, answer carried with them', () => {
+    const session = buildPlacementSession(topics, 'CFA');
+    session.questions.forEach((q, i) => {
+      const source = questionsFor(session.origins[i].topicKey)[session.origins[i].qIdx];
+      expect(q.text).toBe(source.text);
+      expect([...q.opts].sort()).toEqual([...source.opts].sort());
+      // Whatever the order, `a` must still point at the same option text.
+      expect(q.opts[q.a]).toBe(source.opts[source.a]);
+    });
+  });
+
+  it('does not leave every answer in the same slot across repeated builds', () => {
+    // Prose options are shuffled per build, so over many builds the answer must
+    // land in more than one slot. A single fixed slot would mean no shuffling.
+    const slots = new Set<number>();
+    for (let i = 0; i < 40; i++) {
+      for (const q of buildPlacementSession(topics, 'CFA').questions) slots.add(q.a);
+    }
+    expect(slots.size).toBeGreaterThan(1);
   });
 });
