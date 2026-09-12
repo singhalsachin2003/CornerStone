@@ -26,6 +26,16 @@ export interface PurchaseProduct {
 }
 
 export interface EntitlementSnapshot {
+  /**
+   * Did the store actually answer?
+   *
+   * False for every failure path — no key, native module missing, offline, store
+   * outage. Callers must not write a snapshot with `reachable: false` over state
+   * they already hold: "we could not ask" is not the same as "you have nothing",
+   * and treating it as the same locks a paying subscriber out of what they bought
+   * the moment their train enters a tunnel.
+   */
+  reachable: boolean;
   /** Does this install currently hold the premium entitlement? */
   active: boolean;
   /**
@@ -40,7 +50,8 @@ export interface EntitlementSnapshot {
   error?: string;
 }
 
-export const UNCONFIGURED: EntitlementSnapshot = {
+export const UNREACHABLE: EntitlementSnapshot = {
+  reachable: false,
   active: false,
   productAvailable: false,
   products: [],
@@ -80,7 +91,7 @@ function readSnapshot(customerInfo: any, offerings: any): EntitlementSnapshot {
     title: p.product?.title ?? '',
     description: p.product?.description ?? '',
   }));
-  return { active, productAvailable: products.length > 0, products };
+  return { reachable: true, active, productAvailable: products.length > 0, products };
 }
 
 /** RevenueCat's package type is an enum-ish string; this is the human version. */
@@ -108,7 +119,7 @@ function periodLabelFor(p: any): string {
 
 /** Current entitlement and what is for sale. Never throws. */
 export async function fetchEntitlement(): Promise<EntitlementSnapshot> {
-  if (!(await ensureInitialised())) return UNCONFIGURED;
+  if (!(await ensureInitialised())) return UNREACHABLE;
   try {
     const purchases = sdk();
     const [customerInfo, offerings] = await Promise.all([
@@ -117,7 +128,7 @@ export async function fetchEntitlement(): Promise<EntitlementSnapshot> {
     ]);
     return readSnapshot(customerInfo, offerings);
   } catch (e) {
-    return { ...UNCONFIGURED, error: String(e) };
+    return { ...UNREACHABLE, error: String(e) };
   }
 }
 
@@ -152,14 +163,14 @@ export async function purchasePackage(packageId: string): Promise<PurchaseOutcom
 
 /** Restore purchases made on another install of the same store account. */
 export async function restorePurchases(): Promise<EntitlementSnapshot> {
-  if (!(await ensureInitialised())) return UNCONFIGURED;
+  if (!(await ensureInitialised())) return UNREACHABLE;
   try {
     const purchases = sdk();
     const customerInfo = await purchases.restorePurchases();
     const offerings = await purchases.getOfferings();
     return readSnapshot(customerInfo, offerings);
   } catch (e) {
-    return { ...UNCONFIGURED, error: String(e) };
+    return { ...UNREACHABLE, error: String(e) };
   }
 }
 

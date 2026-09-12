@@ -14,6 +14,7 @@ import {
   promoDaysRemaining,
   shouldShowUpsell,
 } from '@/access/rules';
+import { applyEntitlementSnapshot } from '@/access/entitlement';
 
 const NOW = Date.UTC(2026, 8, 12);
 const DAY = 86_400_000;
@@ -129,5 +130,49 @@ describe('what the UI is allowed to say', () => {
     expect(paywallState(input({ grandfathered: true }))).toBe('grandfathered');
     expect(paywallState(input({ promoGrantUntil: NOW + DAY }))).toBe('promo');
     expect(paywallState(input())).toBe('offer');
+  });
+});
+
+/**
+ * Found by running the app rather than by reading it: the first version of
+ * `applySnapshot` wrote every result into the store, including the one produced
+ * when the store could not be reached at all. On a device with no network that
+ * turns a paying subscriber into a locked-out one.
+ */
+describe('an unreachable store is not an answer', () => {
+  const products = [
+    { id: 'monthly', priceLabel: '£3.49', periodLabel: 'Monthly', title: '', description: '' },
+  ];
+  const held = { subscriptionActive: true, productAvailable: true, products };
+
+  it('leaves a known entitlement alone when the store cannot be reached', () => {
+    const next = applyEntitlementSnapshot(held, {
+      reachable: false,
+      active: false,
+      productAvailable: false,
+      products: [],
+    });
+    expect(next).toBe(held);
+  });
+
+  it('accepts a reachable store reporting a lapsed subscription', () => {
+    const next = applyEntitlementSnapshot(held, {
+      reachable: true,
+      active: false,
+      productAvailable: true,
+      products,
+    });
+    expect(next.subscriptionActive).toBe(false);
+    expect(next.productAvailable).toBe(true);
+  });
+
+  it('accepts a reachable store reporting an empty offering', () => {
+    const next = applyEntitlementSnapshot(held, {
+      reachable: true,
+      active: false,
+      productAvailable: false,
+      products: [],
+    });
+    expect(next.productAvailable).toBe(false);
   });
 });

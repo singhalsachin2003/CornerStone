@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { hasPremiumContent } from '@/content';
+import { applyEntitlementSnapshot } from '@/access/entitlement';
 import { EntitlementSnapshot, configured, fetchEntitlement, restorePurchases } from '@/purchases';
 import { storage } from './persistence';
 
@@ -74,12 +75,7 @@ export const useAccessStore = create<AccessState>()(
       determineGrandfathering: (preExisting) =>
         set((s) => (s.grandfathered === null ? { grandfathered: preExisting } : {})),
 
-      applySnapshot: (snapshot) =>
-        set({
-          subscriptionActive: snapshot.active,
-          productAvailable: snapshot.productAvailable,
-          products: snapshot.products,
-        }),
+      applySnapshot: (snapshot) => set((s) => applyEntitlementSnapshot(s, snapshot)),
 
       grantPromo: (until, campaign) =>
         set((s) =>
@@ -99,9 +95,7 @@ export const useAccessStore = create<AccessState>()(
 
       restore: async () => {
         const snapshot = await restorePurchases();
-        // A failed restore must not clear a known-good entitlement — that would
-        // lock out a subscriber whose network dropped mid-tap.
-        if (snapshot.productAvailable || snapshot.active) get().applySnapshot(snapshot);
+        get().applySnapshot(snapshot);
         return snapshot;
       },
     }),
