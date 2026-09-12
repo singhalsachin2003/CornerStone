@@ -430,6 +430,30 @@ The code is done and verified; everything below needs the Console, an account, o
    npm ci                   # the fix
    ```
 
+   ### The v1.1 AAB exists: versionCode 7, verified 2026-09-12
+
+   EAS build `76b88d2b`, `store/cornerstone-versionCode7.aab` (81 MB, gitignored like its
+   predecessor). versionCode 6 was burnt on the fingerprint failure above; Play only requires
+   increasing numbers, so the gap costs nothing.
+
+   Verified with `bundletool dump manifest` and by unpacking the bundle:
+
+   - **Permissions** — `INTERNET`, `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`,
+     `ACCESS_NETWORK_STATE`, **`com.android.vending.BILLING`**, plus the app-scoped
+     `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`.
+   - **App Links** — the `autoVerify` intent filter is present.
+   - **No `goog_` and no `test_` key** in the JS bundle. This build cannot sell anything and
+     the paywall is off for every user, which is the correct state until
+     `REVENUECAT_ANDROID_KEY` is set in the EAS production environment.
+   - **Paid content ships** — segment names across all three tranches, plus `PLAYREVIEW`.
+   - **Dex** — `com.revenuecat.purchases`, `com.android.billingclient`,
+     `expo.modules.updates`, `ExpoStoreReview`.
+   - versionName `1.1.0`, runtime version `e77f444479ac3963b803ca5dc088d0c04f6715c7`.
+
+   **This artifact is already enough to unblock subscription product creation**, because
+   BILLING comes from the Play Billing library rather than from the RevenueCat key. Upload it
+   to internal testing, create the products, add the key, then rebuild.
+
    ### A full local release build was run on 2026-09-12, and it passed
 
    ```bash
