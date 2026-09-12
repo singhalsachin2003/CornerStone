@@ -12,6 +12,8 @@ import { CFA_L3_SEGMENTS_II } from './cfaL3b';
 import { FRM_P1_SEGMENTS_II } from './frmP1b';
 import { FRM_P2_SEGMENTS_II } from './frmP2b';
 
+import { TRANCHE_III_SEGMENTS } from './tranche3';
+
 /**
  * Merge banks by **concatenating** each topic's segments, not by replacing them.
  *
@@ -58,4 +60,6 @@ export const PREMIUM_SEGMENTS: PremiumSegmentBank = mergeBanks(
   CFA_L3_SEGMENTS_II,
   FRM_P1_SEGMENTS_II,
   FRM_P2_SEGMENTS_II,
+  // Tranche III — a fourth segment, allocated by exam weight rather than evenly.
+  TRANCHE_III_SEGMENTS,
 );
