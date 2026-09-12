@@ -9,9 +9,6 @@
     "userInterfaceStyle": "light",
     "backgroundColor": "#f7f4ee",
     "assetBundlePatterns": ["**/*"],
-    "updates": {
-      "enabled": false
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "io.cornerstone.study"

@@ -33,7 +33,11 @@ export const ENTITLEMENT_ID = purchases.entitlementId ?? 'premium';
  */
 export function apiKey(): string | null {
   const key = Platform.OS === 'ios' ? purchases.revenueCatIosKey : purchases.revenueCatAndroidKey;
-  if (!key) return null;
+  // Typed as `string | undefined`, but this is read from a JSON config assembled at
+  // build time and shipped in the bundle — the type is a claim about the build, not
+  // a guarantee about the file. Anything that is not a string is no key, and saying
+  // so here is cheaper than a crash at module scope on somebody's device.
+  if (typeof key !== 'string' || key.length === 0) return null;
   if (__DEV__) return key;
   return key.startsWith('test_') ? null : key;
 }
