@@ -57,7 +57,9 @@ export default function Review() {
               padding: 16,
             }}
           >
-            <Text style={[type.rowLabel, { color: color.brassText }]}>Spaced repetition is off</Text>
+            <Text style={[type.rowLabel, { color: color.brassText }]}>
+              Spaced repetition is off
+            </Text>
             <Text style={[type.secondary, { color: color.brassBody, marginTop: 5 }]}>
               Turn it on in Profile → Study to start collecting missed questions here.
             </Text>
@@ -87,7 +89,9 @@ export default function Review() {
                     DUE TODAY
                   </Eyebrow>
                 </View>
-                <View style={{ width: 1, alignSelf: 'stretch', backgroundColor: 'rgba(22,35,59,.12)' }} />
+                <View
+                  style={{ width: 1, alignSelf: 'stretch', backgroundColor: 'rgba(22,35,59,.12)' }}
+                />
                 <View>
                   <Text style={{ fontFamily: font.serifSemi, fontSize: 26, color: color.ink }}>
                     {upcoming.length}
@@ -110,9 +114,7 @@ export default function Review() {
               />
             </View>
 
-            {due.length > 0 && (
-              <Section title="DUE NOW" items={due} today={today} />
-            )}
+            {due.length > 0 && <Section title="DUE NOW" items={due} today={today} />}
             {upcoming.length > 0 && (
               <Section title="COMING UP" items={upcoming.slice(0, 12)} today={today} />
             )}
@@ -154,7 +156,9 @@ function Section({
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text style={{ fontFamily: font.sans, fontSize: 13.5, lineHeight: 19, color: color.ink }}>
+              <Text
+                style={{ fontFamily: font.sans, fontSize: 13.5, lineHeight: 19, color: color.ink }}
+              >
                 {q.text.length > 74 ? `${q.text.slice(0, 74)}…` : q.text}
               </Text>
               <Text style={[type.meta, { marginTop: 4 }]}>

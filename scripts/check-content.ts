@@ -27,7 +27,9 @@ const known = new Set(ALL_TOPICS.map((t) => t.key));
  */
 for (const exam of Object.values(EXAMS)) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(exam.date)) {
-    problems.push(`${exam.key}: date "${exam.date}" is not ISO-8601 (YYYY-MM-DD) — breaks on Hermes`);
+    problems.push(
+      `${exam.key}: date "${exam.date}" is not ISO-8601 (YYYY-MM-DD) — breaks on Hermes`,
+    );
     continue;
   }
   if (!Number.isFinite(Date.parse(exam.date))) {
@@ -54,7 +56,8 @@ for (const [key, questions] of Object.entries(QUESTIONS)) {
   if (!known.has(key)) problems.push(`orphan quiz bank: ${key}`);
   questions.forEach((q, i) => {
     if (q.opts.length !== 4) problems.push(`${key}[${i}]: ${q.opts.length} options, expected 4`);
-    if (q.a < 0 || q.a >= q.opts.length) problems.push(`${key}[${i}]: answer index ${q.a} out of range`);
+    if (q.a < 0 || q.a >= q.opts.length)
+      problems.push(`${key}[${i}]: answer index ${q.a} out of range`);
     if (new Set(q.opts).size !== q.opts.length) problems.push(`${key}[${i}]: duplicate options`);
     if (!q.why) problems.push(`${key}[${i}]: missing explanation`);
     if (!q.ref) problems.push(`${key}[${i}]: missing curriculum reference`);

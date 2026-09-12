@@ -19,7 +19,8 @@ export default function Results() {
   const setLevel = useStudyStore((s) => s.setLevel);
   const examKey = useStudyStore((s) => s.exam);
 
-  const { mode, topicKey, title, questions, origins, answers, elapsed, restart } = useSessionStore();
+  const { mode, topicKey, title, questions, origins, answers, elapsed, restart } =
+    useSessionStore();
 
   const [delta, setDelta] = useState<{ before: number; after: number } | null>(null);
   const committed = useRef(false);
@@ -173,7 +174,14 @@ export default function Results() {
                   </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: font.sans, fontSize: 13.5, lineHeight: 19, color: color.ink }}>
+                  <Text
+                    style={{
+                      fontFamily: font.sans,
+                      fontSize: 13.5,
+                      lineHeight: 19,
+                      color: color.ink,
+                    }}
+                  >
                     {truncate(q.text, 74)}
                   </Text>
                   <Text style={[type.meta, { marginTop: 4 }]}>
@@ -325,7 +333,9 @@ function StatRow({
 }) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <Text style={{ fontFamily: font.sans, fontSize: 12.5, color: color.bodyOnPaper }}>{label}</Text>
+      <Text style={{ fontFamily: font.sans, fontSize: 12.5, color: color.bodyOnPaper }}>
+        {label}
+      </Text>
       <Text style={{ fontFamily: font.sansSemi, fontSize: 12.5, color: valueColor }}>{value}</Text>
     </View>
   );
@@ -339,7 +349,8 @@ function headline(pct: number): string {
 
 function note(pct: number, mode: string): string {
   if (mode === 'placement') return "Here's where we'd suggest you begin.";
-  if (pct >= 80) return 'You are ahead of the average candidate here. Keep it warm with the review queue.';
+  if (pct >= 80)
+    return 'You are ahead of the average candidate here. Keep it warm with the review queue.';
   return 'Nothing unusual — this is exactly what the review queue is for.';
 }
 

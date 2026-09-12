@@ -17,7 +17,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'The collapse of Barings Bank is most directly attributed to:',
       given: null,
-      opts: ['An unhedged commodity basis exposure', 'A single trader controlling both trading and settlement functions', 'A liquidity mismatch in the repo book', 'A model error in option pricing'],
+      opts: [
+        'An unhedged commodity basis exposure',
+        'A single trader controlling both trading and settlement functions',
+        'A liquidity mismatch in the repo book',
+        'A model error in option pricing',
+      ],
       a: 1,
       why: 'The failure was one of governance: Nick Leeson controlled both the front and back office, so losses could be concealed. The trade itself was secondary.',
       ref: 'Foundations of Risk Management — Financial Disasters',
@@ -25,7 +30,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Two portfolios show identical Sharpe ratios but different Treynor ratios. This most likely indicates that:',
       given: null,
-      opts: ['One portfolio holds significant undiversified specific risk', 'One portfolio is leveraged', 'The risk-free rate was measured differently', 'Both portfolios are fully diversified'],
+      opts: [
+        'One portfolio holds significant undiversified specific risk',
+        'One portfolio is leveraged',
+        'The risk-free rate was measured differently',
+        'Both portfolios are fully diversified',
+      ],
       a: 0,
       why: 'For fully diversified portfolios the two measures rank identically. Divergence implies specific risk in one portfolio that beta does not capture.',
       ref: 'Foundations of Risk Management — Risk-Adjusted Performance',
@@ -33,7 +43,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Under an enterprise risk management framework, the primary responsibility for setting risk appetite lies with:',
       given: null,
-      opts: ['The chief risk officer', 'The board of directors', 'Internal audit', 'The trading desk heads'],
+      opts: [
+        'The chief risk officer',
+        'The board of directors',
+        'Internal audit',
+        'The trading desk heads',
+      ],
       a: 1,
       why: 'The board sets risk appetite; management translates it into limits and the risk function monitors adherence. Audit provides independent assurance.',
       ref: 'Foundations of Risk Management — Risk Governance',
@@ -41,7 +56,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A risk that can be transferred at a known cost, such as a hedgeable currency exposure, is best managed by:',
       given: null,
-      opts: ['Holding economic capital against it', 'Hedging it', 'Scenario analysis only', 'Accepting it as an unknown unknown'],
+      opts: [
+        'Holding economic capital against it',
+        'Hedging it',
+        'Scenario analysis only',
+        'Accepting it as an unknown unknown',
+      ],
       a: 1,
       why: 'Known and hedgeable risks are hedged. Capital covers quantifiable but unhedged risk; scenario analysis addresses the unknown unknowns.',
       ref: 'Foundations of Risk Management — Risk Taxonomy',
@@ -60,7 +80,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A GARCH(1,1) model is estimated with α = 0.08 and β = 0.90. Persistence and the implication for volatility are:',
       given: 'α = 0.08 · β = 0.90',
-      opts: ['0.98 — volatility mean-reverts slowly', '0.98 — volatility mean-reverts quickly', '0.82 — the model is non-stationary', '1.00 — the model reduces to EWMA'],
+      opts: [
+        '0.98 — volatility mean-reverts slowly',
+        '0.98 — volatility mean-reverts quickly',
+        '0.82 — the model is non-stationary',
+        '1.00 — the model reduces to EWMA',
+      ],
       a: 0,
       why: 'Persistence is α + β = 0.98, close to one, so shocks decay slowly and volatility mean-reverts only gradually. At exactly 1.00 it becomes EWMA.',
       ref: 'Quantitative Analysis — Measuring Volatility',
@@ -68,7 +93,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'An analyst regresses one random walk on an unrelated random walk and obtains an R² of 0.78 with a significant t-statistic. The correct conclusion is that:',
       given: null,
-      opts: ['A genuine economic relationship exists', 'The regression is spurious because both series are non-stationary', 'The sample size is too small', 'Heteroskedasticity is present'],
+      opts: [
+        'A genuine economic relationship exists',
+        'The regression is spurious because both series are non-stationary',
+        'The sample size is too small',
+        'Heteroskedasticity is present',
+      ],
       a: 1,
       why: 'Regressing non-stationary series produces spuriously high R² and significant t-statistics with no underlying relationship. Difference the series first.',
       ref: 'Quantitative Analysis — Stationary and Non-Stationary Time Series',
@@ -76,7 +106,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Lowering the significance level of a hypothesis test from 5% to 1% will:',
       given: null,
-      opts: ['Reduce Type I error and reduce Type II error', 'Reduce Type I error and increase Type II error', 'Increase Type I error and reduce Type II error', 'Leave both error rates unchanged'],
+      opts: [
+        'Reduce Type I error and reduce Type II error',
+        'Reduce Type I error and increase Type II error',
+        'Increase Type I error and reduce Type II error',
+        'Leave both error rates unchanged',
+      ],
       a: 1,
       why: 'A stricter threshold makes rejection harder, cutting false rejections (Type I) but raising failures to reject a false null (Type II).',
       ref: 'Quantitative Analysis — Hypothesis Testing',
@@ -84,7 +119,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Compared with GARCH(1,1), the EWMA model:',
       given: null,
-      opts: ['Includes a long-run variance term and mean-reverts', 'Omits the long-run variance term and does not mean-revert', 'Requires a normality assumption GARCH does not', 'Cannot be estimated from historical returns'],
+      opts: [
+        'Includes a long-run variance term and mean-reverts',
+        'Omits the long-run variance term and does not mean-revert',
+        'Requires a normality assumption GARCH does not',
+        'Cannot be estimated from historical returns',
+      ],
       a: 1,
       why: 'EWMA is GARCH(1,1) with ω = 0 and α + β = 1, so there is no long-run variance to revert to.',
       ref: 'Quantitative Analysis — Measuring Volatility and Correlation',
@@ -103,7 +143,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Initial margin posted to a central counterparty is intended to cover:',
       given: null,
-      opts: ['Current mark-to-market exposure', 'Potential future exposure over the close-out period', 'The clearing member\'s default fund contribution', 'Accrued interest on the position'],
+      opts: [
+        'Current mark-to-market exposure',
+        'Potential future exposure over the close-out period',
+        "The clearing member's default fund contribution",
+        'Accrued interest on the position',
+      ],
       a: 1,
       why: 'Initial margin covers potential future exposure between default and close-out. Variation margin settles current mark-to-market.',
       ref: 'Financial Markets and Products — Central Counterparties',
@@ -127,7 +172,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'On a reset date, the value of the floating leg of a plain vanilla interest rate swap is:',
       given: null,
-      opts: ['Zero', 'Par', 'The notional plus accrued interest for the full remaining term', 'Indeterminate without the forward curve'],
+      opts: [
+        'Zero',
+        'Par',
+        'The notional plus accrued interest for the full remaining term',
+        'Indeterminate without the forward curve',
+      ],
       a: 1,
       why: 'A floating-rate note reprices to par on each reset date. That single fact collapses most swap valuation questions.',
       ref: 'Financial Markets and Products — Swaps',
@@ -154,7 +204,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Which statement about expected shortfall is correct?',
       given: null,
-      opts: ['ES is never greater than VaR at the same confidence level', 'ES is sub-additive; VaR need not be', 'ES ignores the shape of the tail', 'ES requires an assumption of normality'],
+      opts: [
+        'ES is never greater than VaR at the same confidence level',
+        'ES is sub-additive; VaR need not be',
+        'ES ignores the shape of the tail',
+        'ES requires an assumption of normality',
+      ],
       a: 1,
       why: 'ES is a coherent risk measure and therefore sub-additive, while VaR can violate sub-additivity. ES also always equals or exceeds VaR at the same confidence.',
       ref: 'Valuation and Risk Models — Coherent Risk Measures',
@@ -162,7 +217,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Historical simulation VaR differs from delta-normal VaR chiefly because it:',
       given: null,
-      opts: ['Assumes returns are normally distributed', 'Requires no distributional assumption', 'Cannot handle option positions', 'Always produces a lower VaR estimate'],
+      opts: [
+        'Assumes returns are normally distributed',
+        'Requires no distributional assumption',
+        'Cannot handle option positions',
+        'Always produces a lower VaR estimate',
+      ],
       a: 1,
       why: 'Historical simulation reorders actual past returns, so no distribution is assumed — at the cost of needing a long, representative sample.',
       ref: 'Valuation and Risk Models — Non-parametric Approaches',
@@ -170,9 +230,14 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A delta-neutral options book is long gamma. A large move in the underlying in either direction will produce:',
       given: null,
-      opts: ['A loss', 'A gain', 'No profit or loss, since the book is delta neutral', 'A gain only if the move is upward'],
+      opts: [
+        'A loss',
+        'A gain',
+        'No profit or loss, since the book is delta neutral',
+        'A gain only if the move is upward',
+      ],
       a: 1,
-      why: 'Long gamma means the position\'s delta moves favourably as the underlying moves, producing gains on large moves in either direction.',
+      why: "Long gamma means the position's delta moves favourably as the underlying moves, producing gains on large moves in either direction.",
       ref: 'Valuation and Risk Models — Option Sensitivities',
     },
   ],
@@ -192,7 +257,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A bank’s 99% 1-day VaR model produced 9 exceptions in 250 trading days. This most likely indicates:',
       given: 'Expected exceptions = 0.01 × 250 = 2.5',
-      opts: ['The model overstates risk', 'The model is well calibrated', 'The model understates risk', 'Nothing without expected shortfall data'],
+      opts: [
+        'The model overstates risk',
+        'The model is well calibrated',
+        'The model understates risk',
+        'Nothing without expected shortfall data',
+      ],
       a: 2,
       why: 'Nine breaches against 2.5 expected is far more than chance would suggest — the model understates risk and falls into the Basel red zone.',
       ref: 'Market Risk — Backtesting VaR',
@@ -200,7 +270,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Breaches of a VaR model cluster in a single stressed week rather than occurring evenly. The most appropriate test is:',
       given: null,
-      opts: ["Kupiec's unconditional coverage test", "Christoffersen's conditional coverage test", 'A Jarque–Bera normality test', 'A Dickey–Fuller unit root test'],
+      opts: [
+        "Kupiec's unconditional coverage test",
+        "Christoffersen's conditional coverage test",
+        'A Jarque–Bera normality test',
+        'A Dickey–Fuller unit root test',
+      ],
       a: 1,
       why: 'Kupiec tests only the number of exceptions. Christoffersen adds an independence test, which is what detects clustering.',
       ref: 'Market Risk — Backtesting VaR',
@@ -208,7 +283,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'In extreme value theory using the peaks-over-threshold approach, a positive shape parameter ξ indicates:',
       given: null,
-      opts: ['Tails thinner than the normal distribution', 'Tails fatter than the normal distribution', 'A bounded loss distribution', 'That the threshold was set too low'],
+      opts: [
+        'Tails thinner than the normal distribution',
+        'Tails fatter than the normal distribution',
+        'A bounded loss distribution',
+        'That the threshold was set too low',
+      ],
       a: 1,
       why: 'A positive ξ corresponds to the Fréchet domain — heavy tails, decaying more slowly than the normal distribution.',
       ref: 'Market Risk — Extreme Value Theory',
@@ -216,7 +296,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'The Gaussian copula was widely criticised after 2008 primarily because it:',
       given: null,
-      opts: ['Cannot join different marginal distributions', 'Exhibits zero tail dependence', 'Requires equal marginals for all variables', 'Cannot be calibrated to market data'],
+      opts: [
+        'Cannot join different marginal distributions',
+        'Exhibits zero tail dependence',
+        'Requires equal marginals for all variables',
+        'Cannot be calibrated to market data',
+      ],
       a: 1,
       why: 'The Gaussian copula implies assets become independent in the extreme tail, exactly the opposite of observed crisis behaviour. Student t copulas admit tail dependence.',
       ref: 'Market Risk — Correlation and Copulas',
@@ -227,15 +312,25 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Under the Merton model, an increase in the volatility of the firm’s assets will:',
       given: null,
-      opts: ['Increase equity value and decrease default probability', 'Increase equity value and increase default probability', 'Decrease equity value and increase default probability', 'Leave equity value unchanged'],
+      opts: [
+        'Increase equity value and decrease default probability',
+        'Increase equity value and increase default probability',
+        'Decrease equity value and increase default probability',
+        'Leave equity value unchanged',
+      ],
       a: 1,
-      why: 'Equity is a call on the firm\'s assets, so higher asset volatility raises its value. It simultaneously raises the probability the assets fall below the debt.',
+      why: "Equity is a call on the firm's assets, so higher asset volatility raises its value. It simultaneously raises the probability the assets fall below the debt.",
       ref: 'Credit Risk — Structural Default Models',
     },
     {
       text: 'Holding individual default probabilities constant, an increase in default correlation across a credit portfolio will:',
       given: null,
-      opts: ['Increase expected loss and increase credit VaR', 'Leave expected loss unchanged and increase credit VaR', 'Increase expected loss and leave credit VaR unchanged', 'Reduce both measures'],
+      opts: [
+        'Increase expected loss and increase credit VaR',
+        'Leave expected loss unchanged and increase credit VaR',
+        'Increase expected loss and leave credit VaR unchanged',
+        'Reduce both measures',
+      ],
       a: 1,
       why: 'Expected loss depends only on individual PDs. Correlation fattens the tail of the loss distribution, which is what credit VaR measures.',
       ref: 'Credit Risk — Portfolio Credit Risk',
@@ -251,7 +346,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'In a CDO structure, an increase in default correlation across the collateral pool will most likely:',
       given: null,
-      opts: ['Benefit the equity tranche and harm the senior tranche', 'Harm the equity tranche and benefit the senior tranche', 'Benefit both tranches', 'Have no effect on either tranche'],
+      opts: [
+        'Benefit the equity tranche and harm the senior tranche',
+        'Harm the equity tranche and benefit the senior tranche',
+        'Benefit both tranches',
+        'Have no effect on either tranche',
+      ],
       a: 0,
       why: 'Higher correlation raises the probability of zero losses (helping equity) and of very large losses (harming senior). Senior tranches are effectively short correlation.',
       ref: 'Credit Risk — Structured Credit and CDOs',
@@ -259,7 +359,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Which mechanism most directly reduces counterparty credit exposure without changing the underlying trades?',
       given: null,
-      opts: ['Increasing the notional', 'Close-out netting and collateral agreements', 'Extending the maturity', 'Widening the credit spread charged'],
+      opts: [
+        'Increasing the notional',
+        'Close-out netting and collateral agreements',
+        'Extending the maturity',
+        'Widening the credit spread charged',
+      ],
       a: 1,
       why: 'Netting offsets positive and negative exposures to the same counterparty, and collateral covers the residual. Neither alters the trades themselves.',
       ref: 'Credit Risk — Netting, Collateral and Margining',
@@ -270,7 +375,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'In a loss distribution approach, operational loss frequency is most commonly modelled with:',
       given: null,
-      opts: ['A lognormal distribution', 'A Poisson distribution', 'A generalised Pareto distribution', 'A Student t distribution'],
+      opts: [
+        'A lognormal distribution',
+        'A Poisson distribution',
+        'A generalised Pareto distribution',
+        'A Student t distribution',
+      ],
       a: 1,
       why: 'Frequency is a count over a fixed period, which the Poisson distribution describes. Severity is typically lognormal, with a Pareto tail.',
       ref: 'Operational Risk — Modelling Loss Distributions',
@@ -278,7 +388,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A firm’s risk management function both designs the control framework and performs the independent assurance review of it. This most directly compromises:',
       given: null,
-      opts: ['The first line of defence', 'The separation of the second and third lines of defence', 'The board\'s risk appetite statement', 'The RCSA process only'],
+      opts: [
+        'The first line of defence',
+        'The separation of the second and third lines of defence',
+        "The board's risk appetite statement",
+        'The RCSA process only',
+      ],
       a: 1,
       why: 'Independent assurance belongs to internal audit, the third line. A function cannot independently assure the controls it designed.',
       ref: 'Operational Risk — Three Lines of Defence',
@@ -286,7 +401,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A model validated successfully on historical data fails badly in a new market regime. This is best classified as a failure of:',
       given: null,
-      opts: ['Implementation accuracy', 'Conceptual soundness', 'Data quality controls', 'Change management'],
+      opts: [
+        'Implementation accuracy',
+        'Conceptual soundness',
+        'Data quality controls',
+        'Change management',
+      ],
       a: 1,
       why: 'The model was built and coded correctly but rests on assumptions that do not hold in the new regime — a conceptual soundness failure.',
       ref: 'Operational Risk — Model Risk Management',
@@ -294,7 +414,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A firm outsources a critical process to a third party that suffers an outage. Regulatory accountability for the disruption rests with:',
       given: null,
-      opts: ['The third party alone', 'The firm, which cannot outsource accountability', 'Both parties equally by default', 'Neither, if the contract contains a force majeure clause'],
+      opts: [
+        'The third party alone',
+        'The firm, which cannot outsource accountability',
+        'Both parties equally by default',
+        'Neither, if the contract contains a force majeure clause',
+      ],
       a: 1,
       why: 'Outsourcing an activity never outsources the accountability. The firm remains responsible for the resilience of its critical services.',
       ref: 'Operational Risk — Third-Party and Outsourcing Risk',
@@ -302,7 +427,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Internal loss data alone is generally insufficient for operational risk capital because it:',
       given: null,
-      opts: ['Is not audited', 'Is too sparse in the tail to estimate extreme severity', 'Overstates high-frequency low-severity events', 'Cannot be used under Basel rules'],
+      opts: [
+        'Is not audited',
+        'Is too sparse in the tail to estimate extreme severity',
+        'Overstates high-frequency low-severity events',
+        'Cannot be used under Basel rules',
+      ],
       a: 1,
       why: 'A single firm rarely experiences enough extreme events to estimate the tail, so external data and scenario analysis supplement internal data.',
       ref: 'Operational Risk — Loss Data Collection',
@@ -337,15 +467,25 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Without funds transfer pricing, a bank’s long-dated lending business will most likely appear:',
       given: null,
-      opts: ['Less profitable than it is, because liquidity cost is over-allocated', 'More profitable than it is, because liquidity cost is not charged to it', 'Correctly priced, since liquidity cost is a central function', 'Unaffected, since FTP is an accounting convention only'],
+      opts: [
+        'Less profitable than it is, because liquidity cost is over-allocated',
+        'More profitable than it is, because liquidity cost is not charged to it',
+        'Correctly priced, since liquidity cost is a central function',
+        'Unaffected, since FTP is an accounting convention only',
+      ],
       a: 1,
-      why: 'FTP charges business lines for the liquidity they consume. Without it, long-dated lending appears artificially profitable at the centre\'s expense.',
+      why: "FTP charges business lines for the liquidity they consume. Without it, long-dated lending appears artificially profitable at the centre's expense.",
       ref: 'Liquidity Risk — Transfer Pricing',
     },
     {
       text: 'Which asset receives no haircut in the LCR high-quality liquid asset calculation?',
       given: null,
-      opts: ['Level 1 assets', 'Level 2A assets', 'Level 2B assets', 'All HQLA receive the same haircut'],
+      opts: [
+        'Level 1 assets',
+        'Level 2A assets',
+        'Level 2B assets',
+        'All HQLA receive the same haircut',
+      ],
       a: 0,
       why: 'Level 1 assets — cash, central bank reserves and qualifying sovereign debt — are counted at full value. Level 2A and 2B take haircuts and are capped.',
       ref: 'Liquidity Risk — Basel Liquidity Framework',
@@ -356,7 +496,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A small allocation to an asset with high volatility and high correlation to the rest of the portfolio can dominate the risk budget. The measure that reveals this is:',
       given: null,
-      opts: ['The position weight', 'Marginal contribution to risk', 'The Sharpe ratio of the position', 'The position\'s standalone volatility'],
+      opts: [
+        'The position weight',
+        'Marginal contribution to risk',
+        'The Sharpe ratio of the position',
+        "The position's standalone volatility",
+      ],
       a: 1,
       why: 'Marginal contribution to risk accounts for both the volatility and the correlation with the existing portfolio, which a weight or standalone volatility cannot.',
       ref: 'Risk and Investment Management — Risk Budgeting',
@@ -364,7 +509,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'When a hedge fund joins an index, the index provider adds the fund’s prior track record. The resulting distortion is:',
       given: null,
-      opts: ['Survivorship bias', 'Backfill bias', 'Selection bias in the risk-free rate', 'Smoothing bias'],
+      opts: [
+        'Survivorship bias',
+        'Backfill bias',
+        'Selection bias in the risk-free rate',
+        'Smoothing bias',
+      ],
       a: 1,
       why: 'Backfill bias arises because funds tend to join after a strong period, so the added history inflates reported index performance.',
       ref: 'Risk and Investment Management — Hedge Fund Indices',
@@ -372,7 +522,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Reported returns on an illiquid private portfolio display strong positive autocorrelation. Unsmoothing the series will:',
       given: null,
-      opts: ['Lower the estimated volatility and raise the Sharpe ratio', 'Raise the estimated volatility and lower the Sharpe ratio', 'Leave volatility unchanged but raise correlation', 'Lower both volatility and correlation'],
+      opts: [
+        'Lower the estimated volatility and raise the Sharpe ratio',
+        'Raise the estimated volatility and lower the Sharpe ratio',
+        'Leave volatility unchanged but raise correlation',
+        'Lower both volatility and correlation',
+      ],
       a: 1,
       why: 'Smoothing understates true volatility and correlation. Correcting for it raises volatility, which reduces the Sharpe ratio.',
       ref: 'Risk and Investment Management — Illiquid Assets',
@@ -380,7 +535,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'Factor theory holds that assets earn a risk premium because they:',
       given: null,
-      opts: ['Belong to a particular asset class', 'Perform poorly in bad times', 'Have high historical volatility', 'Are held by institutional investors'],
+      opts: [
+        'Belong to a particular asset class',
+        'Perform poorly in bad times',
+        'Have high historical volatility',
+        'Are held by institutional investors',
+      ],
       a: 1,
       why: 'Premia compensate exposure to bad times, not asset labels. Two differently labelled assets with the same factor exposure should earn similar returns.',
       ref: 'Risk and Investment Management — Factor Theory',
@@ -388,7 +548,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A manager reports strong alpha, but a factor regression shows most of the excess return is explained by a persistent value tilt. The appropriate conclusion is that the return reflects:',
       given: null,
-      opts: ['Genuine manager skill', 'Systematic factor exposure available more cheaply', 'A backtesting error', 'Survivorship bias in the benchmark'],
+      opts: [
+        'Genuine manager skill',
+        'Systematic factor exposure available more cheaply',
+        'A backtesting error',
+        'Survivorship bias in the benchmark',
+      ],
       a: 1,
       why: 'Return attributable to a known factor is beta, not alpha, and can be obtained through cheaper systematic implementations.',
       ref: 'Risk and Investment Management — Factor Theory',
@@ -399,7 +564,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'The Current Issues topic differs from every other FRM topic area because it:',
       given: null,
-      opts: ['Is not examined', 'Is replaced substantially each exam cycle', 'Contains only quantitative material', 'Carries the largest weight in Part II'],
+      opts: [
+        'Is not examined',
+        'Is replaced substantially each exam cycle',
+        'Contains only quantitative material',
+        'Carries the largest weight in Part II',
+      ],
       a: 1,
       why: 'The reading list rotates each year, so prior-year materials are unreliable. GARP publishes the current list directly.',
       ref: 'Current Issues in Financial Markets — Scope',
@@ -407,7 +577,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'The principal supervisory concern with machine learning models used in credit decisions is:',
       given: null,
-      opts: ['Their computational cost', 'Limited explainability and the resulting model governance gap', 'Their inability to handle large datasets', 'That they cannot be backtested'],
+      opts: [
+        'Their computational cost',
+        'Limited explainability and the resulting model governance gap',
+        'Their inability to handle large datasets',
+        'That they cannot be backtested',
+      ],
       a: 1,
       why: 'Supervisors expect firms to explain credit decisions. Opaque models create a governance problem: who validates a model nobody fully understands.',
       ref: 'Current Issues — AI and Machine Learning in Finance',
@@ -415,7 +590,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A scenario describing rapid, well-signalled decarbonisation policy is best characterised as:',
       given: null,
-      opts: ['High physical risk and low transition risk', 'Low physical risk and high transition risk', 'High physical and high transition risk', 'Low physical and low transition risk'],
+      opts: [
+        'High physical risk and low transition risk',
+        'Low physical risk and high transition risk',
+        'High physical and high transition risk',
+        'Low physical and low transition risk',
+      ],
       a: 1,
       why: 'Fast policy action raises transition risk for exposed sectors while limiting the warming that drives physical risk. The scenarios deliberately trade the two off.',
       ref: 'Current Issues — Climate and Transition Risk',
@@ -423,7 +603,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'The 2023 US regional banking stress is best explained by the interaction of:',
       given: null,
-      opts: ['Credit losses on commercial loans and inadequate provisions', 'Unrealised duration losses and concentrated, digitally mobile uninsured deposits', 'Operational failures in payment systems', 'Counterparty defaults in the derivatives market'],
+      opts: [
+        'Credit losses on commercial loans and inadequate provisions',
+        'Unrealised duration losses and concentrated, digitally mobile uninsured deposits',
+        'Operational failures in payment systems',
+        'Counterparty defaults in the derivatives market',
+      ],
       a: 1,
       why: 'Held-to-maturity portfolios carried large unrealised losses while a concentrated uninsured deposit base withdrew faster than liquidity rules assumed.',
       ref: 'Current Issues — Post-2023 Banking Stress',
@@ -431,7 +616,12 @@ export const FRM_QUESTIONS: QuizBank = {
     {
       text: 'A key financial stability concern with fiat-referenced stablecoins is that they:',
       given: null,
-      opts: ['Cannot be transferred across borders', 'Are subject to run dynamics if reserve quality or redemption is doubted', 'Pay a variable interest rate to holders', 'Are always fully insured by deposit schemes'],
+      opts: [
+        'Cannot be transferred across borders',
+        'Are subject to run dynamics if reserve quality or redemption is doubted',
+        'Pay a variable interest rate to holders',
+        'Are always fully insured by deposit schemes',
+      ],
       a: 1,
       why: 'A stablecoin is a redeemable claim on a reserve pool. Doubt about reserve quality or redemption capacity produces classic run dynamics.',
       ref: 'Current Issues — Digital Assets and Stablecoins',

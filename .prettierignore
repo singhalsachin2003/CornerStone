@@ -1,0 +1,10 @@
+node_modules
+dist
+android
+ios
+.expo
+.expo-web
+package-lock.json
+design_handoff_frm_cfa_study_flow
+store
+marketing

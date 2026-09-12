@@ -69,26 +69,56 @@ const EXPECTED: Record<string, Expect[]> = {
 
 /** Module counts printed under "Learning modules by topic" in the PDF. */
 const EXPECTED_MODULE_COUNTS: Record<string, number> = {
-  'cfa-l1-quant': 11, 'cfa-l1-econ': 8, 'cfa-l1-corp': 7, 'cfa-l1-fsa': 12,
-  'cfa-l1-equity': 12, 'cfa-l1-fixed': 19, 'cfa-l1-deriv': 10, 'cfa-l1-alt': 7,
-  'cfa-l1-pm': 6, 'cfa-l1-ethics': 10,
-  'cfa-l2-quant': 7, 'cfa-l2-econ': 2, 'cfa-l2-fsa': 6, 'cfa-l2-corp': 4,
-  'cfa-l2-equity': 6, 'cfa-l2-fixed': 5, 'cfa-l2-deriv': 2, 'cfa-l2-alt': 4,
-  'cfa-l2-pm': 6, 'cfa-l2-ethics': 3,
-  'cfa-l3-allocation': 5, 'cfa-l3-construction': 7, 'cfa-l3-performance': 3,
-  'cfa-l3-derivatives': 3, 'cfa-l3-ethics': 4,
-  'cfa-l3-pathway-portfolio': 8, 'cfa-l3-pathway-private-markets': 7,
+  'cfa-l1-quant': 11,
+  'cfa-l1-econ': 8,
+  'cfa-l1-corp': 7,
+  'cfa-l1-fsa': 12,
+  'cfa-l1-equity': 12,
+  'cfa-l1-fixed': 19,
+  'cfa-l1-deriv': 10,
+  'cfa-l1-alt': 7,
+  'cfa-l1-pm': 6,
+  'cfa-l1-ethics': 10,
+  'cfa-l2-quant': 7,
+  'cfa-l2-econ': 2,
+  'cfa-l2-fsa': 6,
+  'cfa-l2-corp': 4,
+  'cfa-l2-equity': 6,
+  'cfa-l2-fixed': 5,
+  'cfa-l2-deriv': 2,
+  'cfa-l2-alt': 4,
+  'cfa-l2-pm': 6,
+  'cfa-l2-ethics': 3,
+  'cfa-l3-allocation': 5,
+  'cfa-l3-construction': 7,
+  'cfa-l3-performance': 3,
+  'cfa-l3-derivatives': 3,
+  'cfa-l3-ethics': 4,
+  'cfa-l3-pathway-portfolio': 8,
+  'cfa-l3-pathway-private-markets': 7,
   'cfa-l3-pathway-private-wealth': 7,
-  'frm-p1-foundations': 8, 'frm-p1-quant': 7, 'frm-p1-markets': 10, 'frm-p1-valuation': 9,
-  'frm-p2-market': 8, 'frm-p2-credit': 8, 'frm-p2-operational': 9,
-  'frm-p2-liquidity': 9, 'frm-p2-investment': 7, 'frm-p2-current': 6,
+  'frm-p1-foundations': 8,
+  'frm-p1-quant': 7,
+  'frm-p1-markets': 10,
+  'frm-p1-valuation': 9,
+  'frm-p2-market': 8,
+  'frm-p2-credit': 8,
+  'frm-p2-operational': 9,
+  'frm-p2-liquidity': 9,
+  'frm-p2-investment': 7,
+  'frm-p2-current': 6,
 };
 
 const problems: string[] = [];
 
 /** App names are shortened for the phone; compare on a normalised form. */
 const norm = (s: string) =>
-  s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z ]/g, '').replace(/\s+/g, ' ').trim();
+  s
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 /** Does the app's (shorter) name capture the syllabus name's distinctive words? */
 function nameMatches(appName: string, pdfName: string): boolean {
@@ -111,12 +141,17 @@ for (const [id, expected] of Object.entries(EXPECTED)) {
   }
   expected.forEach((exp, i) => {
     const got = actual[i];
-    if (!got) { problems.push(`${id}[${i}]: missing "${exp.name}"`); return; }
+    if (!got) {
+      problems.push(`${id}[${i}]: missing "${exp.name}"`);
+      return;
+    }
     if (!nameMatches(got.name, exp.name)) {
       problems.push(`${id}[${i}]: name "${got.name}" does not match syllabus "${exp.name}"`);
     }
     if (got.weight !== exp.weight) {
-      problems.push(`${id}[${i}] ${exp.name}: weight "${got.weight}" but syllabus says "${exp.weight}"`);
+      problems.push(
+        `${id}[${i}] ${exp.name}: weight "${got.weight}" but syllabus says "${exp.weight}"`,
+      );
     }
   });
 }
@@ -126,7 +161,8 @@ const pathNames = ['Portfolio Management', 'Private Markets', 'Private Wealth'];
 pathNames.forEach((n) => {
   const p = PATHWAYS.find((x) => x.name === n);
   if (!p) problems.push(`missing pathway: ${n}`);
-  else if (p.weight !== '30–35%') problems.push(`pathway ${n}: weight "${p.weight}" but syllabus says "30–35%"`);
+  else if (p.weight !== '30–35%')
+    problems.push(`pathway ${n}: weight "${p.weight}" but syllabus says "30–35%"`);
 });
 // and each is selectable as the 6th L3 area
 PATHWAYS.forEach((p) => {
@@ -136,10 +172,18 @@ PATHWAYS.forEach((p) => {
 
 // Learning modules present and complete
 for (const [key, count] of Object.entries(EXPECTED_MODULE_COUNTS)) {
-  const topic = [...topicsFor('CFA', 'L1'), ...topicsFor('CFA', 'L2'), ...topicsFor('CFA', 'L3'),
+  const topic = [
+    ...topicsFor('CFA', 'L1'),
+    ...topicsFor('CFA', 'L2'),
+    ...topicsFor('CFA', 'L3'),
     ...PATHWAYS.map((p) => topicsFor('CFA', 'L3', p.key)[5]),
-    ...topicsFor('FRM', 'P1'), ...topicsFor('FRM', 'P2')].find((t) => t?.key === key);
-  if (!topic) { problems.push(`module check: topic ${key} not found`); continue; }
+    ...topicsFor('FRM', 'P1'),
+    ...topicsFor('FRM', 'P2'),
+  ].find((t) => t?.key === key);
+  if (!topic) {
+    problems.push(`module check: topic ${key} not found`);
+    continue;
+  }
   if (topic.modules.length !== count) {
     problems.push(`${key}: ${topic.modules.length} learning modules, syllabus lists ${count}`);
   }
@@ -149,7 +193,8 @@ for (const [key, count] of Object.entries(EXPECTED_MODULE_COUNTS)) {
 const reachable = new Set<string>();
 for (const ex of ['CFA', 'FRM'] as const) {
   for (const lvl of EXAMS[ex].levels) {
-    if (lvl.hasPathway) PATHWAYS.forEach((p) => topicsFor(ex, lvl.key, p.key).forEach((t) => reachable.add(t.key)));
+    if (lvl.hasPathway)
+      PATHWAYS.forEach((p) => topicsFor(ex, lvl.key, p.key).forEach((t) => reachable.add(t.key)));
     else topicsFor(ex, lvl.key).forEach((t) => reachable.add(t.key));
   }
 }

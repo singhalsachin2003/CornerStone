@@ -17,5 +17,4 @@ export const PLAY_LISTING_URL =
  * is a syllabus topic here rather than a different subject, so its readers and
  * this app's are close to the same people.
  */
-export const OTC_LEARN_PLAY_URL =
-  'https://play.google.com/store/apps/details?id=com.otclearn.app';
+export const OTC_LEARN_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.otclearn.app';

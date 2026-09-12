@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, ProgressTrack } from '@/components/primitives';
 import { Ring } from '@/components/Ring';
 import { color, font, gutter, radius } from '@/theme/tokens';
-import { eyebrow, type } from '@/theme/type';
+import { type } from '@/theme/type';
 import { EXAMS, cardsFor, topicsFor } from '@/content';
 import {
   currentStreak,
@@ -44,11 +44,14 @@ export default function Home() {
   const week = weekStrip(studyDays);
 
   // The resume card picks the first partially studied topic, else the first untouched one.
-  const resume = topics.find((t) => {
-    const m = mastery[t.key] ?? 0;
-    return m > 0 && m < 60;
-  }) ?? topics.find((t) => (mastery[t.key] ?? 0) === 0) ?? topics[0];
-  const resumePct = resume ? mastery[resume.key] ?? 0 : 0;
+  const resume =
+    topics.find((t) => {
+      const m = mastery[t.key] ?? 0;
+      return m > 0 && m < 60;
+    }) ??
+    topics.find((t) => (mastery[t.key] ?? 0) === 0) ??
+    topics[0];
+  const resumePct = resume ? (mastery[resume.key] ?? 0) : 0;
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -60,7 +63,13 @@ export default function Home() {
         contentContainerStyle={{ padding: gutter.screen, paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}
+        >
           {/* Tapping the title opens the exam + level switcher. */}
           <Pressable
             accessibilityRole="button"
@@ -68,14 +77,18 @@ export default function Home() {
             onPress={() => router.push('/switch')}
             style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.6 : 1 })}
           >
-            <Text style={{ fontFamily: font.sans, fontSize: 13, lineHeight: 16, color: color.muted }}>
+            <Text
+              style={{ fontFamily: font.sans, fontSize: 13, lineHeight: 16, color: color.muted }}
+            >
               {greeting}, {firstName}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5 }}>
               <Text style={type.homeTitle}>
                 {exam.name} · {level?.name}
               </Text>
-              <Text style={{ fontFamily: font.sans, fontSize: 15, color: color.brass, paddingTop: 4 }}>
+              <Text
+                style={{ fontFamily: font.sans, fontSize: 15, color: color.brass, paddingTop: 4 }}
+              >
                 ⌄
               </Text>
             </View>
@@ -93,7 +106,9 @@ export default function Home() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.paper }}>{initials}</Text>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.paper }}>
+              {initials}
+            </Text>
           </Pressable>
         </View>
 
@@ -112,7 +127,9 @@ export default function Home() {
           }}
         >
           <Ring size={82} innerSize={64} pct={overall} fillColor={color.brass}>
-            <Text style={{ fontFamily: font.serifSemi, fontSize: 19, color: color.ink }}>{overall}%</Text>
+            <Text style={{ fontFamily: font.serifSemi, fontSize: 19, color: color.ink }}>
+              {overall}%
+            </Text>
             <Eyebrow size={8.5} tracking={0.08} style={{ marginTop: 3 }}>
               SYLLABUS
             </Eyebrow>
@@ -120,17 +137,23 @@ export default function Home() {
 
           <View style={{ flex: 1 }}>
             <Text style={type.statLead}>{countdownLine(days)}</Text>
-            <Text style={[type.secondary, { marginTop: 4 }]}>{pacingLine(overall, days, topics.length)}</Text>
+            <Text style={[type.secondary, { marginTop: 4 }]}>
+              {pacingLine(overall, days, topics.length)}
+            </Text>
             <View style={{ flexDirection: 'row', gap: 14, marginTop: 12 }}>
               <View>
-                <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.brass }}>{streak}</Text>
+                <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.brass }}>
+                  {streak}
+                </Text>
                 <Eyebrow size={9.5} tracking={0.06} style={{ marginTop: 4 }}>
                   DAY STREAK
                 </Eyebrow>
               </View>
               <View style={{ width: 1, backgroundColor: 'rgba(22,35,59,.12)' }} />
               <View>
-                <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.ink }}>{due}</Text>
+                <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.ink }}>
+                  {due}
+                </Text>
                 <Eyebrow size={9.5} tracking={0.06} style={{ marginTop: 4 }}>
                   CARDS DUE
                 </Eyebrow>
@@ -179,18 +202,34 @@ export default function Home() {
                 padding: 18,
               })}
             >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                }}
+              >
                 <Eyebrow size={9.5} tracking={0.12} style={{ color: color.onInkFaint }}>
                   {resumePct > 0 ? 'IN PROGRESS' : 'START HERE'}
                 </Eyebrow>
-                <Text style={{ fontFamily: font.sansSemi, fontSize: 11, color: 'rgba(247,244,238,.75)' }}>
+                <Text
+                  style={{
+                    fontFamily: font.sansSemi,
+                    fontSize: 11,
+                    color: 'rgba(247,244,238,.75)',
+                  }}
+                >
                   {resumePct}%
                 </Text>
               </View>
-              <Text style={[type.serif20, { color: color.onInk, marginTop: 8 }]}>{resume.name}</Text>
+              <Text style={[type.serif20, { color: color.onInk, marginTop: 8 }]}>
+                {resume.name}
+              </Text>
               <Text style={[type.secondary, { color: color.onInkMuted, marginTop: 6 }]}>
                 {cardsFor(resume.key).length} snapshot cards ·{' '}
-                {(cardProgress[resume.key] ?? 0) > 0 ? 'quiz unlocked' : `${resume.weight} of the exam`}
+                {(cardProgress[resume.key] ?? 0) > 0
+                  ? 'quiz unlocked'
+                  : `${resume.weight} of the exam`}
               </Text>
               <ProgressTrack
                 pct={resumePct}

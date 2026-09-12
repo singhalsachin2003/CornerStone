@@ -24,7 +24,11 @@ import {
 } from '@/notifications';
 
 const SETTING_ROWS: { key: keyof Settings; name: string; note: string }[] = [
-  { key: 'spacedRepetition', name: 'Spaced repetition', note: 'Resurface missed questions on a schedule' },
+  {
+    key: 'spacedRepetition',
+    name: 'Spaced repetition',
+    note: 'Resurface missed questions on a schedule',
+  },
   {
     key: 'dailyReminder',
     name: 'Daily reminder',
@@ -63,23 +67,16 @@ export default function Profile() {
     [examKey, levelKey, pathway],
   );
 
-  if (!examKey || !levelKey) return null;
-  const exam = EXAMS[examKey];
-  const level = exam.levels.find((l) => l.key === levelKey);
-  const streak = currentStreak(studyDays);
-  const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-  const bookmarks =
-    Object.keys(bookmarkedQuestions).length + Object.keys(bookmarkedCards).length;
+  // Every hook in this component runs before the `!examKey` early return below.
+  // Switching exam clears the level whenever that exam has never been opened, so
+  // this screen really can re-render with no level after having had one — and a
+  // hook called only on the first of those renders is the "rendered fewer hooks
+  // than expected" crash, not a hypothetical.
 
   // The OS is the source of truth for notifications: the candidate can revoke
   // permission in system settings at any time, and the toggle must not claim
   // otherwise. If scheduling fails we leave the switch off.
   const [reminderBlocked, setReminderBlocked] = useState(false);
-
-  // Until the candidate names themselves the store holds the guest placeholder,
-  // which is a prompt rather than a value: the field opens empty so they type over
-  // nothing, and clearing the field puts them back to guest.
-  const isGuest = name === GUEST_NAME;
 
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState('');
@@ -118,6 +115,18 @@ export default function Profile() {
     // Intentionally mount-only: this reconciles persisted state with the OS once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!examKey || !levelKey) return null;
+  const exam = EXAMS[examKey];
+  const level = exam.levels.find((l) => l.key === levelKey);
+  const streak = currentStreak(studyDays);
+  const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  const bookmarks = Object.keys(bookmarkedQuestions).length + Object.keys(bookmarkedCards).length;
+
+  // Until the candidate names themselves the store holds the guest placeholder,
+  // which is a prompt rather than a value: the field opens empty so they type over
+  // nothing, and clearing the field puts them back to guest.
+  const isGuest = name === GUEST_NAME;
   // The other programme, if it has been started — surfaced so switching is discoverable.
   const otherExam = (Object.keys(levelByExam) as (keyof typeof levelByExam)[]).find(
     (k) => k !== examKey,
@@ -142,7 +151,9 @@ export default function Profile() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>{initials}</Text>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>
+              {initials}
+            </Text>
           </View>
           <View style={{ flex: 1 }}>
             {editingName ? (
@@ -233,7 +244,9 @@ export default function Profile() {
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           APPEARANCE
         </Eyebrow>
-        <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)', paddingVertical: 15 }}>
+        <View
+          style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)', paddingVertical: 15 }}
+        >
           <Text style={type.rowLabel}>Topic list style</Text>
           <Text style={[type.meta, { marginTop: 3 }]}>
             Index also switches snapshot cards to the dark treatment.
@@ -347,8 +360,8 @@ function MoreFromUs() {
           OTC Learn
         </Text>
         <Text style={[type.meta, { marginTop: 3 }]}>
-          Our app for over-the-counter derivatives — 36 products, each with a lesson,
-          a worked example and a question bank.
+          Our app for over-the-counter derivatives — 36 products, each with a lesson, a worked
+          example and a question bank.
         </Text>
       </View>
       <ExternalLink size={16} strokeWidth={2} color={color.muted} />
@@ -356,7 +369,15 @@ function MoreFromUs() {
   );
 }
 
-function StatTile({ value, label, tint = color.ink }: { value: string; label: string; tint?: string }) {
+function StatTile({
+  value,
+  label,
+  tint = color.ink,
+}: {
+  value: string;
+  label: string;
+  tint?: string;
+}) {
   return (
     <View
       style={{

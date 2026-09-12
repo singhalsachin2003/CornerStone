@@ -9,7 +9,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 import { BackLink, Eyebrow, SegmentedBar } from '@/components/primitives';
 import { color, font, gutter, radius, shadow } from '@/theme/tokens';
@@ -84,17 +83,16 @@ export default function Snapshot() {
       else if (dx > COMMIT) runOnJS(goPrev)();
     });
 
-  const tap = Gesture.Tap().maxDistance(4).onEnd(() => {
-    runOnJS(flip)();
-  });
+  const tap = Gesture.Tap()
+    .maxDistance(4)
+    .onEnd(() => {
+      runOnJS(flip)();
+    });
 
   const gesture = Gesture.Exclusive(pan, tap);
 
   const cardStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: dragX.value },
-      { rotate: `${dragX.value / 40}deg` },
-    ],
+    transform: [{ translateX: dragX.value }, { rotate: `${dragX.value / 40}deg` }],
     opacity: interpolate(Math.abs(dragX.value), [0, 160], [1, 0.6], 'clamp'),
   }));
 
@@ -133,12 +131,7 @@ export default function Snapshot() {
             onPress={() => topicKey && toggleCardBookmark(topicKey, idx)}
             hitSlop={10}
           >
-            <Text
-              style={[
-                type.navLink,
-                { color: bookmarked ? color.brass : t.muted },
-              ]}
-            >
+            <Text style={[type.navLink, { color: bookmarked ? color.brass : t.muted }]}>
               {bookmarked ? '★ Saved' : '☆ Save'}
             </Text>
           </Pressable>
@@ -203,7 +196,11 @@ export default function Snapshot() {
                   showsVerticalScrollIndicator={false}
                 >
                   <View
-                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                    }}
                   >
                     <Eyebrow size={9.5} tracking={0.12} style={{ color: t.kicker }}>
                       {card.kicker}
@@ -223,7 +220,12 @@ export default function Snapshot() {
                   <Text
                     style={[
                       type.cardTitle,
-                      { fontSize: t.titleSize, lineHeight: t.titleSize * 1.15, color: t.fg, marginTop: 16 },
+                      {
+                        fontSize: t.titleSize,
+                        lineHeight: t.titleSize * 1.15,
+                        color: t.fg,
+                        marginTop: 16,
+                      },
                     ]}
                   >
                     {card.title}
@@ -340,7 +342,9 @@ export default function Snapshot() {
             })}
           >
             <Text style={{ fontFamily: font.sansSemi, fontSize: 14.5, color: t.ctaFg }}>
-              {isLast ? `Start the quiz → ${questionsFor(topicKey!).length} questions` : 'Next card'}
+              {isLast
+                ? `Start the quiz → ${questionsFor(topicKey!).length} questions`
+                : 'Next card'}
             </Text>
           </Pressable>
         </View>

@@ -57,10 +57,7 @@ async function lastPromptedAt(): Promise<number | null> {
  * device that cannot show the sheet — an emulator, a sideload — does not spend
  * four months on a prompt nobody ever saw. Swallows its own failures.
  */
-export async function maybeAskForReview(
-  correct: number,
-  total: number,
-): Promise<void> {
+export async function maybeAskForReview(correct: number, total: number): Promise<void> {
   if (!supported || !sessionDeservesPrompt(correct, total)) return;
   try {
     if (!shouldAskForReview(true, await lastPromptedAt(), Date.now())) return;

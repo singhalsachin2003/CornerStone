@@ -4,8 +4,16 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, ProgressTrack } from '@/components/primitives';
 import { Ring } from '@/components/Ring';
-import { color, font, gutter, masteryColor, masteryTextColor, masteryWord, radius } from '@/theme/tokens';
-import { eyebrow, type } from '@/theme/type';
+import {
+  color,
+  font,
+  gutter,
+  masteryColor,
+  masteryTextColor,
+  masteryWord,
+  radius,
+} from '@/theme/tokens';
+import { type } from '@/theme/type';
 import { EXAMS, TopicArea, cardsFor, questionsFor, topicsFor } from '@/content';
 import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
 
@@ -32,13 +40,14 @@ export default function Topics() {
   const exam = EXAMS[examKey];
   const level = exam.levels.find((l) => l.key === levelKey);
 
-  const open = (t: TopicArea) =>
-    router.push({ pathname: '/snapshot', params: { topic: t.key } });
+  const open = (t: TopicArea) => router.push({ pathname: '/snapshot', params: { topic: t.key } });
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top']}>
       <View style={{ paddingHorizontal: gutter.screen, paddingTop: 20, paddingBottom: 14 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <BackLink label="← Home" onPress={() => router.push('/home')} />
           <Eyebrow size={9.5} tracking={0.12}>
             {VARIANT_TAG[variant]}
@@ -50,7 +59,10 @@ export default function Topics() {
         </Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 24 }}
+      >
         {variant === 'a' && <LedgerList topics={topics} mastery={mastery} onOpen={open} />}
         {variant === 'b' && <TileGrid topics={topics} mastery={mastery} onOpen={open} />}
         {variant === 'c' && <IndexList topics={topics} mastery={mastery} onOpen={open} />}
@@ -116,7 +128,12 @@ function LedgerList({ topics, mastery, onOpen }: ListProps) {
                 {pct}%
               </Text>
             </View>
-            <ProgressTrack pct={pct} height={2} fillColor={masteryColor(pct)} style={{ marginTop: 11 }} />
+            <ProgressTrack
+              pct={pct}
+              height={2}
+              fillColor={masteryColor(pct)}
+              style={{ marginTop: 11 }}
+            />
           </Pressable>
         );
       })}
@@ -157,7 +174,13 @@ function TileGrid({ topics, mastery, onOpen }: ListProps) {
               gap: 10,
             })}
           >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
+            >
               <Ring size={40} innerSize={31} pct={pct} fillColor={masteryColor(pct)}>
                 <Text
                   style={{

@@ -14,7 +14,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'An investor with several distinct, prioritised objectives and different time horizons is best served by:',
       given: null,
-      opts: ['Asset-only mean–variance optimisation', 'Liability-relative allocation', 'Goals-based allocation', 'A single risk-parity portfolio'],
+      opts: [
+        'Asset-only mean–variance optimisation',
+        'Liability-relative allocation',
+        'Goals-based allocation',
+        'A single risk-parity portfolio',
+      ],
       a: 2,
       why: 'Goals-based allocation builds a sub-portfolio for each goal with its own horizon and required probability of success.',
       ref: 'Asset Allocation — Overview of Asset Allocation',
@@ -22,7 +27,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'The principal criticism of unconstrained mean–variance optimisation is that it:',
       given: null,
-      opts: ['Cannot handle more than two assets', 'Produces highly concentrated portfolios sensitive to input estimation error', 'Ignores correlation between assets', 'Requires normally distributed returns to be computed at all'],
+      opts: [
+        'Cannot handle more than two assets',
+        'Produces highly concentrated portfolios sensitive to input estimation error',
+        'Ignores correlation between assets',
+        'Requires normally distributed returns to be computed at all',
+      ],
       a: 1,
       why: 'MVO is an error-maximiser: small changes in expected return inputs produce large swings in optimal weights, typically toward concentration.',
       ref: 'Asset Allocation — Principles of Asset Allocation',
@@ -30,7 +40,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Which factor argues most strongly for a wider rebalancing corridor around a target allocation?',
       given: null,
-      opts: ['Higher asset class volatility', 'Higher transaction costs', 'Higher correlation with the rest of the portfolio', 'A shorter investment horizon'],
+      opts: [
+        'Higher asset class volatility',
+        'Higher transaction costs',
+        'Higher correlation with the rest of the portfolio',
+        'A shorter investment horizon',
+      ],
       a: 1,
       why: 'Higher transaction costs make frequent rebalancing expensive, justifying a wider corridor. Higher volatility argues for a narrower one.',
       ref: 'Asset Allocation — Asset Allocation with Real-World Constraints',
@@ -38,7 +53,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'An analyst forecasts long-run returns using only the most recent five years of data during a strong bull market. This most likely reflects:',
       given: null,
-      opts: ['The ex post risk trap', 'Status quo bias', 'Data measurement error', 'Model uncertainty'],
+      opts: [
+        'The ex post risk trap',
+        'Status quo bias',
+        'Data measurement error',
+        'Model uncertainty',
+      ],
       a: 0,
       why: 'The ex post risk trap treats a period of realised high returns and low volatility as representative, understating forward-looking risk.',
       ref: 'Asset Allocation — Capital Market Expectations, Part 1',
@@ -49,7 +69,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A portfolio has an active share of 0.75 but active risk of only 2%. This combination most likely describes:',
       given: 'Active share 0.75 · Active risk 2%',
-      opts: ['A concentrated sector-rotation strategy', 'A diversified stock picker with limited factor tilts', 'A closet indexer', 'A leveraged long-short fund'],
+      opts: [
+        'A concentrated sector-rotation strategy',
+        'A diversified stock picker with limited factor tilts',
+        'A closet indexer',
+        'A leveraged long-short fund',
+      ],
       a: 1,
       why: 'High active share means very different holdings; low active risk means those differences largely offset, which is diversified stock selection.',
       ref: 'Portfolio Construction — Overview of Equity Portfolio Management',
@@ -57,7 +82,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'In immunising a single liability, the manager should match the present value and duration of the liability while:',
       given: null,
-      opts: ['Maximising portfolio convexity', 'Minimising portfolio convexity', 'Maximising portfolio yield', 'Matching the liability\'s cash flows exactly'],
+      opts: [
+        'Maximising portfolio convexity',
+        'Minimising portfolio convexity',
+        'Maximising portfolio yield',
+        "Matching the liability's cash flows exactly",
+      ],
       a: 1,
       why: 'Minimising convexity subject to matching duration minimises structural risk from non-parallel shifts in the yield curve.',
       ref: 'Portfolio Construction — Overview of Fixed-Income Portfolio Management',
@@ -65,7 +95,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'An endowment with a perpetual horizon and a 5% spending rule is best positioned to bear:',
       given: null,
-      opts: ['Low liquidity risk and high liability risk', 'High illiquidity and equity risk relative to most institutions', 'Regulatory capital constraints similar to an insurer', 'A duration-matched fixed income mandate'],
+      opts: [
+        'Low liquidity risk and high liability risk',
+        'High illiquidity and equity risk relative to most institutions',
+        'Regulatory capital constraints similar to an insurer',
+        'A duration-matched fixed income mandate',
+      ],
       a: 1,
       why: 'A perpetual horizon and predictable spending permit substantial allocations to illiquid and equity-like assets in pursuit of the return required.',
       ref: 'Portfolio Construction — Portfolio Management for Institutional Investors',
@@ -73,7 +108,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'An order for 10,000 shares is placed at a decision price of $50. 8,000 shares fill at an average of $50.40 and the order is cancelled with the price at $51. Implementation shortfall includes:',
       given: 'Decision $50 · 8,000 @ $50.40 · 2,000 unfilled, price $51',
-      opts: ['Only the realised price impact on the 8,000 shares', 'Realised impact plus commissions only', 'Realised impact, commissions and the opportunity cost on the 2,000 unfilled shares', 'Only the commission paid'],
+      opts: [
+        'Only the realised price impact on the 8,000 shares',
+        'Realised impact plus commissions only',
+        'Realised impact, commissions and the opportunity cost on the 2,000 unfilled shares',
+        'Only the commission paid',
+      ],
       a: 2,
       why: 'Implementation shortfall captures the full gap between the paper portfolio and the actual one, including the cost of the portion never executed.',
       ref: 'Portfolio Construction — Trading Costs and Electronic Markets',
@@ -81,7 +121,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Compared with a defined benefit pension plan, a sovereign wealth fund most distinctively faces:',
       given: null,
-      opts: ['A contractual liability stream', 'A public policy mandate and political scrutiny', 'A regulatory solvency ratio', 'Mandatory annual distributions'],
+      opts: [
+        'A contractual liability stream',
+        'A public policy mandate and political scrutiny',
+        'A regulatory solvency ratio',
+        'Mandatory annual distributions',
+      ],
       a: 1,
       why: 'Sovereign wealth funds typically have no contractual liability but must operate under a public mandate with political and transparency constraints.',
       ref: 'Portfolio Construction — Portfolio Management for Institutional Investors',
@@ -92,7 +137,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A manager overweighted a sector that outperformed the benchmark but selected stocks within it that underperformed. Brinson attribution will show:',
       given: null,
-      opts: ['Positive allocation and positive selection', 'Positive allocation and negative selection', 'Negative allocation and positive selection', 'Negative allocation and negative selection'],
+      opts: [
+        'Positive allocation and positive selection',
+        'Positive allocation and negative selection',
+        'Negative allocation and positive selection',
+        'Negative allocation and negative selection',
+      ],
       a: 1,
       why: 'Sector weighting decisions land in allocation; within-sector security decisions land in selection. The two can and often do have opposite signs.',
       ref: 'Performance Measurement — Portfolio Performance Evaluation',
@@ -100,7 +150,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'An investor allocates to one of many specialist managers within a diversified programme. The most appropriate appraisal measure is:',
       given: null,
-      opts: ['The Sharpe ratio', 'The information ratio', 'Total return', 'The Sortino ratio using total risk'],
+      opts: [
+        'The Sharpe ratio',
+        'The information ratio',
+        'Total return',
+        'The Sortino ratio using total risk',
+      ],
       a: 1,
       why: 'For a benchmarked sleeve within a larger programme, active return per unit of active risk — the information ratio — is the relevant measure.',
       ref: 'Performance Measurement — Investment Manager Selection',
@@ -116,7 +171,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Under the GIPS standards, a firm claiming compliance must:',
       given: null,
-      opts: ['Include all fee-paying discretionary portfolios in at least one composite', 'Include only its flagship strategies', 'Present a minimum of three years of history', 'Exclude terminated portfolios from historical composites'],
+      opts: [
+        'Include all fee-paying discretionary portfolios in at least one composite',
+        'Include only its flagship strategies',
+        'Present a minimum of three years of history',
+        'Exclude terminated portfolios from historical composites',
+      ],
       a: 0,
       why: 'Firm-wide compliance requires every fee-paying discretionary portfolio to sit in a composite. Terminated portfolios must remain in the historical record.',
       ref: 'Performance Measurement — Overview of the GIPS Standards',
@@ -124,7 +184,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Which type of due diligence failure most commonly causes catastrophic investor loss?',
       given: null,
-      opts: ['Investment due diligence', 'Operational due diligence', 'Benchmark selection', 'Fee negotiation'],
+      opts: [
+        'Investment due diligence',
+        'Operational due diligence',
+        'Benchmark selection',
+        'Fee negotiation',
+      ],
       a: 1,
       why: 'Fraud, valuation failure and inadequate controls — operational issues — account for most total losses, despite investment analysis receiving more attention.',
       ref: 'Performance Measurement — Investment Manager Selection',
@@ -143,7 +208,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A zero-cost collar on a long equity position produces:',
       given: null,
-      opts: ['Unlimited upside with limited downside', 'Bounded upside and bounded downside', 'Unlimited downside with limited upside', 'The same payoff as the underlying'],
+      opts: [
+        'Unlimited upside with limited downside',
+        'Bounded upside and bounded downside',
+        'Unlimited downside with limited upside',
+        'The same payoff as the underlying',
+      ],
       a: 1,
       why: 'The long put floors the loss and the short call caps the gain. The premium received funds the premium paid, hence zero cost.',
       ref: 'Derivatives and Risk Management — Options Strategies',
@@ -159,7 +229,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Which condition most strongly argues for leaving foreign currency exposure unhedged?',
       given: null,
-      opts: ['A short investment horizon', 'High correlation between the currency and the asset return', 'A long horizon and low correlation between currency and asset returns', 'High hedging cost combined with a short horizon'],
+      opts: [
+        'A short investment horizon',
+        'High correlation between the currency and the asset return',
+        'A long horizon and low correlation between currency and asset returns',
+        'High hedging cost combined with a short horizon',
+      ],
       a: 2,
       why: 'Over long horizons currency effects tend to mean-revert, and low correlation means the currency contributes diversification rather than risk.',
       ref: 'Derivatives and Risk Management — Currency Management',
@@ -178,7 +253,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A firm wishes to state that it complies with the Asset Manager Code. It may do so only if it:',
       given: null,
-      opts: ['Adopts the provisions it considers relevant to its business', 'Adopts the Code in its entirety', 'Obtains CFA Institute pre-approval of its policies', 'Employs at least one CFA charterholder'],
+      opts: [
+        'Adopts the provisions it considers relevant to its business',
+        'Adopts the Code in its entirety',
+        'Obtains CFA Institute pre-approval of its policies',
+        'Employs at least one CFA charterholder',
+      ],
       a: 1,
       why: 'The Asset Manager Code must be adopted in full. Partial adoption cannot be claimed, and this is the single most examinable fact in the reading.',
       ref: 'Ethics — Asset Manager Code of Professional Conduct',
@@ -186,7 +266,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A manager directs client brokerage to a broker that provides research used across all client portfolios. Under Standard III(A) this is:',
       given: null,
-      opts: ['Prohibited in all circumstances', 'Permitted, provided best execution is sought and the benefit accrues to clients', 'Permitted only if the client pre-approves each trade', 'Permitted only for institutional clients'],
+      opts: [
+        'Prohibited in all circumstances',
+        'Permitted, provided best execution is sought and the benefit accrues to clients',
+        'Permitted only if the client pre-approves each trade',
+        'Permitted only for institutional clients',
+      ],
       a: 1,
       why: 'Client brokerage is a client asset. It may purchase research that benefits clients, subject to the duty to seek best execution.',
       ref: 'Standard III(A) — Loyalty, Prudence and Care',
@@ -194,7 +279,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A firm materially changes its investment process without informing existing clients. This most likely violates:',
       given: null,
-      opts: ['Standard V(B) Communication with Clients', 'Standard III(C) Suitability', 'Standard VI(C) Referral Fees', 'Standard IV(C) Responsibilities of Supervisors'],
+      opts: [
+        'Standard V(B) Communication with Clients',
+        'Standard III(C) Suitability',
+        'Standard VI(C) Referral Fees',
+        'Standard IV(C) Responsibilities of Supervisors',
+      ],
       a: 0,
       why: 'Standard V(B) requires prompt disclosure of material changes to the investment process to all clients, not only prospective ones.',
       ref: 'Standard V(B) — Communication with Clients',
@@ -202,7 +292,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'At Level III, suitability under Standard III(C) is assessed:',
       given: null,
-      opts: ['Security by security in isolation', 'In the context of the client\'s total portfolio', 'Only at the time the IPS is written', 'By reference to the benchmark alone'],
+      opts: [
+        'Security by security in isolation',
+        "In the context of the client's total portfolio",
+        'Only at the time the IPS is written',
+        'By reference to the benchmark alone',
+      ],
       a: 1,
       why: 'A security that is risky in isolation may be entirely suitable within a diversified total portfolio. Suitability is a portfolio-level judgement.',
       ref: 'Standard III(C) — Suitability',
@@ -210,7 +305,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A manager uses a proprietary risk model with known limitations in stressed markets and does not mention them to clients. This is best described as:',
       given: null,
-      opts: ['Acceptable, since the model is proprietary', 'A violation of Standard V(B), which requires disclosure of significant limitations', 'A violation of Standard I(B) Independence', 'Acceptable if the model is independently validated'],
+      opts: [
+        'Acceptable, since the model is proprietary',
+        'A violation of Standard V(B), which requires disclosure of significant limitations',
+        'A violation of Standard I(B) Independence',
+        'Acceptable if the model is independently validated',
+      ],
       a: 1,
       why: 'Standard V(B) requires disclosure of the basic process and its significant limitations and inherent risks. Proprietary status does not exempt that duty.',
       ref: 'Standard V(B) — Communication with Clients',
@@ -221,7 +321,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A manager expects the yield curve to steepen with short rates unchanged. The most appropriate position is:',
       given: null,
-      opts: ['Extend duration across the curve', 'Buy the short end and sell the long end', 'Sell the short end and buy the long end', 'A duration-neutral butterfly'],
+      opts: [
+        'Extend duration across the curve',
+        'Buy the short end and sell the long end',
+        'Sell the short end and buy the long end',
+        'A duration-neutral butterfly',
+      ],
       a: 1,
       why: 'Steepening means long yields rise relative to short yields, so long bonds lose. Overweight the short end and underweight the long end.',
       ref: 'Portfolio Management Pathway — Yield Curve Strategies',
@@ -245,7 +350,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Which execution benchmark is most vulnerable to manipulation by the trader being measured?',
       given: null,
-      opts: ['Arrival price', 'VWAP computed over the trader\'s own participation window', 'Previous close', 'Implementation shortfall'],
+      opts: [
+        'Arrival price',
+        "VWAP computed over the trader's own participation window",
+        'Previous close',
+        'Implementation shortfall',
+      ],
       a: 1,
       why: 'A trader who supplies a large share of volume in the measurement window influences the VWAP itself, weakening the benchmark.',
       ref: 'Portfolio Management Pathway — Trade Strategy and Execution',
@@ -253,7 +363,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Compared with a fundamental concentrated strategy, a quantitative multifactor equity strategy typically exhibits:',
       given: null,
-      opts: ['Higher active share and higher idiosyncratic risk', 'Lower active share and risk sourced primarily from factor tilts', 'Identical active share and active risk', 'Lower active risk and higher stock-specific risk'],
+      opts: [
+        'Higher active share and higher idiosyncratic risk',
+        'Lower active share and risk sourced primarily from factor tilts',
+        'Identical active share and active risk',
+        'Lower active risk and higher stock-specific risk',
+      ],
       a: 1,
       why: 'Quantitative strategies hold many names with small deviations, giving lower active share, with risk dominated by systematic factor exposures.',
       ref: 'Portfolio Management Pathway — Active Equity Investing: Portfolio Construction',
@@ -272,7 +387,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Under a European (whole-fund) waterfall compared with an American (deal-by-deal) waterfall, the general partner receives carried interest:',
       given: null,
-      opts: ['Earlier, with a higher clawback risk', 'Later, with a lower clawback risk', 'Earlier, with a lower clawback risk', 'At the same time under both structures'],
+      opts: [
+        'Earlier, with a higher clawback risk',
+        'Later, with a lower clawback risk',
+        'Earlier, with a lower clawback risk',
+        'At the same time under both structures',
+      ],
       a: 1,
       why: 'A whole-fund waterfall returns all contributed capital and the preferred return before any carry is paid, which delays carry and reduces clawback risk.',
       ref: 'Private Markets Pathway — General Partner and Investor Perspectives',
@@ -280,7 +400,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A general partner uses a subscription-line credit facility to delay capital calls. The most direct effect on reported performance is:',
       given: null,
-      opts: ['TVPI rises and IRR is unchanged', 'IRR rises and TVPI is broadly unchanged or slightly lower', 'Both IRR and TVPI rise', 'Both measures fall'],
+      opts: [
+        'TVPI rises and IRR is unchanged',
+        'IRR rises and TVPI is broadly unchanged or slightly lower',
+        'Both IRR and TVPI rise',
+        'Both measures fall',
+      ],
       a: 1,
       why: 'Delaying the capital call shortens the period capital is outstanding, flattering the money-weighted IRR. Interest cost slightly reduces the multiple.',
       ref: 'Private Markets Pathway — General Partner and Investor Perspectives',
@@ -288,7 +413,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A covenant-lite loan compared with a traditional maintenance-covenant loan most likely implies:',
       given: null,
-      opts: ['Higher expected recovery for the lender', 'Lower expected recovery, because intervention is delayed', 'No difference in expected recovery', 'Higher recovery but greater default probability'],
+      opts: [
+        'Higher expected recovery for the lender',
+        'Lower expected recovery, because intervention is delayed',
+        'No difference in expected recovery',
+        'Higher recovery but greater default probability',
+      ],
       a: 1,
       why: 'Without maintenance covenants the lender cannot force early remediation, so deterioration runs further before workout, reducing recovery.',
       ref: 'Private Markets Pathway — Private Debt',
@@ -296,7 +426,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A brownfield infrastructure asset with a regulated revenue framework will most likely display:',
       given: null,
-      opts: ['Equity-like returns and high cyclical sensitivity', 'Bond-like returns and low cyclical sensitivity', 'Equity-like returns and low cyclical sensitivity', 'High construction risk'],
+      opts: [
+        'Equity-like returns and high cyclical sensitivity',
+        'Bond-like returns and low cyclical sensitivity',
+        'Equity-like returns and low cyclical sensitivity',
+        'High construction risk',
+      ],
       a: 1,
       why: 'Operational assets with regulated or contracted revenue produce stable, long-duration cash flows that behave more like bonds than equities.',
       ref: 'Private Markets Pathway — Infrastructure',
@@ -307,7 +442,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A client has a high-priority goal three years away and a lower-priority aspirational goal thirty years away. Goals-based allocation would fund the near-term goal with:',
       given: null,
-      opts: ['A high-equity sub-portfolio to maximise expected value', 'A low-risk sub-portfolio regardless of overall risk tolerance', 'The same allocation as the aspirational goal', 'Illiquid private assets for the return premium'],
+      opts: [
+        'A high-equity sub-portfolio to maximise expected value',
+        'A low-risk sub-portfolio regardless of overall risk tolerance',
+        'The same allocation as the aspirational goal',
+        'Illiquid private assets for the return premium',
+      ],
       a: 1,
       why: 'Each goal is funded according to its own horizon and required probability of success. A high-priority near-term goal requires low-risk assets.',
       ref: 'Private Wealth Pathway — Investment Planning',
@@ -315,7 +455,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A senior executive holds substantial employer stock and derives employment income from the same firm. The most appropriate recommendation is:',
       given: null,
-      opts: ['Increase the employer stock position to align interests', 'Reduce the concentration because human and financial capital are correlated', 'Hold the position because it is tax-efficient', 'Hedge only the employment income'],
+      opts: [
+        'Increase the employer stock position to align interests',
+        'Reduce the concentration because human and financial capital are correlated',
+        'Hold the position because it is tax-efficient',
+        'Hedge only the employment income',
+      ],
       a: 1,
       why: 'Human capital and financial capital are highly correlated here, so a shock to the employer hits both simultaneously. Diversification is the remedy.',
       ref: 'Private Wealth Pathway — Wealth Planning',
@@ -331,7 +476,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'Asset location refers to the decision about:',
       given: null,
-      opts: ['Which countries to invest in', 'Which account type holds each asset class', 'The proportion held in each asset class', 'The custodian used for each holding'],
+      opts: [
+        'Which countries to invest in',
+        'Which account type holds each asset class',
+        'The proportion held in each asset class',
+        'The custodian used for each holding',
+      ],
       a: 1,
       why: 'Asset location places heavily taxed assets in tax-advantaged accounts and tax-efficient assets in taxable accounts, without changing the allocation.',
       ref: 'Private Wealth Pathway — Preserving the Wealth',
@@ -339,7 +489,12 @@ export const CFA_L3_QUESTIONS: QuizBank = {
     {
       text: 'A lifetime gift is most likely to dominate a bequest when the recipient has:',
       given: null,
-      opts: ['A higher tax rate and a short horizon', 'A lower tax rate and a long horizon', 'The same tax rate and a short horizon', 'A higher tax rate and a long horizon'],
+      opts: [
+        'A higher tax rate and a short horizon',
+        'A lower tax rate and a long horizon',
+        'The same tax rate and a short horizon',
+        'A higher tax rate and a long horizon',
+      ],
       a: 1,
       why: 'A lower recipient tax rate and a longer compounding period both raise the relative value of gifting today rather than transferring at death.',
       ref: 'Private Wealth Pathway — Transferring the Wealth',

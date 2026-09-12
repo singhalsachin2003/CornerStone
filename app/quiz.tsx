@@ -14,18 +14,8 @@ export default function Quiz() {
   const bookmarked = useStudyStore((s) => s.bookmarkedQuestions);
   const toggleBookmark = useStudyStore((s) => s.toggleQuestionBookmark);
 
-  const {
-    questions,
-    origins,
-    qIdx,
-    chosen,
-    answers,
-    elapsed,
-    title,
-    choose,
-    next,
-    tick,
-  } = useSessionStore();
+  const { questions, origins, qIdx, chosen, answers, elapsed, title, choose, next, tick } =
+    useSessionStore();
 
   // The session clock ticks while this screen is mounted.
   useEffect(() => {
@@ -61,8 +51,12 @@ export default function Quiz() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, paddingHorizontal: gutter.screen, paddingTop: 18, paddingBottom: 18 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <View
+        style={{ flex: 1, paddingHorizontal: gutter.screen, paddingTop: 18, paddingBottom: 18 }}
+      >
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <BackLink label="← Back" onPress={() => router.back()} />
           {timedQuizzes && (
             <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
@@ -168,7 +162,11 @@ export default function Quiz() {
                 padding: 16,
               }}
             >
-              <Eyebrow size={10} tracking={0.12} style={{ color: correct ? color.sage : color.rust }}>
+              <Eyebrow
+                size={10}
+                tracking={0.12}
+                style={{ color: correct ? color.sage : color.rust }}
+              >
                 {correct ? 'CORRECT — NICE WORK' : 'NOT QUITE'}
               </Eyebrow>
               <Text

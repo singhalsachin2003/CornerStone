@@ -37,9 +37,18 @@ export function Ring({
   const dash = (clamped / 100) * circumference;
 
   return (
-    <View style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}>
+    <View
+      style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}
+    >
       <Svg width={size} height={size} style={{ position: 'absolute' }}>
-        <Circle cx={size / 2} cy={size / 2} r={r} stroke={trackColor} strokeWidth={stroke} fill="none" />
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          stroke={trackColor}
+          strokeWidth={stroke}
+          fill="none"
+        />
         {clamped > 0 && (
           <Circle
             cx={size / 2}

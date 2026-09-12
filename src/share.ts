@@ -11,11 +11,7 @@ import { PLAY_LISTING_URL } from '@/links';
  */
 
 /** Written in the sharer's voice — it lands in their chat under their name. */
-export function resultShareMessage(
-  topic: string,
-  correct: number,
-  total: number,
-): string {
+export function resultShareMessage(topic: string, correct: number, total: number): string {
   return `I scored ${correct}/${total} on ${topic} in Cornerstone.\n\n${PLAY_LISTING_URL}`;
 }
 

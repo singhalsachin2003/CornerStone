@@ -42,7 +42,10 @@ export default function Switcher() {
           Progress, bookmarks and review queues are kept separately for each.
         </Text>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 12 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 12 }}
+        >
           {EXAM_KEYS.map((examKey, i) => {
             const e = EXAMS[examKey];
             const started = levelByExam[examKey];
@@ -59,7 +62,11 @@ export default function Switcher() {
                   <Text style={{ fontFamily: font.serifSemi, fontSize: 20, color: color.ink }}>
                     {e.name}
                   </Text>
-                  <Eyebrow size={9.5} tracking={0.1} style={{ color: started ? color.brass : color.meta }}>
+                  <Eyebrow
+                    size={9.5}
+                    tracking={0.1}
+                    style={{ color: started ? color.brass : color.meta }}
+                  >
                     {started ? 'IN PROGRESS' : e.levelWord}
                   </Eyebrow>
                 </View>

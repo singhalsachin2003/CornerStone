@@ -61,8 +61,18 @@ export function parseISODate(iso: string): Date {
 }
 
 const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 /** "2027-05-17" → "17 May 2027". */
@@ -319,10 +329,7 @@ const CFA_L2: TopicArea[] = [
     weight: '5–10%',
     weightMid: 7.5,
     blurb: 'Two dense modules: currency equilibrium value and economic growth.',
-    modules: [
-      'Currency Exchange Rates: Understanding Equilibrium Value',
-      'Economic Growth',
-    ],
+    modules: ['Currency Exchange Rates: Understanding Equilibrium Value', 'Economic Growth'],
   },
   {
     key: 'cfa-l2-fsa',
@@ -387,10 +394,7 @@ const CFA_L2: TopicArea[] = [
     weight: '5–10%',
     weightMid: 7.5,
     blurb: 'Forward commitments and contingent claims — binomial, BSM, the Greeks.',
-    modules: [
-      'Pricing and Valuation of Forward Commitments',
-      'Valuation of Contingent Claims',
-    ],
+    modules: ['Pricing and Valuation of Forward Commitments', 'Valuation of Contingent Claims'],
   },
   {
     key: 'cfa-l2-alt',

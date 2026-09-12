@@ -6,7 +6,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An analyst assembles several individually immaterial non-public details from suppliers and customers and, combined with public filings, concludes the issuer will miss guidance. Acting on that conclusion is:',
       given: null,
-      opts: ['A violation of Standard II(A)', 'Permitted under the mosaic theory', 'Permitted only after disclosure to the issuer', 'A violation of Standard V(A)'],
+      opts: [
+        'A violation of Standard II(A)',
+        'Permitted under the mosaic theory',
+        'Permitted only after disclosure to the issuer',
+        'A violation of Standard V(A)',
+      ],
       a: 1,
       why: 'The mosaic theory expressly permits combining non-material non-public information with public information. No single piece was material on its own.',
       ref: 'Standard II(A) — Material Nonpublic Information',
@@ -14,7 +19,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A firm offers premium clients earlier access to research than standard clients, and discloses the tiering to all clients. Under Standard III(B) this is:',
       given: null,
-      opts: ['A violation, because all clients must receive research simultaneously', 'Permitted, because the differential service is disclosed', 'A violation, unless the premium fee is waived', 'Permitted only for institutional clients'],
+      opts: [
+        'A violation, because all clients must receive research simultaneously',
+        'Permitted, because the differential service is disclosed',
+        'A violation, unless the premium fee is waived',
+        'Permitted only for institutional clients',
+      ],
       a: 1,
       why: 'Fair dealing does not require identical treatment. Different service levels are permissible provided they are disclosed and do not disadvantage other clients.',
       ref: 'Standard III(B) — Fair Dealing',
@@ -22,7 +32,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A manager presents a composite that excludes two terminated accounts that underperformed. This most likely violates:',
       given: null,
-      opts: ['Standard III(D) Performance Presentation', 'Standard VI(B) Priority of Transactions', 'Standard IV(A) Loyalty to Employer', 'Standard I(B) Independence and Objectivity'],
+      opts: [
+        'Standard III(D) Performance Presentation',
+        'Standard VI(B) Priority of Transactions',
+        'Standard IV(A) Loyalty to Employer',
+        'Standard I(B) Independence and Objectivity',
+      ],
       a: 0,
       why: 'Excluding terminated accounts creates survivorship bias and makes the presentation neither fair nor complete, breaching Standard III(D).',
       ref: 'Standard III(D) — Performance Presentation',
@@ -30,7 +45,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A member takes a research report prepared at her previous employer and reuses its analysis, with attribution removed, at her new firm. She has violated:',
       given: null,
-      opts: ['Standard IV(A) only', 'Standard I(C) Misrepresentation and Standard IV(A) Loyalty', 'Standard V(B) only', 'No standard, because she wrote the original analysis'],
+      opts: [
+        'Standard IV(A) only',
+        'Standard I(C) Misrepresentation and Standard IV(A) Loyalty',
+        'Standard V(B) only',
+        'No standard, because she wrote the original analysis',
+      ],
       a: 1,
       why: 'The work product belongs to the former employer, and presenting it as new work without attribution is plagiarism under Standard I(C).',
       ref: 'Standard I(C) — Misrepresentation; Standard IV(A) — Loyalty',
@@ -38,7 +58,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An investment firm allocates a hot IPO pro rata across all suitable client accounts, including accounts in which employees are beneficial owners. Under Standard VI(B), this is:',
       given: null,
-      opts: ['Acceptable if client accounts are filled before employee-owned accounts', 'Acceptable in all circumstances', 'A violation regardless of the allocation order', 'Acceptable only if the employees are not portfolio managers'],
+      opts: [
+        'Acceptable if client accounts are filled before employee-owned accounts',
+        'Acceptable in all circumstances',
+        'A violation regardless of the allocation order',
+        'Acceptable only if the employees are not portfolio managers',
+      ],
       a: 0,
       why: 'Priority of transactions requires client interests to come before those of employees. Employee-beneficial accounts may participate only after clients are satisfied.',
       ref: 'Standard VI(B) — Priority of Transactions',
@@ -57,7 +82,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Adding a variable to a regression raises R² from 0.42 to 0.44 but lowers adjusted R² from 0.39 to 0.38. The analyst should conclude the variable:',
       given: 'R²: 0.42 → 0.44 · R̄²: 0.39 → 0.38',
-      opts: ['Improves the model and should be retained', 'Does not justify its loss of degrees of freedom', 'Introduces heteroskedasticity', 'Makes the model non-stationary'],
+      opts: [
+        'Improves the model and should be retained',
+        'Does not justify its loss of degrees of freedom',
+        'Introduces heteroskedasticity',
+        'Makes the model non-stationary',
+      ],
       a: 1,
       why: 'R² always rises with an added regressor. A falling adjusted R² means the explanatory gain does not compensate for the lost degree of freedom.',
       ref: 'Quantitative Methods — Evaluating Regression Model Fit, LOS 2.c',
@@ -65,7 +95,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An AR(1) model is estimated on a series with a unit root. The most appropriate remedy is to:',
       given: null,
-      opts: ['Add a lag to the model', 'First-difference the series', 'Use White-corrected standard errors', 'Apply a log transformation to the dependent variable'],
+      opts: [
+        'Add a lag to the model',
+        'First-difference the series',
+        'Use White-corrected standard errors',
+        'Apply a log transformation to the dependent variable',
+      ],
       a: 1,
       why: 'A unit root violates covariance stationarity and produces spurious results. First differencing typically restores stationarity.',
       ref: 'Quantitative Methods — Time-Series Analysis, LOS 5.f',
@@ -73,7 +108,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Conditional heteroskedasticity in a regression most directly causes:',
       given: null,
-      opts: ['Biased coefficient estimates', 'Unreliable standard errors and invalid t-tests', 'A spurious unit root', 'Perfect multicollinearity'],
+      opts: [
+        'Biased coefficient estimates',
+        'Unreliable standard errors and invalid t-tests',
+        'A spurious unit root',
+        'Perfect multicollinearity',
+      ],
       a: 1,
       why: 'Coefficients remain unbiased and consistent, but the standard errors are wrong, so hypothesis tests based on them are invalid.',
       ref: 'Quantitative Methods — Model Misspecification, LOS 3.a',
@@ -92,7 +132,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An investor borrows in a low-interest-rate currency and invests in a high-interest-rate currency. This carry trade is profitable only if:',
       given: null,
-      opts: ['Uncovered interest rate parity holds', 'Uncovered interest rate parity fails', 'Covered interest rate parity fails', 'Purchasing power parity holds in the short run'],
+      opts: [
+        'Uncovered interest rate parity holds',
+        'Uncovered interest rate parity fails',
+        'Covered interest rate parity fails',
+        'Purchasing power parity holds in the short run',
+      ],
       a: 1,
       why: 'If uncovered parity held, the high-rate currency would depreciate by exactly the interest differential and the trade would earn nothing. Its empirical failure is the source of carry returns.',
       ref: 'Economics — Currency Exchange Rates, LOS 1.d',
@@ -100,7 +145,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Under the neoclassical growth model, a permanent increase in the savings rate will:',
       given: null,
-      opts: ['Raise the long-run growth rate of output per capita', 'Raise the level of output per capita but not its long-run growth rate', 'Have no effect on either the level or the growth rate', 'Lower the steady-state capital-to-labour ratio'],
+      opts: [
+        'Raise the long-run growth rate of output per capita',
+        'Raise the level of output per capita but not its long-run growth rate',
+        'Have no effect on either the level or the growth rate',
+        'Lower the steady-state capital-to-labour ratio',
+      ],
       a: 1,
       why: 'Diminishing returns to capital mean higher saving raises the steady-state level of output per worker but leaves the long-run growth rate set by technology.',
       ref: 'Economics — Economic Growth, LOS 2.d',
@@ -108,7 +158,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Relative purchasing power parity predicts that a country with persistently higher inflation than its trading partners will experience:',
       given: null,
-      opts: ['Currency appreciation', 'Currency depreciation', 'No change in the nominal exchange rate', 'A widening real interest differential only'],
+      opts: [
+        'Currency appreciation',
+        'Currency depreciation',
+        'No change in the nominal exchange rate',
+        'A widening real interest differential only',
+      ],
       a: 1,
       why: 'Higher relative inflation erodes purchasing power, so relative PPP predicts nominal depreciation roughly equal to the inflation differential.',
       ref: 'Economics — Currency Exchange Rates, LOS 1.b',
@@ -124,7 +179,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Under the FX portfolio balance approach, a country running persistent fiscal deficits will most likely see its currency:',
       given: null,
-      opts: ['Appreciate indefinitely as capital flows in', 'Appreciate in the short run and depreciate in the long run', 'Depreciate immediately and permanently', 'Remain unchanged in both horizons'],
+      opts: [
+        'Appreciate indefinitely as capital flows in',
+        'Appreciate in the short run and depreciate in the long run',
+        'Depreciate immediately and permanently',
+        'Remain unchanged in both horizons',
+      ],
       a: 1,
       why: 'Higher rates attract capital and support the currency initially, but investors eventually demand compensation for the growing debt burden, causing depreciation.',
       ref: 'Economics — Currency Exchange Rates, LOS 1.g',
@@ -135,7 +195,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An investor holds 30% of an investee and exercises significant influence. Compared with proportionate consolidation, the equity method will report:',
       given: null,
-      opts: ['Higher revenue and higher total assets', 'The same net income but lower revenue and lower total assets', 'Lower net income and higher total assets', 'The same revenue but different net income'],
+      opts: [
+        'Higher revenue and higher total assets',
+        'The same net income but lower revenue and lower total assets',
+        'Lower net income and higher total assets',
+        'The same revenue but different net income',
+      ],
       a: 1,
       why: 'The equity method reports a single line for both the investment and the share of income. Net income is identical; revenue and assets are not grossed up.',
       ref: 'FSA — Intercorporate Investments, LOS 1.c',
@@ -143,7 +208,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A sponsor lowers the discount rate used to value its defined benefit obligation. All else equal, this will:',
       given: null,
-      opts: ['Decrease the PBO and improve funded status', 'Increase the PBO and worsen funded status', 'Leave the PBO unchanged', 'Increase plan assets'],
+      opts: [
+        'Decrease the PBO and improve funded status',
+        'Increase the PBO and worsen funded status',
+        'Leave the PBO unchanged',
+        'Increase plan assets',
+      ],
       a: 1,
       why: 'A lower discount rate raises the present value of future benefits, increasing the PBO and reducing the funded status.',
       ref: 'FSA — Employee Compensation: Post-Employment, LOS 2.c',
@@ -151,7 +221,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A subsidiary’s functional currency is its local currency. The appropriate translation method and the treatment of the resulting adjustment are:',
       given: null,
-      opts: ['Temporal method; gain or loss in net income', 'Current rate method; adjustment in other comprehensive income', 'Temporal method; adjustment in OCI', 'Current rate method; gain or loss in net income'],
+      opts: [
+        'Temporal method; gain or loss in net income',
+        'Current rate method; adjustment in other comprehensive income',
+        'Temporal method; adjustment in OCI',
+        'Current rate method; gain or loss in net income',
+      ],
       a: 1,
       why: 'When the functional currency is the local currency, the current rate method applies and the cumulative translation adjustment goes to OCI, not income.',
       ref: 'FSA — Multinational Operations, LOS 3.b',
@@ -159,7 +234,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Which of the following is the strongest indicator of low reporting quality rather than merely low results quality?',
       given: null,
-      opts: ['Declining margins across several periods', 'A large one-off restructuring charge', 'Frequent, unexplained changes in accounting estimates that raise reported income', 'A cyclical downturn in revenue'],
+      opts: [
+        'Declining margins across several periods',
+        'A large one-off restructuring charge',
+        'Frequent, unexplained changes in accounting estimates that raise reported income',
+        'A cyclical downturn in revenue',
+      ],
       a: 2,
       why: 'Reporting quality concerns the faithfulness of the numbers. Repeated income-increasing estimate changes point to biased reporting, not just poor performance.',
       ref: 'FSA — Evaluating Quality of Financial Reports, LOS 5.b',
@@ -167,7 +247,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'In analysing a bank, which ratio most directly addresses the adequacy of loss absorption capacity?',
       given: null,
-      opts: ['Common equity tier 1 ratio', 'Net interest margin', 'Cost-to-income ratio', 'Loan-to-deposit ratio'],
+      opts: [
+        'Common equity tier 1 ratio',
+        'Net interest margin',
+        'Cost-to-income ratio',
+        'Loan-to-deposit ratio',
+      ],
       a: 0,
       why: 'CET1 measures the highest-quality capital against risk-weighted assets, which is precisely the loss-absorption question. The others address profitability or funding.',
       ref: 'FSA — Analysis of Financial Institutions, LOS 4.b',
@@ -194,15 +279,25 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'When estimating the beta of a private firm using the pure-play method, the analyst should relever the unlevered beta using:',
       given: null,
-      opts: ['The comparable company\'s debt-to-equity ratio', 'The subject company\'s target debt-to-equity ratio', 'The industry average debt-to-equity ratio', 'A zero debt-to-equity ratio'],
+      opts: [
+        "The comparable company's debt-to-equity ratio",
+        "The subject company's target debt-to-equity ratio",
+        'The industry average debt-to-equity ratio',
+        'A zero debt-to-equity ratio',
+      ],
       a: 1,
-      why: 'Unlever with the comparable\'s capital structure to strip it out, then relever with the subject firm\'s target structure. Using the comparable\'s in both steps is the planted error.',
+      why: "Unlever with the comparable's capital structure to strip it out, then relever with the subject firm's target structure. Using the comparable's in both steps is the planted error.",
       ref: 'Corporate Issuers — Cost of Capital: Advanced Topics, LOS 3.c',
     },
     {
       text: 'In a share-exchange acquisition rather than a cash acquisition, the risk that expected synergies fail to materialise is:',
       given: null,
-      opts: ['Borne entirely by the acquirer', 'Shared between acquirer and target shareholders', 'Borne entirely by the target', 'Eliminated by the exchange ratio'],
+      opts: [
+        'Borne entirely by the acquirer',
+        'Shared between acquirer and target shareholders',
+        'Borne entirely by the target',
+        'Eliminated by the exchange ratio',
+      ],
       a: 1,
       why: 'Target shareholders become owners of the combined entity, so they share in any shortfall. In a cash deal the acquirer bears the full risk.',
       ref: 'Corporate Issuers — Corporate Restructuring, LOS 4.d',
@@ -210,7 +305,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Which ESG integration approach explicitly excludes entire industries from the investable universe?',
       given: null,
-      opts: ['Best-in-class', 'Negative screening', 'Thematic investing', 'Engagement and active ownership'],
+      opts: [
+        'Best-in-class',
+        'Negative screening',
+        'Thematic investing',
+        'Engagement and active ownership',
+      ],
       a: 1,
       why: 'Negative screening removes sectors or activities outright. Best-in-class instead selects leaders within every sector.',
       ref: 'Corporate Issuers — ESG Considerations in Investment Analysis, LOS 2.b',
@@ -221,7 +321,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A firm has negative free cash flow to equity, pays no dividend, and applies clean surplus accounting. The most appropriate valuation model is:',
       given: null,
-      opts: ['Gordon growth dividend discount model', 'FCFE discount model', 'Residual income model', 'Two-stage dividend discount model'],
+      opts: [
+        'Gordon growth dividend discount model',
+        'FCFE discount model',
+        'Residual income model',
+        'Two-stage dividend discount model',
+      ],
       a: 2,
       why: 'Residual income recognises much of the value in current book value, making it workable where dividends and near-term free cash flow are absent.',
       ref: 'Equity Valuation — Residual Income Valuation, LOS 5.a',
@@ -229,7 +334,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An analyst forecasts FCFF and discounts it at the cost of equity. This produces:',
       given: null,
-      opts: ['A correct estimate of equity value', 'A correct estimate of firm value', 'An overstated value, because the discount rate is too high for the cash flow', 'An understated value, because the discount rate is too high for the cash flow'],
+      opts: [
+        'A correct estimate of equity value',
+        'A correct estimate of firm value',
+        'An overstated value, because the discount rate is too high for the cash flow',
+        'An understated value, because the discount rate is too high for the cash flow',
+      ],
       a: 3,
       why: 'FCFF belongs to all capital providers and must be discounted at WACC. The cost of equity exceeds WACC, so discounting FCFF at it understates value.',
       ref: 'Equity Valuation — Free Cash Flow Valuation, LOS 3.b',
@@ -253,7 +363,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Compared with a trailing P/E, a justified leading P/E is preferable when:',
       given: null,
-      opts: ['Earnings are volatile and the most recent year was unrepresentative', 'The firm has no analyst coverage', 'Book value is negative', 'The firm pays no dividend'],
+      opts: [
+        'Earnings are volatile and the most recent year was unrepresentative',
+        'The firm has no analyst coverage',
+        'Book value is negative',
+        'The firm pays no dividend',
+      ],
       a: 0,
       why: 'Leading P/E uses forecast normalised earnings, which avoids anchoring on an unrepresentative trailing figure.',
       ref: 'Equity Valuation — Market-Based Valuation, LOS 4.c',
@@ -264,7 +379,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A manager expects rates to evolve exactly as implied by the current forward curve. Riding the yield curve will most likely produce:',
       given: null,
-      opts: ['Excess return over a buy-and-hold strategy', 'The same return as any other maturity strategy', 'A loss relative to the benchmark', 'A gain only if the curve is inverted'],
+      opts: [
+        'Excess return over a buy-and-hold strategy',
+        'The same return as any other maturity strategy',
+        'A loss relative to the benchmark',
+        'A gain only if the curve is inverted',
+      ],
       a: 1,
       why: 'If rates evolve as the forwards imply, all maturity strategies earn the same return by no-arbitrage. A view only pays if it differs from the forwards.',
       ref: 'Fixed Income — The Term Structure and Interest Rate Dynamics, LOS 1.d',
@@ -280,7 +400,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Relative to an otherwise identical option-free bond, a callable bond has:',
       given: null,
-      opts: ['A higher value and higher effective duration', 'A lower value and lower effective duration when rates fall', 'A higher value and lower effective duration', 'The same value but different convexity'],
+      opts: [
+        'A higher value and higher effective duration',
+        'A lower value and lower effective duration when rates fall',
+        'A higher value and lower effective duration',
+        'The same value but different convexity',
+      ],
       a: 1,
       why: 'The call belongs to the issuer, so the bond is worth less. As rates fall, the call compresses price appreciation, shortening effective duration.',
       ref: 'Fixed Income — Valuation and Analysis of Bonds with Embedded Options, LOS 3.c',
@@ -288,15 +413,25 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Which criticism applies most directly to structural credit models such as Merton?',
       given: null,
-      opts: ['They require an estimation sample of historical defaults', 'They rely on unobservable asset values and volatilities', 'They cannot incorporate the capital structure', 'They assume default is a surprise jump process'],
+      opts: [
+        'They require an estimation sample of historical defaults',
+        'They rely on unobservable asset values and volatilities',
+        'They cannot incorporate the capital structure',
+        'They assume default is a surprise jump process',
+      ],
       a: 1,
-      why: 'Structural models require the firm\'s asset value and asset volatility, neither of which is directly observable. Reduced-form models face the estimation-sample criticism.',
+      why: "Structural models require the firm's asset value and asset volatility, neither of which is directly observable. Reduced-form models face the estimation-sample criticism.",
       ref: 'Fixed Income — Credit Analysis Models, LOS 4.d',
     },
     {
       text: 'A credit protection buyer on a CDS is economically equivalent to:',
       given: null,
-      opts: ['Being long the reference bond', 'Being short credit risk of the reference entity', 'Selling a put on the reference entity', 'Being long the benchmark government bond only'],
+      opts: [
+        'Being long the reference bond',
+        'Being short credit risk of the reference entity',
+        'Selling a put on the reference entity',
+        'Being long the benchmark government bond only',
+      ],
       a: 1,
       why: 'Buying protection pays off when credit deteriorates, so it is a short credit position — the mirror image of owning the bond.',
       ref: 'Fixed Income — Credit Default Swaps, LOS 5.b',
@@ -315,15 +450,25 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'In the Black–Scholes–Merton model, N(d₂) is best interpreted as:',
       given: null,
-      opts: ['The delta of the call', 'The risk-neutral probability the option finishes in the money', 'The actual probability the option finishes in the money', 'The present value factor applied to the strike'],
+      opts: [
+        'The delta of the call',
+        'The risk-neutral probability the option finishes in the money',
+        'The actual probability the option finishes in the money',
+        'The present value factor applied to the strike',
+      ],
       a: 1,
-      why: 'N(d₂) is the risk-neutral probability of exercise. N(d₁) is the option\'s delta, and the actual probability is not used in the model at all.',
+      why: "N(d₂) is the risk-neutral probability of exercise. N(d₁) is the option's delta, and the actual probability is not used in the model at all.",
       ref: 'Derivatives — Valuation of Contingent Claims, LOS 2.d',
     },
     {
       text: 'A dealer is short gamma and rebalances a delta hedge only weekly. A large move in the underlying in either direction will most likely produce:',
       given: null,
-      opts: ['A hedging gain', 'A hedging loss', 'No effect, because the book is delta neutral', 'A gain only if the move is upward'],
+      opts: [
+        'A hedging gain',
+        'A hedging loss',
+        'No effect, because the book is delta neutral',
+        'A gain only if the move is upward',
+      ],
       a: 1,
       why: 'A short gamma position loses on large moves in either direction because the delta hedge is systematically wrong between rebalancing dates.',
       ref: 'Derivatives — Valuation of Contingent Claims, LOS 2.h',
@@ -331,7 +476,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An increase in the volatility of the underlying will, all else equal:',
       given: null,
-      opts: ['Increase call values and decrease put values', 'Decrease call values and increase put values', 'Increase both call and put values', 'Leave both unchanged'],
+      opts: [
+        'Increase call values and decrease put values',
+        'Decrease call values and increase put values',
+        'Increase both call and put values',
+        'Leave both unchanged',
+      ],
       a: 2,
       why: 'Higher volatility raises the value of optionality on both sides, because the downside is truncated by the option structure while the upside is not.',
       ref: 'Derivatives — Valuation of Contingent Claims, LOS 2.f',
@@ -350,7 +500,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A commodity futures curve is in contango. An investor holding a long-only rolling futures position will most likely earn:',
       given: null,
-      opts: ['A positive roll return', 'A negative roll return', 'A roll return of exactly zero', 'A roll return independent of the curve shape'],
+      opts: [
+        'A positive roll return',
+        'A negative roll return',
+        'A roll return of exactly zero',
+        'A roll return independent of the curve shape',
+      ],
       a: 1,
       why: 'In contango the investor sells a cheaper expiring contract and buys a more expensive deferred one, producing a negative roll return.',
       ref: 'Alternative Investments — Introduction to Commodities, LOS 1.d',
@@ -366,7 +521,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A merger arbitrage strategy has a return profile most similar to:',
       given: null,
-      opts: ['A long call on the target', 'A short put on deal completion', 'A long straddle', 'A long position in the acquirer'],
+      opts: [
+        'A long call on the target',
+        'A short put on deal completion',
+        'A long straddle',
+        'A long position in the acquirer',
+      ],
       a: 1,
       why: 'The strategy earns a small steady spread when deals close and suffers large losses when they break — the payoff shape of a short put.',
       ref: 'Alternative Investments — Hedge Fund Strategies, LOS 4.c',
@@ -374,7 +534,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Compared with direct real estate ownership, publicly traded REITs most likely exhibit:',
       given: null,
-      opts: ['Lower liquidity and lower short-run equity correlation', 'Higher liquidity and higher short-run equity correlation', 'Higher liquidity and lower short-run equity correlation', 'Identical liquidity and correlation'],
+      opts: [
+        'Lower liquidity and lower short-run equity correlation',
+        'Higher liquidity and higher short-run equity correlation',
+        'Higher liquidity and lower short-run equity correlation',
+        'Identical liquidity and correlation',
+      ],
       a: 1,
       why: 'Listed vehicles trade continuously, which gives liquidity but also imports short-run equity market beta that direct property does not display.',
       ref: 'Alternative Investments — Investments in Real Estate through Publicly Traded Securities, LOS 3.a',
@@ -382,7 +547,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'Under the theory of storage, a market in contango is best explained by:',
       given: null,
-      opts: ['A high convenience yield', 'High storage costs relative to the convenience yield', 'Producer hedging pressure', 'Backwardated inventory levels'],
+      opts: [
+        'A high convenience yield',
+        'High storage costs relative to the convenience yield',
+        'Producer hedging pressure',
+        'Backwardated inventory levels',
+      ],
       a: 1,
       why: 'Contango arises when the cost of carrying inventory exceeds the convenience yield of holding the physical commodity.',
       ref: 'Alternative Investments — Introduction to Commodities, LOS 1.e',
@@ -409,7 +579,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'A portfolio has a one-day 95% VaR of $1.2m. The most accurate interpretation is:',
       given: 'VaR₉₅,₁d = $1.2m',
-      opts: ['The maximum loss on any single day is $1.2m', 'On 5% of days the loss is expected to exceed $1.2m', 'The average daily loss is $1.2m', 'Losses will never exceed $1.2m in a month'],
+      opts: [
+        'The maximum loss on any single day is $1.2m',
+        'On 5% of days the loss is expected to exceed $1.2m',
+        'The average daily loss is $1.2m',
+        'Losses will never exceed $1.2m in a month',
+      ],
       a: 1,
       why: 'VaR is a quantile of the loss distribution. It states the frequency with which the threshold is breached, never the size of the breach.',
       ref: 'Portfolio Management — Measuring and Managing Market Risk, LOS 5.b',
@@ -425,7 +600,12 @@ export const CFA_L2_QUESTIONS: QuizBank = {
     {
       text: 'An ETF trades persistently at a premium to net asset value. The most likely cause is:',
       given: null,
-      opts: ['A failure of the creation/redemption mechanism', 'High portfolio turnover within the fund', 'A high expense ratio', 'A large number of authorised participants'],
+      opts: [
+        'A failure of the creation/redemption mechanism',
+        'High portfolio turnover within the fund',
+        'A high expense ratio',
+        'A large number of authorised participants',
+      ],
       a: 0,
       why: 'Arbitrage by authorised participants normally closes premiums and discounts. A persistent premium implies the mechanism is impaired.',
       ref: 'Portfolio Management — Exchange-Traded Funds, LOS 3.c',

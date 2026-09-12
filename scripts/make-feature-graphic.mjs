@@ -88,8 +88,7 @@ console.log(`wrote ${svgPath}`);
 async function findChromium() {
   try {
     const { chromium } = await import('playwright-core');
-    const local =
-      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    const local = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
     const testing = join(
       process.env.HOME ?? '',
       'Library/Caches/ms-playwright/chromium-1223/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
@@ -110,7 +109,10 @@ if (!found) {
 }
 
 const browser = await found.chromium.launch({ executablePath: found.executablePath });
-const page = await browser.newPage({ viewport: { width: 1024, height: 500 }, deviceScaleFactor: 2 });
+const page = await browser.newPage({
+  viewport: { width: 1024, height: 500 },
+  deviceScaleFactor: 2,
+});
 await page.setContent(`<!doctype html><body style="margin:0;overflow:hidden">${svg}</body>`, {
   waitUntil: 'load',
 });
