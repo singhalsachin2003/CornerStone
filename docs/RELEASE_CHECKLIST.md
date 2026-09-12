@@ -345,9 +345,30 @@ script (`npm run store:screenshot`) rather than a hand-built device state — se
   - **Data Safety must be corrected** — see `docs/PRIVACY.md` for the exact answers.
   - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, and it was on the
     blocked list. **It has been removed from that list** — blocking it strips the permission
-    from a library that calls `ConnectivityManager`. Confirm on the merged manifest after the
-    first v1.1 build: the list goes from three entries to five, the other new one being
-    `com.android.vending.BILLING` from the Play Billing library.
+    from a library that calls `ConnectivityManager`.
+
+    **Verified on the merged release manifest, 2026-09-12** (`npx expo prebuild --platform
+    android --clean` then `cd android && ./gradlew :app:processReleaseManifest`, reading
+    `app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml`):
+
+    ```
+    android.permission.ACCESS_NETWORK_STATE          ← new in v1.1 (expo-updates)
+    android.permission.INTERNET
+    android.permission.POST_NOTIFICATIONS
+    android.permission.RECEIVE_BOOT_COMPLETED
+    com.android.vending.BILLING                      ← new in v1.1 (Play Billing 8.3.0)
+    io.cornerstone.study.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION   ← app-scoped, grants nothing
+    ```
+
+    `com.android.vending.BILLING` arrives from `com.android.billingclient:billing:8.3.0`,
+    pulled in by `com.revenuecat.purchases:purchases:10.20.0`. **This is the declaration Play
+    requires before it will let you create a subscription product**, so the manifest side of
+    that dependency is now confirmed rather than assumed.
+
+    When grepping the merged manifest, match on the `<uses-permission` element rather than on
+    the word "permission" in the name — `com.android.vending.BILLING` does not contain it, and
+    a name-based filter silently reports the one permission you are actually looking for as
+    missing.
   - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
     without deduping. Check `app.json` by hand if it is ever run.
 
@@ -366,13 +387,43 @@ The code is done and verified; everything below needs the Console, an account, o
    unzip -q x.aab -d out
    bundletool dump manifest --bundle=x.aab | grep uses-permission   # BILLING must be there
    strings out/base/assets/index.android.bundle | grep -oE "goog_[A-Za-z0-9]+"
-   strings out/base/assets/index.android.bundle | grep -oE "test_[A-Za-z0-9]+"   # must be empty
+   strings out/base/assets/index.android.bundle | grep -oE "\btest_[A-Za-z0-9]{8,}"
    ```
 
    `aapt2 dump xmltree` cannot read an AAB manifest — it is protobuf-encoded.
    **Play refuses to create subscription products until an uploaded binary declares
    `com.android.vending.BILLING`**, so the build comes before the product, which is the
-   opposite of how it looks.
+   opposite of how it looks. That permission comes from the Play Billing library, **not**
+   from the RevenueCat key — so a build with no key still declares it and is still enough
+   to unblock product creation in the Console.
+
+   ### A full local release build was run on 2026-09-12, and it passed
+
+   ```bash
+   npx expo prebuild --platform android --clean
+   cd android && ./gradlew :app:assembleRelease      # 10m38s, BUILD SUCCESSFUL
+   ```
+
+   Verified on `app/build/outputs/apk/release/app-release.apk`:
+
+   - **Permissions** — the six listed above, `com.android.vending.BILLING` among them.
+   - **No `goog_` key in the bundle**, because `REVENUECAT_ANDROID_KEY` was unset. That is
+     the correct inert state, not a failure: the access rule turns the paywall off for
+     everyone in a build that cannot sell.
+   - **Premium content ships** — segment names and the `PLAYREVIEW` code are both in
+     `assets/index.android.bundle` (7.1 MB).
+   - **Native modules linked** — `com.revenuecat.purchases`, `com.android.billingclient`,
+     `expo.modules.updates` and `ExpoStoreReview` all present in the dex.
+   - versionName `1.1.0`, minSdk 24, targetSdk 36.
+
+   **Two grep traps, both of which produced a wrong answer first time:**
+
+   - Matching permissions on the word "permission" in the name reports `BILLING` as missing,
+     because `com.android.vending.BILLING` does not contain it. Match the `<uses-permission`
+     element instead.
+   - `grep -oE "test_[A-Za-z0-9]+"` over the bundle hits `…shortest_paths` abutting
+     `paywall_components_localizations` in a string table. Anchor it with `\b` and require
+     a realistic key length, or it cries wolf on every build.
 3. **Create the RevenueCat project** for `io.cornerstone.study`, create the Play subscription
    products, put them in an offering, then set `REVENUECAT_ANDROID_KEY` in the EAS production
    environment. Until that variable exists the build ships with no key and the paywall stays
