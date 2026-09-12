@@ -1004,7 +1004,7 @@ export const CFA_L1_SEGMENTS: PremiumSegmentBank = {
           given: 'outlay 1,000; CF 400 for 3 years; r = 9%',
           opts: ['−12', '12', '112', '200'],
           a: 1,
-          why: 'The three-year annuity factor at 9% is 2.5313, so PV = 400 × 2.5313 = 1,012.5 and NPV ≈ 12.5.',
+          why: 'The three-year annuity factor at 9% is 2.5313, so PV = 400 × 2.5313 = 1,012.5 and NPV is about 12.',
           ref: 'Capital Investments and Capital Allocation',
         },
         {

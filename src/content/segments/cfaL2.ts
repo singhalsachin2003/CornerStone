@@ -319,7 +319,7 @@ export const CFA_L2_SEGMENTS: PremiumSegmentBank = {
           given: null,
           opts: ['4', '3', '5', '2'],
           a: 1,
-          why: 'One category is the omitted reference. Including a dummy for every category alongside an intercept creates perfect multicollinearity — the dummy variable trap.',
+          why: 'One category is the omitted reference, so four categories need 3 dummies. Including a dummy for every category alongside an intercept creates perfect multicollinearity — the dummy variable trap.',
           ref: 'Extensions of Multiple Regression',
         },
         {
@@ -1927,7 +1927,7 @@ export const CFA_L2_SEGMENTS: PremiumSegmentBank = {
           given: null,
           opts: ['4', '2', '1.41', '1.0'],
           a: 1,
-          why: 'Active return scales with √BR, so quadrupling breadth doubles the expected active return.',
+          why: 'Active return scales with √BR, so quadrupling breadth multiplies it by √4 = 2.',
           ref: 'Analysis of Active Portfolio Management',
         },
         {

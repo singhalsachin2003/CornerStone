@@ -18,6 +18,7 @@ import {
   examTotals,
   isAscending,
   isNumericOptionSet,
+  optionValue,
   formatExamDate,
   premiumSegmentsFor,
   premiumTotals,
@@ -60,6 +61,48 @@ for (const [key, cards] of Object.entries(CARDS)) {
   });
 }
 
+/** Every number appearing in a free-text explanation. */
+function numbersIn(text: string): number[] {
+  const out: number[] = [];
+  for (const m of text.replace(/−/g, '-').matchAll(/-?\d[\d,]*(?:\.\d+)?/g)) {
+    const n = Number.parseFloat(m[0].replace(/,/g, ''));
+    if (Number.isFinite(n)) out.push(n);
+  }
+  return out;
+}
+
+/**
+ * For a computational question, does the explanation actually state the answer?
+ *
+ * This exists because the structural checks cannot see arithmetic, and arithmetic
+ * is where these questions go wrong. Three separate answer-index errors shipped
+ * past every other check in this file — an option list where `a` pointed at 0.71%
+ * while the working said 1.00%, a forward value pointing one option short, a
+ * geometric mean off by a whole option — and each would have been caught here,
+ * because in every case the explanation computed the right number and the index
+ * pointed somewhere else.
+ *
+ * It also makes the content better on its own terms: an explanation that never
+ * states its own answer is a worse explanation.
+ */
+function explanationStatesAnswer(q: Question): boolean {
+  const answer = optionValue(q.opts[q.a]);
+  if (!Number.isFinite(answer)) return true;
+
+  // The tolerance is bounded by the distance to the nearest *other* option, not
+  // just by the answer's magnitude. A flat 2% sounds reasonable and is useless
+  // here: options like 6.14% and 6.18% sit 0.04 apart, so a 2% window around
+  // either one swallows the other and a wrong answer index passes. Capping at
+  // under half the nearest gap is what makes "a neighbouring option can never
+  // satisfy this" true rather than merely intended.
+  const others = q.opts.map(optionValue).filter((_, i) => i !== q.a);
+  const gaps = others.map((v) => Math.abs(v - answer)).filter((g) => Number.isFinite(g) && g > 0);
+  const nearestGap = gaps.length > 0 ? Math.min(...gaps) : Number.POSITIVE_INFINITY;
+  const tolerance = Math.min(Math.max(Math.abs(answer) * 0.02, 1e-9), nearestGap * 0.45);
+
+  return numbersIn(q.why).some((n) => Math.abs(n - answer) <= tolerance);
+}
+
 function checkQuestions(label: string, questions: Question[]) {
   questions.forEach((q, i) => {
     // Numeric option sets are not shuffled at session time, so their authored
@@ -74,6 +117,12 @@ function checkQuestions(label: string, questions: Question[]) {
     if (new Set(q.opts).size !== q.opts.length) problems.push(`${label}[${i}]: duplicate options`);
     if (!q.text) problems.push(`${label}[${i}]: missing question text`);
     if (!q.why) problems.push(`${label}[${i}]: missing explanation`);
+    if (isNumericOptionSet(q) && q.why && !explanationStatesAnswer(q)) {
+      problems.push(
+        `${label}[${i}]: the explanation never states the answer (${q.opts[q.a]}) — ` +
+          'either the answer index is wrong or the working is',
+      );
+    }
     if (!q.ref) problems.push(`${label}[${i}]: missing curriculum reference`);
   });
 }

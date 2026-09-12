@@ -298,7 +298,7 @@ export const FRM_P2_SEGMENTS: PremiumSegmentBank = {
           given: 'λ 4%; T 3',
           opts: ['88.0%', '88.7%', '12.0%', '96.0%'],
           a: 1,
-          why: 'P(survival) = e^(−0.04 × 3) = e^(−0.12) = 0.8869.',
+          why: 'P(survival) = e^(−0.04 × 3) = e^(−0.12) = 0.8869, or 88.7%.',
           ref: 'Structural and reduced-form default models; Merton model',
         },
         {
