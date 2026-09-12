@@ -16,6 +16,8 @@ import {
   Question,
   cardCount,
   examTotals,
+  isAscending,
+  isNumericOptionSet,
   formatExamDate,
   premiumSegmentsFor,
   premiumTotals,
@@ -60,6 +62,12 @@ for (const [key, cards] of Object.entries(CARDS)) {
 
 function checkQuestions(label: string, questions: Question[]) {
   questions.forEach((q, i) => {
+    // Numeric option sets are not shuffled at session time, so their authored
+    // order is what every candidate sees. Ascending order is what exam boards
+    // print and what keeps the answer's slot uncorrelated with its correctness.
+    if (isNumericOptionSet(q) && !isAscending(q)) {
+      problems.push(`${label}[${i}]: numeric options are not in ascending order`);
+    }
     if (q.opts.length !== 4) problems.push(`${label}[${i}]: ${q.opts.length} options, expected 4`);
     if (q.a < 0 || q.a >= q.opts.length)
       problems.push(`${label}[${i}]: answer index ${q.a} out of range`);
@@ -113,7 +121,11 @@ for (const [topicKey, specs] of Object.entries(PREMIUM_SEGMENTS)) {
       if (!c.kicker || !c.title || !c.body || !c.exam)
         problems.push(`card ${label}[${i}]: incomplete`);
     });
-    checkQuestions(label, spec.questions);
+    // Validate what ships, not what was typed. Numeric option sets are put into
+    // ascending order at the content boundary (see src/content/optionOrder.ts), so
+    // checking the authored spec would fail on a file the app never serves.
+    const shipped = premiumSegmentsFor(topicKey).find((seg) => seg.slug === spec.slug);
+    checkQuestions(label, shipped?.questions ?? spec.questions);
   }
 }
 
@@ -135,6 +147,14 @@ console.log(`questions     ${questions}`);
 console.log(`CFA           ${JSON.stringify(examTotals('CFA'))}`);
 console.log(`FRM           ${JSON.stringify(examTotals('FRM'))}`);
 console.log(`premium       ${JSON.stringify(premiumTotals())}`);
+
+// How much work the boundary is doing. Not a failure — the normaliser exists so
+// banks can be written in whatever order reads best — but a number worth seeing,
+// because it is the count of questions whose slots the author did not choose.
+const reordered = ALL_TOPICS.flatMap((t) => segmentsFor(t.key))
+  .flatMap((seg) => seg.questions)
+  .filter((q) => isNumericOptionSet(q)).length;
+console.log(`numeric items ${reordered} with fixed option order, all ascending`);
 console.log(
   `paid areas    ${ALL_TOPICS.filter((t) => premiumSegmentsFor(t.key).length > 0).length} of ${ALL_TOPICS.length}`,
 );

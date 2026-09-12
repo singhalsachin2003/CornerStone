@@ -1,6 +1,7 @@
 import { ALL_TOPICS, TopicArea, topicByKey } from './syllabus';
 import { CardBank, Question, QuizBank, Segment, SnapshotCard } from './types';
 import { PREMIUM_SEGMENTS } from './segments';
+import { normaliseOptionOrder } from './optionOrder';
 
 import { CFA_L1_CARDS } from './cards/cfaL1';
 import { CFA_L2_CARDS } from './cards/cfaL2';
@@ -14,6 +15,7 @@ import { FRM_QUESTIONS } from './questions/frm';
 
 export * from './syllabus';
 export * from './types';
+export * from './optionOrder';
 export { PREMIUM_SEGMENTS } from './segments';
 
 export const CARDS: CardBank = {
@@ -23,12 +25,25 @@ export const CARDS: CardBank = {
   ...FRM_CARDS,
 };
 
-export const QUESTIONS: QuizBank = {
+const AUTHORED_QUESTIONS: QuizBank = {
   ...CFA_L1_QUESTIONS,
   ...CFA_L2_QUESTIONS,
   ...CFA_L3_QUESTIONS,
   ...FRM_QUESTIONS,
 };
+
+/**
+ * Numeric option sets are put into ascending order once, here, rather than in
+ * every bank by hand — see `optionOrder.ts` for why the authored order was a
+ * problem. Normalising at the boundary means the banks stay readable as written
+ * and nothing downstream has to remember to do it.
+ */
+export const QUESTIONS: QuizBank = Object.fromEntries(
+  Object.entries(AUTHORED_QUESTIONS).map(([key, questions]) => [
+    key,
+    questions.map(normaliseOptionOrder),
+  ]),
+);
 
 export function cardsFor(topicKey: string): SnapshotCard[] {
   return CARDS[topicKey] ?? [];
@@ -110,6 +125,21 @@ export function coreSegment(topicKey: string): Segment {
   };
 }
 
+/**
+ * Premium questions with their numeric options sorted, computed once per segment.
+ * `premiumSegmentsFor` is called on every render of a topic row, so mapping the
+ * bank on each call would re-sort several hundred questions for a list redraw.
+ */
+const normalisedPremiumCache = new Map<string, Question[]>();
+function normalisedPremium(topicKey: string, slug: string, questions: Question[]): Question[] {
+  const key = `${topicKey}/${slug}`;
+  const cached = normalisedPremiumCache.get(key);
+  if (cached) return cached;
+  const normalised = questions.map(normaliseOptionOrder);
+  normalisedPremiumCache.set(key, normalised);
+  return normalised;
+}
+
 /** The premium segments of a topic area, in the order they were authored. */
 export function premiumSegmentsFor(topicKey: string): Segment[] {
   let questionOffset = questionCount(topicKey);
@@ -124,7 +154,7 @@ export function premiumSegmentsFor(topicKey: string): Segment[] {
       modules: spec.modules,
       tier: 'premium' as const,
       cards: spec.cards,
-      questions: spec.questions,
+      questions: normalisedPremium(topicKey, spec.slug, spec.questions),
       questionOffset,
       cardOffset,
     };
