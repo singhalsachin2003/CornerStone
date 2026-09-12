@@ -8,6 +8,7 @@ import { FRM_P2_SEGMENTS } from './frmP2';
 
 import { CFA_L1_SEGMENTS_II } from './cfaL1b';
 import { CFA_L2_SEGMENTS_II } from './cfaL2b';
+import { CFA_L3_SEGMENTS_II } from './cfaL3b';
 
 /**
  * Merge banks by **concatenating** each topic's segments, not by replacing them.
@@ -52,4 +53,5 @@ export const PREMIUM_SEGMENTS: PremiumSegmentBank = mergeBanks(
   // Tranche II — appended after everything above, per the note.
   CFA_L1_SEGMENTS_II,
   CFA_L2_SEGMENTS_II,
+  CFA_L3_SEGMENTS_II,
 );
