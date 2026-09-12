@@ -25,3 +25,55 @@ export interface Question {
 
 export type CardBank = Record<string, SnapshotCard[]>;
 export type QuizBank = Record<string, Question[]>;
+
+// ---------------------------------------------------------------------------
+// Segments
+// ---------------------------------------------------------------------------
+
+/**
+ * Free content is everything the app had already shipped. Premium is what was
+ * added afterwards, and only ever what was added afterwards — see
+ * `src/access/rules.ts` for why the deal is shaped that way.
+ */
+export type SegmentTier = 'free' | 'premium';
+
+/**
+ * A named unit of study inside a topic area, drawn along the lines of the
+ * official learning modules rather than invented for the app.
+ *
+ * A topic area is too big to be a unit of work — "Fixed Income" is nineteen
+ * modules — and a single module is too small to be worth opening. A segment sits
+ * between them: a few related modules, one sitting's worth of cards and questions.
+ */
+export interface Segment {
+  /** Globally unique: `${topicKey}/${slug}`. Also the route param. */
+  key: string;
+  topicKey: string;
+  slug: string;
+  name: string;
+  /** One line, shown on the segment row. */
+  blurb: string;
+  /**
+   * The official learning modules this segment covers, quoted from the outline so
+   * a candidate can line the app up against the curriculum they were given.
+   */
+  modules: string[];
+  tier: SegmentTier;
+  cards: SnapshotCard[];
+  questions: Question[];
+}
+
+/**
+ * A premium segment as authored. `topicKey` and `key` are filled in by the bank
+ * that holds it, so a segment cannot be filed under one topic and keyed to another.
+ */
+export interface PremiumSegmentSpec {
+  slug: string;
+  name: string;
+  blurb: string;
+  modules: string[];
+  cards: SnapshotCard[];
+  questions: Question[];
+}
+
+export type PremiumSegmentBank = Record<string, PremiumSegmentSpec[]>;
