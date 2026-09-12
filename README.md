@@ -195,17 +195,24 @@ increments its lapse count; three clean passes retire it from the queue.
 ## Release readiness
 
 Done:
-- **Permissions** — verified from the built APK with `aapt2`, not from the config. The release
-  build ships exactly three: `INTERNET`, `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`
-  (plus an app-scoped `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` that AndroidX generates for
-  runtime-registered receivers — it grants nothing and is invisible to users).
+- **Permissions** — verified from the built APK with `aapt2`, not from the config. Through
+  versionCode 5 the release build shipped exactly three: `INTERNET`, `POST_NOTIFICATIONS`,
+  `RECEIVE_BOOT_COMPLETED` (plus an app-scoped `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` that
+  AndroidX generates for runtime-registered receivers — it grants nothing and is invisible to
+  users).
 
-  Thirty-two others are stripped via `android.blockedPermissions`. Most came from
+  **v1.1 adds two, both consequences of shipping updates and a subscription:**
+  `ACCESS_NETWORK_STATE`, which had to come *off* the blocked list because `expo-updates`
+  calls `ConnectivityManager` and blocking it strips the permission from a library that needs
+  it; and `com.android.vending.BILLING`, which arrives through the Play Billing library and is
+  what Play requires before it will let you create a subscription product at all.
+
+  Thirty-one others are stripped via `android.blockedPermissions`. Most came from
   `expo-notifications`, which bundles Firebase Cloud Messaging for remote push even though
   this app only schedules local notifications; that pulled in `c2dm.permission.RECEIVE`,
-  `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, the Play install-referrer binding and sixteen
-  launcher-badge permissions. Exact-alarm permissions are blocked deliberately too: Play
-  requires a justification form for them and a study reminder does not qualify.
+  `WAKE_LOCK`, the Play install-referrer binding and sixteen launcher-badge permissions.
+  Exact-alarm permissions are blocked deliberately too: Play requires a justification form for
+  them and a study reminder does not qualify.
 
   **`expo prebuild` cannot show you this** — library manifests merge during the Gradle build.
   Always check the artifact:

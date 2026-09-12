@@ -343,9 +343,11 @@ script (`npm run store:screenshot`) rather than a hand-built device state — se
   - **`PRIVACY.md` was rewritten before this shipped**, as the previous version promised it
     would be. It now describes the update service and the subscription explicitly.
   - **Data Safety must be corrected** — see `docs/PRIVACY.md` for the exact answers.
-  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, which is on the
-    blocked list. Confirm the merged manifest after the first v1.1 build: the documented
-    permission list goes from three entries to four.
+  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, and it was on the
+    blocked list. **It has been removed from that list** — blocking it strips the permission
+    from a library that calls `ConnectivityManager`. Confirm on the merged manifest after the
+    first v1.1 build: the list goes from three entries to five, the other new one being
+    `com.android.vending.BILLING` from the Play Billing library.
   - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
     without deduping. Check `app.json` by hand if it is ever run.
 
