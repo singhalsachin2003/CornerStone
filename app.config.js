@@ -29,11 +29,20 @@ function purchasesExtra() {
 module.exports = ({ config }) => ({
   ...config,
 
-  // Over-the-air updates. `appVersion` means a JS update only ever reaches builds
-  // of the same `version`, so a bundle can never land on a binary whose native
-  // modules it does not match. That policy is what makes retiring a promotional
-  // code a minutes-long OTA instead of a store release.
-  runtimeVersion: { policy: 'appVersion' },
+  // Over-the-air updates, which is what makes retiring a promotional code a
+  // minutes-long update instead of a store release. The promo table depends on
+  // that, because every code in it is public.
+  //
+  // `fingerprint`, not the `appVersion` default that `eas update:configure`
+  // writes. With `appVersionSource: remote` and `version` pinned in app.json,
+  // `appVersion` holds the runtime constant across native changes — so forgetting
+  // to bump `version` after adding a native module pushes JS onto a binary that
+  // cannot run it. This repo has now added one (`react-native-purchases`), which
+  // turns that from a hypothetical into the next mistake waiting to happen.
+  // Fingerprinting the native project means a native change produces a new runtime
+  // on its own, and existing installs simply stop receiving updates until they
+  // take the store build — which is the correct outcome.
+  runtimeVersion: { policy: 'fingerprint' },
   updates: {
     enabled: true,
     url: `https://u.expo.dev/${PROJECT_ID}`,

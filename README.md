@@ -17,7 +17,11 @@ Built from the design handoff in `design_handoff_frm_cfa_study_flow/`, with cont
 - **react-native-svg** for the progress rings (React Native has no conic gradient)
 - **Source Serif 4** and **Archivo** via `@expo-google-fonts`
 
-No backend, no auth, no API keys. Everything runs on-device.
+- **react-native-purchases** (RevenueCat over Play Billing) for the optional subscription,
+  behind a facade that is completely inert without a key
+
+No backend and no auth. Study content and progress run entirely on-device; the only network
+traffic is an over-the-air update check and, if the candidate subscribes, an entitlement check.
 
 ## Running
 
@@ -31,19 +35,31 @@ npm run web
 ## Checks
 
 ```bash
+npm run verify           # everything below, in one command — this is what CI runs
+npm run lint             # eslint
+npm run format:check     # prettier
 npm run typecheck        # tsc --noEmit
-npm test                 # Jest — scheduling, streaks, progress, shuffling (47 tests)
-npm run check:content    # every topic has cards + questions; every question is well-formed
+npm test                 # Jest — scheduling, access, promo codes, segments, option order
+npm run check:content    # every topic and segment has content; every question is well-formed
 npm run check:syllabus   # topic areas, weights and module counts match the syllabus PDF
+npm run check:applinks   # assetlinks.json is well formed, and says what is still outstanding
+npm run preview:access   # renders the five paywall states to .expo-web/access-preview/
 ```
 
 Tests target the pure logic rather than components, because that logic is what fails
 *silently*: a wrong review interval, an off-by-one streak or a shuffle that loses the answer
 index corrupts a candidate's data without ever throwing.
 
-`check:content` fails the build if a topic area has no content, if a question does not have
-exactly four distinct options with a valid answer index, or if a content bank is keyed to a topic
-that does not exist.
+`check:content` fails the build if a topic area or segment has no content, if a question does not
+have exactly four distinct options with a valid answer index, if a content bank is keyed to a
+topic that does not exist, if a segment cites a learning module that is not in that topic's
+published outline, or if a numeric option set is not in ascending order.
+
+That last one is not cosmetic. `shuffleOptions` deliberately leaves numeric option sets alone —
+exam boards print values in order — so for those questions the authored position is the position
+every candidate sees. Before it was enforced, the answer sat in slot B 81% of the time across the
+paid questions and in slot D never, which meant guessing beat working it out. Sorting ascending
+makes position a function of magnitude, which is uncorrelated with correctness.
 
 `check:syllabus` is the independent one: its expected topic names, weight bands and
 learning-module counts are transcribed from the PDF rather than read from the app, so it catches
@@ -243,3 +259,55 @@ CFA®, Chartered Financial Analyst® and GIPS® are registered trademarks of CFA
 GARP® are trademarks of the Global Association of Risk Professionals. This app is an independent
 study aid and is not endorsed by, affiliated with, or sponsored by either body. Always check
 weights and readings against the official documents for your exam window.
+
+## Monetisation
+
+Everything the app shipped before the subscription existed is free, permanently, and anyone who
+had already installed it keeps every paid segment permanently. What is sold is the segments
+written afterwards.
+
+That shape is not a preference. A content paywall dropped over a finished catalogue makes the
+subscription irrational — nothing renews if nothing is added, so every rational buyer takes the
+cheapest one-off tier and recurring revenue collapses. Selling the pipeline is what gives a
+renewal something to be a renewal of.
+
+It is enforced structurally rather than by policy: the free **core** segment of every topic area
+is *derived* from the banks that shipped in versionCode 5, not listed anywhere. Putting a price
+on shipped content would require deleting it from `CARDS`/`QUESTIONS`, which is a conspicuous
+diff rather than an oversight.
+
+### The four guards
+
+`src/access/rules.ts` is the whole gating decision as one pure function with `now` injected, so
+every state is reachable from a test rather than from one device on one day. Three of the guards
+exist to stop the paywall doing damage in states that arrive *before* anything is for sale:
+
+| Guard | Why |
+| --- | --- |
+| No purchases key → no gating | The SDK answers "not subscribed" for everyone, and gating on that locks content for every user of a build that cannot sell them anything |
+| No buyable product → no gating | A key is not enough; merchant verification is weeks away from the line of code that adds it |
+| No premium content → no gating | A pitch for nothing is a lie |
+| Pre-existing install → permanent access | Anyone already using the app keeps all of it |
+
+Grandfathering outranks a live subscription deliberately: telling somebody who has had the app
+for a year that their 30-day code is expiring would be both wrong and alarming.
+
+### Promotional codes
+
+Codes give the paid segments away for a fixed window. They never discount, because Play's own
+promo codes grant free *trials*, are redeemable only inside Google's payment sheet, and have no
+API an app can call. Giving content away takes no payment, so no Play product or offer is
+involved.
+
+Every code compiles into the bundle and `strings` will find it, which dictates the rest: no
+grant is permanent, a year is the ceiling, `redeemableUntil` retires a campaign on its own, and
+analytics carries the campaign rather than the code. `PLAYREVIEW` is what the Play Console's
+Sign-in details declaration hands a reviewer instead of a demo account, and a test fails the
+build if it disappears.
+
+### Segments and the review queue
+
+The review queue keys items as `topicKey#index` into a **canonical bank** — free core first,
+then premium in authored order. Those indices must mean the same question forever, including for
+somebody whose subscription lapses while their queue still holds premium items. **Appending is
+the only safe way to add content; reordering never is.**

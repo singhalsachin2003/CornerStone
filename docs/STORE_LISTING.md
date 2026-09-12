@@ -83,18 +83,30 @@ FRM
 • Part II — all 6 topic areas
 
 38 topic areas in total, each with hand-written snapshot cards and its own question bank,
-organised by the published topic outlines and exam weight bands.
+organised by the published topic outlines and exam weight bands. Each area is divided into
+segments that follow the official learning modules, so you can line the app up against the
+curriculum you were given.
 
 SITTING BOTH?
 
 Plenty of candidates do. CFA and FRM run side by side with completely separate progress,
 bookmarks and review queues, and any exam or level is one tap away.
 
+FREE, AND WHAT IS NOT
+
+Everything Cornerstone shipped before the subscription existed is free, permanently —
+all 38 topic areas, their snapshot cards and their question banks. Anyone who installed
+the app before the subscription existed keeps every paid segment too, permanently.
+
+Cornerstone Plus opens the segments written since: deeper coverage drawn along named
+clusters of the official learning modules, with new segments added to the same
+subscription as they are written. That is what the subscription buys — the next ones.
+
 BUILT TO RESPECT YOUR TIME
 
 • Works fully offline — all content ships with the app
 • No account, no sign-up, no ads
-• Nothing you do leaves your device
+• Your study progress never leaves your device
 • Optional daily reminder
 
 IMPORTANT
@@ -155,16 +167,23 @@ upload them in this order:
 Answer honestly; this app should land at **Everyone / PEGI 3**.
 - No violence, sexuality, profanity, controlled substances, gambling
 - No user-generated content, no user interaction, no location sharing
-- No purchases
+- **Purchases: yes** — from version 1.1 there is a subscription. This answer changed;
+  the rating itself does not.
 
 ## Other Play Console fields
 
 - **App category** — Education
 - **Tags** — Education, Test Prep
 - **Contains ads** — No
-- **In-app purchases** — No
+- **In-app purchases** — **Yes**, from version 1.1. Declare the price range once the Play
+  subscription products exist.
 - **Target audience** — 18+ (professional certification candidates)
-- **Data safety** — see `docs/PRIVACY.md`
+- **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
+  subscription products go live**, not before the build ships: publishing a Play product
+  needs no new binary, so nothing else will ever force it to be revisited.
+- **Sign-in details** (formerly "App access") — **Yes, some functionality is restricted.**
+  The reviewer route is the `PLAYREVIEW` promotional code; the exact wording to paste is in
+  `docs/PRIVACY.md`.
 - **Privacy policy URL** — host `docs/PRIVACY.md` at a public URL (GitHub Pages works) and
   paste the link
 - **Government app** — No

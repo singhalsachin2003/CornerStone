@@ -1,9 +1,10 @@
-# Release checklist — Cornerstone v1.0 (Android)
+# Release checklist — Cornerstone (Android)
 
 Everything in here needs your accounts or your judgement. The code side is done.
 
 Verified state at time of writing: `eas-cli` 21.2.0 installed, logged in as **singhalsachin2003**,
-repo is **public**, `app.json` version `1.0.0`, `versionCode` managed remotely by EAS.
+repo is **public**, `app.json` version `1.1.0`, `versionCode` managed remotely by EAS.
+v1.0 shipped as versionCode 5; v1.1 is the subscription release.
 
 ---
 
@@ -325,30 +326,59 @@ script (`npm run store:screenshot`) rather than a hand-built device state — se
 
 - **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
   No SDK and no data leaves the app; this is why v1.0 ships without a crash reporter.
-- **Content fixes need a full release** in v1.0, because over-the-air updates are deliberately
-  disabled for zero network egress. If that becomes painful, re-add `expo-updates` — but the
-  privacy policy and Data Safety form must be updated in the same release.
+- **Content fixes ship over the air from v1.1.** `updates.enabled` is on, pointed at
+  `https://u.expo.dev/<projectId>`, with a channel per build profile in `eas.json`. Publish
+  with `eas update --branch production`. This is what makes retiring a promotional code a
+  minutes-long job rather than a store release, and the promo table depends on it because
+  every code in it is public.
 
-  Costed out on 31 July 2026 and **rejected for v1.0**. What it actually takes:
+  What it cost, and what had to change with it — all done, listed so the next person can
+  check none of it has drifted:
 
-  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, which is on our blocked
-    list. It has to come off — blocking it strips the permission from a library that calls
-    `ConnectivityManager`. It is normal-protection-level, so no user-facing prompt, but it
-    changes the documented APK permission list above from three entries to four.
-  - `PRIVACY.md` is published and states "no outbound network requests of any kind" and "no
-    over-the-air update service", and promises the policy will be updated *before* any release
-    that adds them. The app would contact `u.expo.dev` on every launch.
-  - Play **Data Safety** currently answers "no data collected" and would need revisiting.
-  - Use `runtimeVersion.policy: "fingerprint"`, not the `appVersion` default that
-    `eas update:configure` writes. With `version` pinned at 1.0.0 and `appVersionSource: remote`,
-    `appVersion` holds the runtime constant across native changes — so forgetting to bump
-    `version` after adding a native module pushes JS onto a build that cannot run it.
+  - **`runtimeVersion.policy` is `fingerprint`, not `appVersion`.** With
+    `appVersionSource: remote`, `appVersion` holds the runtime constant across native
+    changes, so forgetting to bump `version` after adding a native module pushes JS onto a
+    binary that cannot run it. v1.1 added `react-native-purchases`, which turns that from a
+    hypothetical into the next mistake waiting to happen.
+  - **`PRIVACY.md` was rewritten before this shipped**, as the previous version promised it
+    would be. It now describes the update service and the subscription explicitly.
+  - **Data Safety must be corrected** — see `docs/PRIVACY.md` for the exact answers.
+  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, which is on the
+    blocked list. Confirm the merged manifest after the first v1.1 build: the documented
+    permission list goes from three entries to four.
   - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
-    without deduping. Check `app.json` by hand afterwards.
+    without deduping. Check `app.json` by hand if it is ever run.
 
-  The build quota is not the reason to want this: the free plan allows 15 Android builds a
-  month, far more than this app ships. The only real cost of staying build-only is the 4–5 hour
-  free-tier queue.
+- **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
+  No SDK and no data leaves the app for this.
+
+## Before the v1.1 release — the monetisation additions
+
+The code is done and verified; everything below needs the Console, an account, or a build.
+
+1. **Export the signing keystore** — `eas credentials --platform android`. EAS holds the only
+   copy. One-way door, blocked by nothing, do it first.
+2. **Build once, then check the artifact**, not the build log:
+
+   ```bash
+   unzip -q x.aab -d out
+   bundletool dump manifest --bundle=x.aab | grep uses-permission   # BILLING must be there
+   strings out/base/assets/index.android.bundle | grep -oE "goog_[A-Za-z0-9]+"
+   strings out/base/assets/index.android.bundle | grep -oE "test_[A-Za-z0-9]+"   # must be empty
+   ```
+
+   `aapt2 dump xmltree` cannot read an AAB manifest — it is protobuf-encoded.
+   **Play refuses to create subscription products until an uploaded binary declares
+   `com.android.vending.BILLING`**, so the build comes before the product, which is the
+   opposite of how it looks.
+3. **Create the RevenueCat project** for `io.cornerstone.study`, create the Play subscription
+   products, put them in an offering, then set `REVENUECAT_ANDROID_KEY` in the EAS production
+   environment. Until that variable exists the build ships with no key and the paywall stays
+   off for everyone — which is correct behaviour, not a bug.
+4. **Correct Data Safety and Sign-in details** before the products go live. Publishing a Play
+   product needs no new binary, so nothing else will ever force the form to be revisited.
+5. **Publish `assetlinks.json` at the host root.** `npm run check:applinks` explains why the
+   copy in `docs/` is not enough and what fingerprint it needs.
 
 ## Annual maintenance
 
