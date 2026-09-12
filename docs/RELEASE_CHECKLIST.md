@@ -379,8 +379,22 @@ The code is done and verified; everything below needs the Console, an account, o
    off for everyone — which is correct behaviour, not a bug.
 4. **Correct Data Safety and Sign-in details** before the products go live. Publishing a Play
    product needs no new binary, so nothing else will ever force the form to be revisited.
-5. **Publish `assetlinks.json` at the host root.** `npm run check:applinks` explains why the
-   copy in `docs/` is not enough and what fingerprint it needs.
+5. **Publish `assetlinks.json` at the host root.** The file is complete —
+   `docs/.well-known/assetlinks.json` carries the real Play app signing fingerprint and the
+   upload key — but it is served at `/CornerStone/.well-known/`, which Android never reads.
+   Copy it to the root of the **`singhalsachin2003.github.io`** repository so it resolves at
+   `https://singhalsachin2003.github.io/.well-known/assetlinks.json`. That is the only thing
+   still standing between the intent filter and verified App Links.
+
+   **Take the fingerprint from the "Digital Asset Links JSON" block at the bottom of the App
+   signing page, never from the fingerprint copy buttons above it.** Clicking the Classical
+   key's SHA-256 button produced a different value from the one Google puts in its own
+   generated snippet — only the snippet is authoritative, and the difference is a silent way
+   to publish a file that verifies nothing.
+
+   Cornerstone's Play app id is **4973277887599855563**, and
+   `.../app/<id>/keymanagement` loads the App signing page directly — the nav path in the
+   playbook is not needed.
 
 ## Annual maintenance
 
