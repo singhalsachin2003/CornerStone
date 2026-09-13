@@ -386,9 +386,16 @@ The code is done and verified; everything below needs the Console, an account, o
    ```bash
    unzip -q x.aab -d out
    bundletool dump manifest --bundle=x.aab | grep uses-permission   # BILLING must be there
-   strings out/base/assets/index.android.bundle | grep -oE "goog_[A-Za-z0-9]+"
-   strings out/base/assets/index.android.bundle | grep -oE "\btest_[A-Za-z0-9]{8,}"
+   grep -rhoE "goog_[A-Za-z0-9]{20,}" out | sort -u        # the key lives in app.config
+   grep -rhoE "\btest_[A-Za-z0-9]{20,}" out | sort -u     # and so would a test key
+   python3 -c "import json;print(json.load(open('out/base/assets/app.config'))['extra']['purchases'])"
    ```
+
+   **Grep the whole artifact, not the JS bundle.** `extra` is not bundled with the JS — it is
+   written to `base/assets/app.config` and read at runtime through `expo-constants`. Searching
+   only `index.android.bundle` reports "no key" on a build that has one, which is exactly the
+   false negative that would send you rebuilding a correct artifact. versionCode 9 is the first
+   build where this mattered, and it caught it.
 
    `aapt2 dump xmltree` cannot read an AAB manifest — it is protobuf-encoded.
    **Play refuses to create subscription products until an uploaded binary declares
@@ -491,7 +498,11 @@ The code is done and verified; everything below needs the Console, an account, o
    | Entitlement | `premium` / "Cornerstone Premium", **no products attached yet** |
 
    `REVENUECAT_ANDROID_KEY` is set in the EAS `production`, `preview` and `development`
-   environments, so the next build carries the key.
+   environments, so the next build carries the key. **Verified in versionCode 9**, EAS build
+   `eff5b1dc`, saved at `store/cornerstone-versionCode9.aab`: `extra.purchases` reads
+   `{entitlementId: 'premium', revenueCatAndroidKey: 'goog_…Dyv'}`, `com.android.vending.BILLING`
+   is declared, the runtime version is the fingerprint policy, and the Supabase URL and
+   publishable key are in the JS bundle.
 
    **Two things are deliberately still missing, and the order between them is forced:**
 
