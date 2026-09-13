@@ -512,12 +512,19 @@ The code is done and verified; everything below needs the Console, an account, o
 
 4. **Correct Data Safety and Sign-in details** before the products go live. Publishing a Play
    product needs no new binary, so nothing else will ever force the form to be revisited.
-5. **Publish `assetlinks.json` at the host root.** The file is complete —
-   `docs/.well-known/assetlinks.json` carries the real Play app signing fingerprint and the
-   upload key — but it is served at `/CornerStone/.well-known/`, which Android never reads.
-   Copy it to the root of the **`singhalsachin2003.github.io`** repository so it resolves at
-   `https://singhalsachin2003.github.io/.well-known/assetlinks.json`. That is the only thing
-   still standing between the intent filter and verified App Links.
+5. **Publish `assetlinks.json` at the host root — merged and committed, not yet pushed.**
+   `~/singhalsachin2003.github.io` has the merge as commit `ace134f` on `main`, one commit
+   ahead of `origin`. `git push` from that repository is the whole remaining step, and it
+   is the only thing standing between the shipped intent filter and verified App Links.
+
+   **That host already vouches for OTC Learn.** `/.well-known/assetlinks.json` is a list so
+   one domain can vouch for several apps; the merge appends `io.cornerstone.study` and
+   leaves `com.otclearn.app` exactly as it was. Overwriting the file with Cornerstone's
+   copy from `docs/.well-known/` would silently unverify OTC Learn's links, which work
+   today — so re-run the merge, never a copy, if this ever has to be redone.
+
+   Cornerstone carries two fingerprints: the Play app signing key (what store installs
+   present) and the upload key (what a locally built APK presents). Both belong in the file.
 
    **Take the fingerprint from the "Digital Asset Links JSON" block at the bottom of the App
    signing page, never from the fingerprint copy buttons above it.** Clicking the Classical
