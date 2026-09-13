@@ -350,9 +350,12 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* ACCOUNT */}
+        {/* YOUR STUDIES — renamed from ACCOUNT. The sign-in card above took that
+            heading when backup was added, and two sections called ACCOUNT on one
+            screen read as a rendering fault. Nothing here is an account setting:
+            it is the exam, the level, the topic count and the bookmarks. */}
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
-          ACCOUNT
+          YOUR STUDIES
         </Eyebrow>
         <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)' }}>
           <DisclosureRow
