@@ -105,8 +105,8 @@ subscription as they are written. That is what the subscription buys — the nex
 BUILT TO RESPECT YOUR TIME
 
 • Works fully offline — all content ships with the app
-• No account, no sign-up, no ads
-• Your study progress never leaves your device
+• No ads, and no sign-up required to use any of it
+• An optional account backs your progress up, so a new phone does not start you over
 • Optional daily reminder
 
 IMPORTANT
@@ -180,7 +180,9 @@ Answer honestly; this app should land at **Everyone / PEGI 3**.
 - **Target audience** — 18+ (professional certification candidates)
 - **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
   subscription products go live**, not before the build ships: publishing a Play product
-  needs no new binary, so nothing else will ever force it to be revisited.
+  needs no new binary, so nothing else will ever force it to be revisited. It changed
+  again when optional accounts were added — email address, name and study progress all
+  became collected data types, each marked optional.
 - **Sign-in details** (formerly "App access") — **Yes, some functionality is restricted.**
   The reviewer route is the `PLAYREVIEW` promotional code; the exact wording to paste is in
   `docs/PRIVACY.md`.

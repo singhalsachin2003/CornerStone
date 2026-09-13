@@ -1,6 +1,6 @@
 # Privacy Policy — Cornerstone
 
-**Last updated: 12 September 2026**
+**Last updated: 13 September 2026**
 
 Cornerstone is a study app for CFA® and FRM® candidates, published by Sachin Singhal.
 
@@ -9,9 +9,10 @@ Cornerstone is a study app for CFA® and FRM® candidates, published by Sachin S
 **Cornerstone has no account, no sign-in, no analytics, no crash reporting and no
 advertising. Your study progress never leaves your device.**
 
-Version 1.1 adds two things that do use the network, and only two: an optional
-subscription, and over-the-air updates. Both are described in full below. If you never
-subscribe, the only outbound request the app makes is a check for a content update.
+Version 1.1 adds three things that use the network, and only three: an optional
+subscription, over-the-air updates, and an **optional account** that backs your progress
+up. All three are described in full below. If you create no account and never subscribe,
+the only outbound request the app makes is a check for a content update.
 
 ## What the app stores on your device, and never sends anywhere
 
@@ -31,8 +32,8 @@ leaves it:
 | Whether a subscription or promotional code is active | To unlock paid segments offline |
 
 This data is removed when you uninstall the app or clear its storage from system settings.
-Because nothing is transmitted, we cannot access, recover, export or delete it on your
-behalf.
+**Without an account, nothing above is transmitted**, so we cannot access, recover, export
+or delete it on your behalf.
 
 ## Subscriptions
 
@@ -53,6 +54,36 @@ anyone who had already installed the app keeps all of it permanently.
 **Promotional codes take no payment and involve no third party.** A code is checked against a
 list inside the app and grants access for a fixed number of days. Nothing is transmitted when
 you redeem one.
+
+## Accounts and progress backup
+
+Creating an account is **optional**, and the app works exactly as it always has without
+one. Nothing in the app asks you to sign up, and no feature is withheld if you do not.
+
+If you do create one, your study progress is copied to a database we run on Supabase so
+that it survives a reinstall or a new phone. What is copied is only what the table above
+lists as study data:
+
+- your display name, if you set one, and which exam, level and pathway you are studying
+- how far through each topic you are, and how many questions you have answered
+- your review queue, bookmarks and the days you studied
+- your app settings
+
+**What is never copied:** your subscription status, any promotional code you have
+redeemed, and anything about your device. Subscription already moves between devices
+through your Google Play account, so it does not need to be here — and keeping it out
+means nobody can grant themselves paid access by editing their own record.
+
+- **Authentication is by email address and password**, handled by Supabase. We store the
+  address so you can sign back in; we never see your password.
+- **Your data is locked to your account** at the database level. Every table enforces that
+  a row can only be read or written by the account that owns it.
+- **You can sign out at any time**, which leaves everything on the device untouched.
+- **To delete your account and its backup, email the address below** and it will be
+  removed.
+
+Backup is a best-effort copy rather than a live mirror: the app uploads when it can reach
+the server and carries on normally when it cannot.
 
 ## Over-the-air updates
 
@@ -77,8 +108,8 @@ rather than waiting for a store release.
 
 Cornerstone contains no advertising SDKs, no analytics SDKs, no crash-reporting SDKs and no
 social login. The only third parties that receive anything are Google Play (for payment),
-RevenueCat (for entitlement checking) and Expo's update service (for updates), each strictly
-as described above.
+RevenueCat (for entitlement checking), Expo's update service (for updates) and — only if you
+create an account — Supabase (for the progress backup), each strictly as described above.
 
 ## Children
 
@@ -109,11 +140,13 @@ nothing else will ever force the form to be revisited.
 | Question | Answer |
 | --- | --- |
 | Does your app collect or share any required user data types? | **Yes** |
-| Data type collected | **Financial info → Purchase history** |
-| Data type collected | **App info and performance → Other app performance data** — none; do not tick |
-| Is it shared with third parties? | **No** — RevenueCat is a processor acting on our behalf, not a recipient sharing data onward |
-| Is collection optional? | **Yes** — only if the user subscribes |
-| Purpose | **App functionality** (unlocking purchased content) |
+| Data type collected | **Financial info → Purchase history** — optional, only if the user subscribes |
+| Data type collected | **Personal info → Email address** — optional, only if the user creates an account |
+| Data type collected | **Personal info → Name** — optional, only if the user sets a display name *and* has an account |
+| Data type collected | **App activity → Other user-generated content** — the study progress that is backed up: mastery, review queue, bookmarks, study days, settings |
+| Is any of it shared with third parties? | **No.** RevenueCat and Supabase are processors acting on our behalf, not recipients sharing data onward |
+| Is collection optional? | **Yes**, all of it. The app is fully functional with no account and no subscription |
+| Purpose | **App functionality** — unlocking purchased content, and restoring progress on a new device |
 | Encrypted in transit? | **Yes** |
 | Can users request deletion? | **Yes** — by email to the address above |
 

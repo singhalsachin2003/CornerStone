@@ -20,8 +20,12 @@ Built from the design handoff in `design_handoff_frm_cfa_study_flow/`, with cont
 - **react-native-purchases** (RevenueCat over Play Billing) for the optional subscription,
   behind a facade that is completely inert without a key
 
-No backend and no auth. Study content and progress run entirely on-device; the only network
-traffic is an over-the-air update check and, if the candidate subscribes, an entitlement check.
+- **@supabase/supabase-js** for an optional account that backs progress up, behind a client
+  that is inert without credentials
+
+Study content and progress run on-device. Network traffic is an over-the-air update check,
+an entitlement check if the candidate subscribes, and a progress backup if they create an
+account — each optional, each behind a facade that returns null when unconfigured.
 
 ## Running
 
@@ -318,3 +322,40 @@ The review queue keys items as `topicKey#index` into a **canonical bank** — fr
 then premium in authored order. Those indices must mean the same question forever, including for
 somebody whose subscription lapses while their queue still holds premium items. **Appending is
 the only safe way to add content; reordering never is.**
+
+## Progress backup
+
+An optional account copies study progress to Supabase so it survives a reinstall. The
+design is in `supabase/schema.sql` and `supabase/sync.md`; the code is in `src/sync`.
+
+It is a **backup, not a live mirror**, and the UI says so. On Supabase's free plan a
+project pauses after a week of inactivity, and with this install base a quiet week is
+ordinary — so "the server is unreachable" is the expected case, not the exceptional one.
+Every failure resolves to nothing rather than throwing, the same rule
+`src/store/persistence.ts` already follows.
+
+### Entitlement is deliberately not synced
+
+There is no table for the subscription, the grandfathered flag or a promotional grant, and
+there must not be. Row level security lets a user write their own rows, so a synced
+`grandfathered` column would be a premium switch every user can flip for themselves with
+the publishable key that ships in the bundle. Nothing is lost: RevenueCat already restores
+a subscription across devices.
+
+### One row per thing, never a blob
+
+A JSON blob per user is last-write-wins across the whole account, so a phone that has not
+synced since yesterday erases a session done on a tablet this morning. Per-row lets each
+kind of state merge on its own terms:
+
+| State | Rule |
+| --- | --- |
+| Mastery | Later timestamp wins — it can legitimately fall after a bad sitting |
+| Card progress | Greater wins — the app never revises it down |
+| Counters | Greater, **never the sum**: both devices count the same history, so summing inflates on every re-sync |
+| Study days | Union |
+| Review queue, bookmarks | Later wins, with an explicit tombstone for deletions |
+
+A deletion cannot be an absent row. The device still holding it would treat its copy as
+newer and restore it — so a retired review item keeps a `retiredAt` and a removed bookmark
+keeps `{ on: false }`.
