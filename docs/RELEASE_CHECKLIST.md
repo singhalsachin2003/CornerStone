@@ -481,10 +481,35 @@ The code is done and verified; everything below needs the Console, an account, o
    - `grep -oE "test_[A-Za-z0-9]+"` over the bundle hits `…shortest_paths` abutting
      `paywall_components_localizations` in a string table. Anchor it with `\b` and require
      a realistic key length, or it cries wolf on every build.
-3. **Create the RevenueCat project** for `io.cornerstone.study`, create the Play subscription
-   products, put them in an offering, then set `REVENUECAT_ANDROID_KEY` in the EAS production
-   environment. Until that variable exists the build ships with no key and the paywall stays
-   off for everyone — which is correct behaviour, not a bug.
+3. **RevenueCat — project and entitlement exist; products do not.** Done on 2026-09-13:
+
+   | Thing | Value |
+   | --- | --- |
+   | Project | `Cornerstone`, id `fd227857`, category Education, platform React Native |
+   | App configuration | `Cornerstone (Play Store)`, id `appef6dc1dad0`, package `io.cornerstone.study` |
+   | Public SDK key | `goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv` — public by design, it ships in the bundle |
+   | Entitlement | `premium` / "Cornerstone Premium", **no products attached yet** |
+
+   `REVENUECAT_ANDROID_KEY` is set in the EAS `production`, `preview` and `development`
+   environments, so the next build carries the key.
+
+   **Two things are deliberately still missing, and the order between them is forced:**
+
+   - **The Play service account JSON was not uploaded to RevenueCat.** It is a private key
+     and the file at `~/.config/otc-learn/play-service-account.json` never leaves this
+     machine on my account. Sachin uploads it at
+     `app.revenuecat.com/projects/fd227857/apps/appef6dc1dad0`. Without it RevenueCat
+     cannot validate a Play transaction, so this must be done before anyone can buy.
+   - **No Play subscription products, therefore no offering.** Play refuses to create a
+     subscription until an uploaded binary declares `com.android.vending.BILLING`, and the
+     live build (versionCode 5) does not. versionCode 7 and 8 do. So: upload an AAB to a
+     track → create the products → add them to an offering in RevenueCat → rebuild.
+
+   **Setting the key early is safe.** Guard 2 (`productAvailable`) reads the offering, the
+   offering is empty, so `gatingActive` is false and every segment stays open to everyone.
+   The paywall turns itself on only when a real product appears — nothing about that
+   depends on another release.
+
 4. **Correct Data Safety and Sign-in details** before the products go live. Publishing a Play
    product needs no new binary, so nothing else will ever force the form to be revisited.
 5. **Publish `assetlinks.json` at the host root.** The file is complete —
