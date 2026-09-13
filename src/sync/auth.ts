@@ -30,7 +30,11 @@ export type AuthOutcome =
 function readable(message: string): string {
   const m = message.toLowerCase();
   if (m.includes('invalid login credentials')) {
-    return 'That email and password did not match. If you have just signed up, check for a confirmation email first.';
+    // Deliberately does not mention a confirmation email. Confirmation is off on
+    // the project, so suggesting one would send a candidate hunting for a message
+    // that was never sent — and if it is ever turned back on, the distinct
+    // "email not confirmed" case below says so precisely.
+    return 'That email and password did not match.';
   }
   if (m.includes('email not confirmed')) {
     return 'Check your email for a confirmation link before signing in.';

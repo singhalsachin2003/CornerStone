@@ -147,8 +147,21 @@ settled before accounts are offered to anyone:
   whatever confirmation is set to.
 - **Turning confirmation off** unblocks development and early users immediately,
   at the cost of accepting addresses nobody has proved they own. For an app with
-  no social surface and nothing sensitive stored, that is a defensible trade —
-  but it is the owner's to make, so nothing has been changed.
+  no social surface and nothing sensitive stored, that is a defensible trade.
+
+**Confirmation was turned off on 2026-09-13**, on the owner's instruction. Verified
+from outside the dashboard: a signup now returns a session immediately, so nobody
+waits on an email that the built-in sender would rate limit away.
+
+Two consequences worth stating plainly, because neither is visible from the app:
+
+- **Addresses are unverified.** A candidate who mistypes theirs has an account they
+  can sign into but can never recover, because password reset goes to the address
+  they typed. Custom SMTP plus confirmation is still the right end state.
+- **Password reset does not work yet**, for the same reason confirmation was
+  blocking: it is an email flow against the built-in sender's 2-per-hour project
+  limit. The app does not offer a reset link, which is honest, but it means a
+  forgotten password currently means a new account.
 
 ## The project
 

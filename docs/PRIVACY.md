@@ -75,7 +75,8 @@ through your Google Play account, so it does not need to be here — and keeping
 means nobody can grant themselves paid access by editing their own record.
 
 - **Authentication is by email address and password**, handled by Supabase. We store the
-  address so you can sign back in; we never see your password.
+  address so you can sign back in; we never see your password. Addresses are not
+  currently verified, so please type yours carefully — it is how you sign back in.
 - **Your data is locked to your account** at the database level. Every table enforces that
   a row can only be read or written by the account that owns it.
 - **You can sign out at any time**, which leaves everything on the device untouched.
