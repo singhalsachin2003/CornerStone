@@ -95,22 +95,71 @@ for (const [i, s] of statements.entries()) {
   }
 }
 
-notes.push(
-  'Android fetches https://singhalsachin2003.github.io/.well-known/assetlinks.json — the HOST ' +
-    'root. The copy in docs/ is served at /CornerStone/.well-known/ and will not be read. ' +
-    'Publish the same file in the singhalsachin2003.github.io repository. This is the only ' +
-    'thing still standing between the intent filter and verified App Links.',
-);
+/**
+ * The published file is the one that decides, so check it rather than reminding
+ * about it. Android fetches the **host root** — the copy under `docs/` is served
+ * at `/CornerStone/.well-known/` and is never read — and it requires the response
+ * to be `application/json`, which is a silent failure mode all of its own.
+ *
+ * Best-effort by design: a network failure is reported, never fatal. This runs
+ * inside `npm run verify`, and a build machine without egress must not fail a
+ * check about somebody else's web host.
+ */
+const HOST_ROOT = 'https://singhalsachin2003.github.io/.well-known/assetlinks.json';
 
-if (notes.length) {
-  console.log('App Links — outstanding:');
-  notes.forEach((n) => console.log('  · ' + n));
-  console.log('');
+async function checkPublished() {
+  try {
+    const response = await fetch(HOST_ROOT, { signal: AbortSignal.timeout(8000) });
+    if (!response.ok) {
+      notes.push(`${HOST_ROOT} returned HTTP ${response.status} — the links will not verify.`);
+      return;
+    }
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      problems.push(
+        `${HOST_ROOT} is served as "${contentType}". Android requires application/json and ` +
+          'ignores the file otherwise, with no error anywhere.',
+      );
+    }
+    const published = (await response.json()) as typeof statements;
+    const ours = published.find((s) => s.target?.package_name === PACKAGE);
+    if (!ours) {
+      problems.push(`${HOST_ROOT} does not vouch for ${PACKAGE}.`);
+      return;
+    }
+    if (!ours.target.sha256_cert_fingerprints?.includes(APP_SIGNING)) {
+      problems.push(
+        `${HOST_ROOT} vouches for ${PACKAGE} but without the Play app signing fingerprint, ` +
+          'so no store install can verify these links.',
+      );
+      return;
+    }
+    const others = published.filter((s) => s.target?.package_name !== PACKAGE).length;
+    console.log(
+      `Published at the host root: ${PACKAGE} with ` +
+        `${ours.target.sha256_cert_fingerprints.length} fingerprint(s)` +
+        (others ? `, alongside ${others} other app(s) left intact.` : '.'),
+    );
+  } catch (error) {
+    notes.push(
+      `could not read ${HOST_ROOT} (${error instanceof Error ? error.message : error}). ` +
+        'Not treated as a failure — this check needs network access.',
+    );
+  }
 }
 
-if (problems.length) {
-  console.error(`${problems.length} problem(s):`);
-  problems.forEach((p) => console.error('  ' + p));
-  process.exit(1);
-}
-console.log('assetlinks.json is well formed');
+// Not top-level await: this file is transpiled to CJS, which forbids it.
+void checkPublished().then(() => {
+  if (notes.length) {
+    console.log('App Links — outstanding:');
+    notes.forEach((n) => console.log('  · ' + n));
+    console.log('');
+  }
+
+  if (problems.length) {
+    console.error(`${problems.length} problem(s):`);
+    problems.forEach((p) => console.error('  ' + p));
+    process.exit(1);
+  }
+  console.log('assetlinks.json is well formed');
+});
