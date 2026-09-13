@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, PrimaryButton, SegmentedBar } from '@/components/primitives';
 import { color, font, gutter, radius } from '@/theme/tokens';
 import { monoGiven, type } from '@/theme/type';
-import { useStudyStore } from '@/store/useStudyStore';
+import { isBookmarked, useStudyStore } from '@/store/useStudyStore';
 import { useSessionStore } from '@/store/useSessionStore';
 
 export default function Quiz() {
@@ -40,7 +40,7 @@ export default function Quiz() {
   const total = questions.length;
   const isLast = qIdx + 1 >= total;
   const bmId = origin ? `${origin.topicKey}#${origin.qIdx}` : '';
-  const isBookmarked = !!bookmarked[bmId];
+  const bookmarkedNow = isBookmarked(bookmarked, bmId);
   const correct = chosen !== null && chosen === q.a;
 
   const advance = () => {
@@ -100,7 +100,7 @@ export default function Quiz() {
           </Eyebrow>
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ selected: isBookmarked }}
+            accessibilityState={{ selected: bookmarkedNow }}
             onPress={() => origin && toggleBookmark(origin.topicKey, origin.qIdx)}
             hitSlop={10}
           >
@@ -108,10 +108,10 @@ export default function Quiz() {
               style={{
                 fontFamily: font.sansSemi,
                 fontSize: 12,
-                color: isBookmarked ? color.brass : color.muted,
+                color: bookmarkedNow ? color.brass : color.muted,
               }}
             >
-              {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+              {bookmarkedNow ? '★ Bookmarked' : '☆ Bookmark'}
             </Text>
           </Pressable>
         </View>

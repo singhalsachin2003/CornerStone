@@ -15,7 +15,7 @@ import { color, font, gutter, radius, shadow } from '@/theme/tokens';
 import { monoBlock, type } from '@/theme/type';
 import { accessibleCardsFor, accessibleQuestionEntries, segmentByKey, topicByKey } from '@/content';
 import { useAccess } from '@/access';
-import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
+import { TopicVariant, isBookmarked, useStudyStore } from '@/store/useStudyStore';
 import { buildSegmentSession, buildTopicSession, useSessionStore } from '@/store/useSessionStore';
 
 /** Release beyond ±70px commits the card, per the interaction spec. */
@@ -70,7 +70,7 @@ export default function Snapshot() {
   const total = cards.length;
   const isLast = idx + 1 >= total;
   const canonicalIdx = cardOffset + idx;
-  const bookmarked = !!bookmarkedCards[`${topicKey}#${canonicalIdx}`];
+  const bookmarked = isBookmarked(bookmarkedCards, `${topicKey}#${canonicalIdx}`);
 
   useEffect(() => {
     if (topicKey) markCardProgress(topicKey, canonicalIdx);

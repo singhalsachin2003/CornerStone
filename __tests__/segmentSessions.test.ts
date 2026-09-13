@@ -102,7 +102,15 @@ describe('building a review session', () => {
   const premiumIdx = premiumSegmentsFor(topicKey)[0].questionOffset;
 
   function due(qIdx: number) {
-    return { id: `${topicKey}#${qIdx}`, topicKey, qIdx, step: 0, lapses: 1, dueOn: '2026-09-01' };
+    return {
+      id: `${topicKey}#${qIdx}`,
+      topicKey,
+      qIdx,
+      step: 0,
+      lapses: 1,
+      dueOn: '2026-09-01',
+      updatedAt: 0,
+    };
   }
 
   it('serves a premium item to somebody entitled to it', () => {

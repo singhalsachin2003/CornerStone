@@ -9,6 +9,7 @@ import { type } from '@/theme/type';
 import { EXAMS, PATHWAYS, formatExamDate, topicsFor } from '@/content';
 import {
   GUEST_NAME,
+  bookmarkCount,
   Settings,
   TopicVariant,
   currentStreak,
@@ -124,7 +125,9 @@ export default function Profile() {
   const level = exam.levels.find((l) => l.key === levelKey);
   const streak = currentStreak(studyDays);
   const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-  const bookmarks = Object.keys(bookmarkedQuestions).length + Object.keys(bookmarkedCards).length;
+  // Counts only live bookmarks: a removed one keeps its entry so the removal can
+  // survive a cross-device merge, and counting entries would count those too.
+  const bookmarks = bookmarkCount(bookmarkedQuestions) + bookmarkCount(bookmarkedCards);
 
   // Until the candidate names themselves the store holds the guest placeholder,
   // which is a prompt rather than a value: the field opens empty so they type over
