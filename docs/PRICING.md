@@ -107,11 +107,17 @@ honest about what the subscription actually buys — everything shipped in
 versionCode 5 stays free permanently, and a subscription buys what is added
 afterwards:
 
-- **Title:** Cornerstone Premium
+- **Title:** Cornerstone Plus
 - **Benefits:**
   - Every practice segment, across all 38 topic areas
   - 417 cards and 834 questions beyond the free core
   - New segments added for each exam cycle
+
+**The name is "Cornerstone Plus", not "Premium".** That is what `profile.tsx` puts on
+screen, and the Play listing title is what a buyer reads on the purchase sheet — the two
+must agree. The RevenueCat *entitlement* is `premium`, which is an internal id and fine;
+its display name there currently reads "Cornerstone Premium" and is worth renaming so
+nothing in the dashboard disagrees with the app.
 
 **Do not list progress backup or the glossary as benefits.** Both are free and
 stay free — the account is optional for everyone and the glossary says "free,

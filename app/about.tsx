@@ -58,8 +58,8 @@ export default function About() {
             you miss returns on a spaced-repetition schedule.
           </Body>
           <Body>
-            Everything is stored on your device. There is no account, and no study data leaves your
-            phone.
+            Everything is stored on your device and the app works fully offline. An account is
+            optional — without one, no study data leaves your phone.
           </Body>
         </Section>
 

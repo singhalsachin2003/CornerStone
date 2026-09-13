@@ -6,18 +6,20 @@ Cornerstone is a study app for CFA® and FRM® candidates, published by Sachin S
 
 ## The short version
 
-**Cornerstone has no account, no sign-in, no analytics, no crash reporting and no
-advertising. Your study progress never leaves your device.**
+**Cornerstone has no analytics, no crash reporting, no advertising and no social login.
+It works fully without an account, and nothing it stores about your studying leaves your
+device unless you ask it to.**
 
 Version 1.1 adds three things that use the network, and only three: an optional
 subscription, over-the-air updates, and an **optional account** that backs your progress
 up. All three are described in full below. If you create no account and never subscribe,
 the only outbound request the app makes is a check for a content update.
 
-## What the app stores on your device, and never sends anywhere
+## What the app stores on your device
 
-All of the following is written to your device's local application storage and never
-leaves it:
+All of the following is written to your device's local application storage. **Without an
+account it stays there**, and creating one copies across only the study data identified
+in the section on backup below:
 
 | Data | Purpose |
 | --- | --- |
@@ -98,7 +100,7 @@ rather than waiting for a store release.
 
 ## Permissions
 
-- **Internet** — used for the two purposes above, and for nothing else. Study content is
+- **Internet** — used for the three purposes above, and for nothing else. Study content is
   bundled with the app and works fully offline.
 - **Notifications** — requested only if you switch on the daily study reminder in Profile. It
   schedules a notification locally on your device; nothing is sent to a server. Declining it,
