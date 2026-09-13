@@ -505,6 +505,28 @@ The code is done and verified; everything below needs the Console, an account, o
      live build (versionCode 5) does not. versionCode 7 and 8 do. So: upload an AAB to a
      track → create the products → add them to an offering in RevenueCat → rebuild.
 
+
+   **Pricing — decided 2026-09-13: mirror OTC Learn.** Read from the Android Publisher API
+   rather than retyped from memory, so these are the live values, not an approximation:
+
+   | | OTC Learn (`otc_learn_pro`) | Cornerstone (to create) |
+   | --- | --- | --- |
+   | Subscription id | `otc_learn_pro` | `cornerstone_premium` |
+   | Monthly base plan | `monthly`, `P1M`, **INR 29** | `monthly`, `P1M`, **INR 29** |
+   | Yearly base plan | `yearly`, `P1Y`, **INR 199** | `yearly`, `P1Y`, **INR 199** |
+   | Regions priced | **IN only** | IN only, unless Sachin says otherwise |
+   | Intro offers / free trial | none | none |
+
+   RevenueCat sees those as `cornerstone_premium:monthly` and `cornerstone_premium:yearly`
+   — Play's `<subscription>:<basePlan>` form — and both attach to the `premium` entitlement.
+
+   **One thing to settle before this goes live: OTC Learn is priced for India only.** CFA and
+   FRM candidates are not, and Play simply makes the subscription unavailable everywhere else.
+   Mirroring the amounts is decided; mirroring the *single region* is a separate choice.
+   Letting Play auto-convert INR 199/year into other markets gives about $2.30/year, which is
+   almost certainly under-priced for this audience — so set per-region prices deliberately, or
+   keep it India-only deliberately. Either is fine; drifting into one by default is not.
+
    **Setting the key early is safe.** Guard 2 (`productAvailable`) reads the offering, the
    offering is empty, so `gatingActive` is false and every segment stays open to everyone.
    The paywall turns itself on only when a real product appears — nothing about that

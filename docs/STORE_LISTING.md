@@ -175,8 +175,10 @@ Answer honestly; this app should land at **Everyone / PEGI 3**.
 - **App category** — Education
 - **Tags** — Education, Test Prep
 - **Contains ads** — No
-- **In-app purchases** — **Yes**, from version 1.1. Declare the price range once the Play
-  subscription products exist.
+- **In-app purchases** — **Yes**, from version 1.1. Price range **INR 29 – INR 199 per
+  item**, mirroring OTC Learn: `cornerstone_premium:monthly` at INR 29/month and
+  `cornerstone_premium:yearly` at INR 199/year. Play derives this field from the products,
+  so it only needs restating here if the products are ever priced outside that range.
 - **Target audience** — 18+ (professional certification candidates)
 - **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
   subscription products go live**, not before the build ships: publishing a Play product
