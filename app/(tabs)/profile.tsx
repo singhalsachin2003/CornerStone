@@ -15,6 +15,7 @@ import {
   currentStreak,
   useStudyStore,
 } from '@/store/useStudyStore';
+import { GLOSSARY_COUNT } from '@/content/glossary';
 import { OTC_LEARN_PLAY_URL } from '@/links';
 import { useAccess } from '@/access';
 import { isSyncConfigured } from '@/sync/client';
@@ -372,6 +373,11 @@ export default function Profile() {
           )}
           <DisclosureRow label="Topics in this level" value={`${topics.length} areas`} />
           <DisclosureRow label="Bookmarks" value={`${bookmarks} saved`} />
+          <DisclosureRow
+            label="Glossary"
+            value={`${GLOSSARY_COUNT} terms →`}
+            onPress={() => router.push('/glossary')}
+          />
           <DisclosureRow label="About & legal" value="→" onPress={() => router.push('/about')} />
         </View>
 
