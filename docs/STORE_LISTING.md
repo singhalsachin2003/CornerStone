@@ -87,6 +87,13 @@ organised by the published topic outlines and exam weight bands. Each area is di
 segments that follow the official learning modules, so you can line the app up against the
 curriculum you were given.
 
+A GLOSSARY THAT IS ALWAYS FREE
+
+260 terms across both programmes, searchable by name or abbreviation — type "var" and you
+get Value at Risk. Each entry gives the definition, the formula where there is one, and the
+distinction that actually gets tested. It is free for everyone, permanently, whether or not
+you ever subscribe.
+
 SITTING BOTH?
 
 Plenty of candidates do. CFA and FRM run side by side with completely separate progress,

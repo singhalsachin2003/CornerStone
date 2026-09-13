@@ -127,6 +127,8 @@ src/
   content/syllabus.ts      topic areas, official weights, learning modules
   content/cards/           152 snapshot cards
   content/questions/       190 questions
+  content/segments/        the paid segments, appended never inserted
+  content/glossary/        260 terms, free for both exams
   store/useStudyStore.ts   persisted progress, streak, bookmarks, settings
   store/useSessionStore.ts in-flight quiz session (not persisted)
   store/review.ts          SM-2 style scheduling
@@ -136,7 +138,14 @@ scripts/check-content.ts
 ## Content coverage
 
 Every topic area in both programmes has 4 hand-written snapshot cards and a 5-question bank —
-**38 areas, 152 cards, 190 questions**. There is no generic filler.
+**38 areas, 152 cards, 190 questions**. There is no generic filler. Paid segments add a further
+417 cards and 834 questions on top of that; see `src/content/segments/`.
+
+A **glossary of 260 terms** sits alongside, reachable from Profile. It is **free for both exams,
+permanently, and structurally so**: nothing under `src/content/glossary/` imports `src/access`,
+and `npm run check:glossary` plus the test suite both fail the build if that changes. The
+subscription sells the pipeline of new segments — a dictionary is not something that renews, and
+one that can be taken away is not a reference.
 
 | Programme | Level | Areas | Source |
 | --- | --- | --- | --- |
