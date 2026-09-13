@@ -182,10 +182,11 @@ Answer honestly; this app should land at **Everyone / PEGI 3**.
 - **App category** — Education
 - **Tags** — Education, Test Prep
 - **Contains ads** — No
-- **In-app purchases** — **Yes**, from version 1.1. Price range **INR 29 – INR 199 per
-  item**, mirroring OTC Learn: `cornerstone_premium:monthly` at INR 29/month and
-  `cornerstone_premium:yearly` at INR 199/year. Play derives this field from the products,
-  so it only needs restating here if the products are ever priced outside that range.
+- **In-app purchases** — **Yes**, from version 1.1. `cornerstone_premium:monthly` at
+  INR 29/month and `cornerstone_premium:yearly` at INR 199/year. Play derives the
+  displayed price range from the products themselves, so this line never needs editing to
+  match — but **the range widens the moment a second region is priced**, which is the open
+  decision in [`PRICING.md`](PRICING.md). Read it before creating the products.
 - **Target audience** — 18+ (professional certification candidates)
 - **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
   subscription products go live**, not before the build ships: publishing a Play product
@@ -200,3 +201,30 @@ Answer honestly; this app should land at **Everyone / PEGI 3**.
 - **Government app** — No
 - **Financial features** — **None.** This is study content about finance, not a financial
   product; do not tick any of the financial-features boxes.
+
+---
+
+## Release notes ("What's new")
+
+**The production track currently carries Expo's placeholder — "First release of this
+awesome app."** That string is live on the store listing today, read by anyone who taps
+What's new. It was never written; it is what `eas submit` puts there when nothing is
+supplied. Replacing it is free and needs no binary.
+
+Play caps this field at **500 characters**. The v1.1 text, at 404:
+
+```
+Cornerstone Plus: the study segments written since launch, across all 38 topic areas.
+Everything that shipped before stays free, permanently — and if you already had the app,
+you keep all of it too.
+
+Also new:
+• A glossary — 260 CFA and FRM terms, free for everyone
+• An optional account, so a reinstall or a new phone no longer starts you over
+• Numeric answer options now always read in ascending order
+```
+
+Leading with what stays free is deliberate. The one thing an existing user wants to know
+when a study app they already paid attention to adds a subscription is whether the thing
+they were using is about to be taken away. It is not, and saying so first is worth more
+than the feature list underneath.
