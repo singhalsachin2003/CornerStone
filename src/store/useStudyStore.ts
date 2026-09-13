@@ -15,9 +15,19 @@ import {
   addDays,
   dayKey,
   dueItems,
+  pruneRetired,
   scheduleLapse,
   schedulePromotion,
 } from './review';
+import {
+  BookmarkMap,
+  EMPTY_SYNC_META,
+  SyncMeta,
+  migrateToSyncable,
+  toggleBookmark,
+} from './syncMeta';
+
+export { bookmarkCount, isBookmarked } from './syncMeta';
 
 export type TopicVariant = 'a' | 'b' | 'c';
 
@@ -52,11 +62,18 @@ interface StudyState {
 
   /** Percentage mastery per topic key, 0–100. */
   mastery: Record<string, number>;
+  /**
+   * Epoch ms of the last change to each topic's mastery, for cross-device merge.
+   * Kept beside `mastery` rather than inside it so every reader — and there are
+   * many — stays `mastery[key] ?? 0`.
+   */
+  masteryUpdatedAt: Record<string, number>;
   /** Highest snapshot card index reached per topic, for the resume card. */
   cardProgress: Record<string, number>;
 
-  bookmarkedQuestions: Record<string, true>;
-  bookmarkedCards: Record<string, true>;
+  /** Keyed `topicKey#index`. A removal is `on: false`, not an absent entry. */
+  bookmarkedQuestions: BookmarkMap;
+  bookmarkedCards: BookmarkMap;
 
   reviewQueue: ReviewItem[];
   /** Local date keys on which a session was completed. */
@@ -66,6 +83,9 @@ interface StudyState {
   questionsCorrect: number;
 
   settings: Settings;
+
+  /** Whole-row timestamps for state with no natural per-item key. */
+  syncMeta: SyncMeta;
 
   // actions
   setHydrated: () => void;
@@ -134,6 +154,7 @@ export const useStudyStore = create<StudyState>()(
       variant: 'b',
 
       mastery: {},
+      masteryUpdatedAt: {},
       cardProgress: {},
       bookmarkedQuestions: {},
       bookmarkedCards: {},
@@ -142,28 +163,51 @@ export const useStudyStore = create<StudyState>()(
       questionsAnswered: 0,
       questionsCorrect: 0,
       settings: initialSettings,
+      syncMeta: EMPTY_SYNC_META,
 
       setHydrated: () => set({ hydrated: true }),
-      completeOnboarding: () => set({ onboarded: true }),
+      completeOnboarding: () =>
+        set((s) => ({ onboarded: true, syncMeta: { ...s.syncMeta, profile: Date.now() } })),
 
       // Switching exam restores that exam's last level, so moving between the CFA
       // and FRM programmes costs one tap and never discards a selection.
-      setExam: (exam) => set((s) => ({ exam, level: s.levelByExam[exam] ?? null })),
+      setExam: (exam) =>
+        set((s) => ({
+          exam,
+          level: s.levelByExam[exam] ?? null,
+          syncMeta: { ...s.syncMeta, profile: Date.now() },
+        })),
 
       setLevel: (level) =>
         set((s) => ({
           level,
           levelByExam: s.exam ? { ...s.levelByExam, [s.exam]: level } : s.levelByExam,
+          syncMeta: { ...s.syncMeta, profile: Date.now() },
         })),
 
       setExamLevel: (exam, level) =>
-        set((s) => ({ exam, level, levelByExam: { ...s.levelByExam, [exam]: level } })),
-      setPathway: (pathway) => set({ pathway }),
-      setVariant: (variant) => set({ variant }),
-      setName: (name) => set({ name, initials: initialsFor(name) }),
+        set((s) => ({
+          exam,
+          level,
+          levelByExam: { ...s.levelByExam, [exam]: level },
+          syncMeta: { ...s.syncMeta, profile: Date.now() },
+        })),
+      setPathway: (pathway) =>
+        set((s) => ({ pathway, syncMeta: { ...s.syncMeta, profile: Date.now() } })),
+      setVariant: (variant) =>
+        set((s) => ({ variant, syncMeta: { ...s.syncMeta, profile: Date.now() } })),
+      setName: (name) =>
+        set((s) => ({
+          name,
+          initials: initialsFor(name),
+          syncMeta: { ...s.syncMeta, profile: Date.now() },
+        })),
 
       toggleSetting: (key) =>
-        set((s) => ({ settings: { ...s.settings, [key]: !s.settings[key] } })),
+        set((s) => ({
+          settings: { ...s.settings, [key]: !s.settings[key] },
+          syncMeta: { ...s.syncMeta, settings: Date.now() },
+        })),
 
       markCardProgress: (topicKey, cardIdx) =>
         set((s) => ({
@@ -173,23 +217,22 @@ export const useStudyStore = create<StudyState>()(
           },
         })),
 
+      // The entry stays when a bookmark is removed, carrying `on: false`. An
+      // absent entry cannot express a removal, so a second device holding its own
+      // copy would treat that copy as newer and restore the bookmark.
       toggleQuestionBookmark: (topicKey, qIdx) =>
-        set((s) => {
-          const id = `${topicKey}#${qIdx}`;
-          const next = { ...s.bookmarkedQuestions };
-          if (next[id]) delete next[id];
-          else next[id] = true;
-          return { bookmarkedQuestions: next };
-        }),
+        set((s) => ({
+          bookmarkedQuestions: toggleBookmark(
+            s.bookmarkedQuestions,
+            `${topicKey}#${qIdx}`,
+            Date.now(),
+          ),
+        })),
 
       toggleCardBookmark: (topicKey, cardIdx) =>
-        set((s) => {
-          const id = `${topicKey}#${cardIdx}`;
-          const next = { ...s.bookmarkedCards };
-          if (next[id]) delete next[id];
-          else next[id] = true;
-          return { bookmarkedCards: next };
-        }),
+        set((s) => ({
+          bookmarkedCards: toggleBookmark(s.bookmarkedCards, `${topicKey}#${cardIdx}`, Date.now()),
+        })),
 
       recordSession: (topicKey, answers) => {
         const state = get();
@@ -201,17 +244,19 @@ export const useStudyStore = create<StudyState>()(
         const after = Math.max(0, Math.min(100, Math.round(before + (sessionPct - before) * LEARNING_RATE)));
 
         // Rebuild the queue: missed questions enter or reset, correct ones promote.
+        // A graduated item is retired in place rather than deleted — see
+        // `schedulePromotion`. Tombstones are pruned here so the queue stays
+        // bounded without needing a separate sweep.
+        const now = Date.now();
         const byId = new Map(state.reviewQueue.map((i) => [i.id, i]));
         if (state.settings.spacedRepetition) {
           for (const a of answers) {
             const id = `${topicKey}#${a.qIdx}`;
             const existing = byId.get(id);
             if (!a.ok) {
-              byId.set(id, scheduleLapse(existing, topicKey, a.qIdx));
-            } else if (existing) {
-              const promoted = schedulePromotion(existing);
-              if (promoted) byId.set(id, promoted);
-              else byId.delete(id);
+              byId.set(id, scheduleLapse(existing, topicKey, a.qIdx, now));
+            } else if (existing && existing.retiredAt === undefined) {
+              byId.set(id, schedulePromotion(existing, now));
             }
           }
         }
@@ -219,7 +264,8 @@ export const useStudyStore = create<StudyState>()(
         const today = dayKey();
         set({
           mastery: { ...state.mastery, [topicKey]: after },
-          reviewQueue: [...byId.values()],
+          masteryUpdatedAt: { ...state.masteryUpdatedAt, [topicKey]: now },
+          reviewQueue: pruneRetired([...byId.values()], now),
           studyDays: state.studyDays.includes(today)
             ? state.studyDays
             : [...state.studyDays, today].slice(-400),
@@ -233,6 +279,7 @@ export const useStudyStore = create<StudyState>()(
       resetProgress: () =>
         set({
           mastery: {},
+          masteryUpdatedAt: {},
           cardProgress: {},
           bookmarkedQuestions: {},
           bookmarkedCards: {},
@@ -245,6 +292,12 @@ export const useStudyStore = create<StudyState>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => storage),
+      /**
+       * Bumped from the implicit 0 when sync timestamps were added. Anything
+       * stored by an earlier build runs through `migrateToSyncable`.
+       */
+      version: 1,
+      migrate: (persisted) => migrateToSyncable(persisted as Record<string, unknown>),
       partialize: ({ hydrated, ...rest }) => rest,
       onRehydrateStorage: () => (state) => {
         // No state means the persisted JSON was unreadable. The splash screen is

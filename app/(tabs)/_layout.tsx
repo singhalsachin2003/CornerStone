@@ -1,6 +1,7 @@
 import React from 'react';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Home, Layers, Repeat, User } from 'lucide-react-native';
 import { TabButton, tabBarStyle } from '@/components/TabBar';
 import { color } from '@/theme/tokens';
 
@@ -16,16 +17,16 @@ export default function TabsLayout() {
       <TabSlot />
       <TabList style={[tabBarStyle, { paddingBottom: Math.max(insets.bottom, 4) }]}>
         <TabTrigger name="home" href="/home" asChild>
-          <TabButton label="Home" shape="square" />
+          <TabButton label="Home" icon={Home} />
         </TabTrigger>
         <TabTrigger name="topics" href="/topics" asChild>
-          <TabButton label="Topics" shape="circle" />
+          <TabButton label="Topics" icon={Layers} />
         </TabTrigger>
         <TabTrigger name="review" href="/review" asChild>
-          <TabButton label="Review" shape="square" />
+          <TabButton label="Review" icon={Repeat} />
         </TabTrigger>
         <TabTrigger name="profile" href="/profile" asChild>
-          <TabButton label="Profile" shape="circle" />
+          <TabButton label="Profile" icon={User} />
         </TabTrigger>
       </TabList>
     </Tabs>

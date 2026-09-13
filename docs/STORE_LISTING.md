@@ -83,18 +83,37 @@ FRM
 • Part II — all 6 topic areas
 
 38 topic areas in total, each with hand-written snapshot cards and its own question bank,
-organised by the published topic outlines and exam weight bands.
+organised by the published topic outlines and exam weight bands. Each area is divided into
+segments that follow the official learning modules, so you can line the app up against the
+curriculum you were given.
+
+A GLOSSARY THAT IS ALWAYS FREE
+
+260 terms across both programmes, searchable by name or abbreviation — type "var" and you
+get Value at Risk. Each entry gives the definition, the formula where there is one, and the
+distinction that actually gets tested. It is free for everyone, permanently, whether or not
+you ever subscribe.
 
 SITTING BOTH?
 
 Plenty of candidates do. CFA and FRM run side by side with completely separate progress,
 bookmarks and review queues, and any exam or level is one tap away.
 
+FREE, AND WHAT IS NOT
+
+Everything Cornerstone shipped before the subscription existed is free, permanently —
+all 38 topic areas, their snapshot cards and their question banks. Anyone who installed
+the app before the subscription existed keeps every paid segment too, permanently.
+
+Cornerstone Plus opens the segments written since: deeper coverage drawn along named
+clusters of the official learning modules, with new segments added to the same
+subscription as they are written. That is what the subscription buys — the next ones.
+
 BUILT TO RESPECT YOUR TIME
 
 • Works fully offline — all content ships with the app
-• No account, no sign-up, no ads
-• Nothing you do leaves your device
+• No ads, and no sign-up required to use any of it
+• An optional account backs your progress up, so a new phone does not start you over
 • Optional daily reminder
 
 IMPORTANT
@@ -155,18 +174,57 @@ upload them in this order:
 Answer honestly; this app should land at **Everyone / PEGI 3**.
 - No violence, sexuality, profanity, controlled substances, gambling
 - No user-generated content, no user interaction, no location sharing
-- No purchases
+- **Purchases: yes** — from version 1.1 there is a subscription. This answer changed;
+  the rating itself does not.
 
 ## Other Play Console fields
 
 - **App category** — Education
 - **Tags** — Education, Test Prep
 - **Contains ads** — No
-- **In-app purchases** — No
+- **In-app purchases** — **Yes**, from version 1.1. `cornerstone_premium:monthly` at
+  INR 29/month and `cornerstone_premium:yearly` at INR 199/year. Play derives the
+  displayed price range from the products themselves, so this line never needs editing to
+  match — but **the range widens the moment a second region is priced**, which is the open
+  decision in [`PRICING.md`](PRICING.md). Read it before creating the products.
 - **Target audience** — 18+ (professional certification candidates)
-- **Data safety** — see `docs/PRIVACY.md`
+- **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
+  subscription products go live**, not before the build ships: publishing a Play product
+  needs no new binary, so nothing else will ever force it to be revisited. It changed
+  again when optional accounts were added — email address, name and study progress all
+  became collected data types, each marked optional.
+- **Sign-in details** (formerly "App access") — **Yes, some functionality is restricted.**
+  The reviewer route is the `PLAYREVIEW` promotional code; the exact wording to paste is in
+  `docs/PRIVACY.md`.
 - **Privacy policy URL** — host `docs/PRIVACY.md` at a public URL (GitHub Pages works) and
   paste the link
 - **Government app** — No
 - **Financial features** — **None.** This is study content about finance, not a financial
   product; do not tick any of the financial-features boxes.
+
+---
+
+## Release notes ("What's new")
+
+**The production track currently carries Expo's placeholder — "First release of this
+awesome app."** That string is live on the store listing today, read by anyone who taps
+What's new. It was never written; it is what `eas submit` puts there when nothing is
+supplied. Replacing it is free and needs no binary.
+
+Play caps this field at **500 characters**. The v1.1 text, at 404:
+
+```
+Cornerstone Plus: the study segments written since launch, across all 38 topic areas.
+Everything that shipped before stays free, permanently — and if you already had the app,
+you keep all of it too.
+
+Also new:
+• A glossary — 260 CFA and FRM terms, free for everyone
+• An optional account, so a reinstall or a new phone no longer starts you over
+• Numeric answer options now always read in ascending order
+```
+
+Leading with what stays free is deliberate. The one thing an existing user wants to know
+when a study app they already paid attention to adds a subscription is whether the thing
+they were using is about to be taken away. It is not, and saying so first is worth more
+than the feature list underneath.

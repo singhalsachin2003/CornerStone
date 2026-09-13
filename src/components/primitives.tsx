@@ -246,7 +246,9 @@ export function ProgressTrack({
 }) {
   return (
     <View style={[{ height, backgroundColor: trackColor }, style]}>
-      <View style={{ height, width: `${Math.max(0, Math.min(100, pct))}%`, backgroundColor: fillColor }} />
+      <View
+        style={{ height, width: `${Math.max(0, Math.min(100, pct))}%`, backgroundColor: fillColor }}
+      />
     </View>
   );
 }
@@ -254,7 +256,13 @@ export function ProgressTrack({
 // ---------------------------------------------------------------------------
 
 /** Hairline divider. */
-export function Rule({ style, tone = color.ruleSoft }: { style?: StyleProp<ViewStyle>; tone?: string }) {
+export function Rule({
+  style,
+  tone = color.ruleSoft,
+}: {
+  style?: StyleProp<ViewStyle>;
+  tone?: string;
+}) {
   return <View style={[{ height: StyleSheet.hairlineWidth * 2, backgroundColor: tone }, style]} />;
 }
 

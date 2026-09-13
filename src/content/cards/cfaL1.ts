@@ -168,7 +168,7 @@ export const CFA_L1_CARDS: CardBank = {
     {
       kicker: 'VALUATION',
       title: 'The Gordon growth model in one line',
-      body: 'A stock is worth next year\'s dividend divided by the excess of the required return over the constant growth rate. It only works when g is genuinely constant and strictly less than r.',
+      body: "A stock is worth next year's dividend divided by the excess of the required return over the constant growth rate. It only works when g is genuinely constant and strictly less than r.",
       formula: 'V₀ = D₁ / (r − g)',
       exam: 'If the stem gives D₀, you must grow it one period first. Using D₀ directly is the most common wrong answer.',
     },
@@ -182,7 +182,7 @@ export const CFA_L1_CARDS: CardBank = {
     {
       kicker: 'INDUSTRY',
       title: 'Industry structure sets the ceiling on returns',
-      body: 'Porter\'s five forces frame the analysis: rivalry, new entrants, substitutes, supplier power and buyer power. Barriers to entry and industry concentration are the two variables that most often move pricing power.',
+      body: "Porter's five forces frame the analysis: rivalry, new entrants, substitutes, supplier power and buyer power. Barriers to entry and industry concentration are the two variables that most often move pricing power.",
       formula: null,
       exam: 'Industry life-cycle stage drives the forecast. Embryonic and growth stages justify high reinvestment and low payout.',
     },
@@ -263,7 +263,7 @@ export const CFA_L1_CARDS: CardBank = {
       title: 'Committed capital is not invested capital',
       body: 'Limited partners commit capital that the general partner draws down over an investment period. The J-curve — early negative returns from fees before exits arrive — is a structural feature, not underperformance.',
       formula: null,
-      exam: 'A question about early negative IRR in a fund\'s life is testing whether you recognise the J-curve.',
+      exam: "A question about early negative IRR in a fund's life is testing whether you recognise the J-curve.",
     },
     {
       kicker: 'REAL ASSETS',

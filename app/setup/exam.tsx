@@ -59,13 +59,17 @@ export default function ExamPicker() {
             About, but this is where a candidate first sees the marks used, so the
             non-affiliation has to be legible here too rather than only two taps away. */}
         <Text style={[type.meta, { marginBottom: 14 }]}>
-          Not affiliated with, endorsed by or sponsored by CFA Institute or GARP. CFA® and
-          Chartered Financial Analyst® are registered trademarks owned by CFA Institute. FRM® is
-          a trademark owned by the Global Association of Risk Professionals.
+          Not affiliated with, endorsed by or sponsored by CFA Institute or GARP. CFA® and Chartered
+          Financial Analyst® are registered trademarks owned by CFA Institute. FRM® is a trademark
+          owned by the Global Association of Risk Professionals.
         </Text>
 
         <PrimaryButton
-          label={knownLevel ? `Continue to ${EXAMS[exam!].levels.find((l) => l.key === knownLevel)?.name}` : 'Continue'}
+          label={
+            knownLevel
+              ? `Continue to ${EXAMS[exam!].levels.find((l) => l.key === knownLevel)?.name}`
+              : 'Continue'
+          }
           disabled={!exam}
           onPress={() => {
             // Already set up: go straight back to studying. Level is changeable
@@ -96,8 +100,12 @@ function ExamCard({
 
   return (
     <SelectableCard selected={selected} onPress={onSelect}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Text style={{ fontFamily: font.serifSemi, fontSize: 22, lineHeight: 26, color: color.ink }}>
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}
+      >
+        <Text
+          style={{ fontFamily: font.serifSemi, fontSize: 22, lineHeight: 26, color: color.ink }}
+        >
           {e.name}
         </Text>
         <Text style={[eyebrow(10, 0.1), { color: color.brass }]}>{e.levelWord}</Text>

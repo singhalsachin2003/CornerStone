@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.cornerstone.study",
+      "sha256_cert_fingerprints": [
+        "A0:50:DF:A5:DE:F5:C8:D5:E7:AF:B6:93:23:30:F4:E3:4F:18:7A:F1:92:0C:09:E4:4D:80:05:28:D7:6A:50:9D",
+        "E7:CD:2E:98:74:0C:D8:46:2C:92:E7:80:2C:D2:85:14:B1:E8:ED:B6:8E:C0:CE:B3:84:91:49:EA:26:03:2D:A6"
+      ]
+    }
+  }
+]

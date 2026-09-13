@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, PrimaryButton } from '@/components/primitives';
@@ -29,7 +29,9 @@ export default function Onboarding() {
           CORNERSTONE
         </Eyebrow>
 
-        <View style={{ flex: 1, justifyContent: 'center', gap: 18, paddingTop: 20, paddingBottom: 40 }}>
+        <View
+          style={{ flex: 1, justifyContent: 'center', gap: 18, paddingTop: 20, paddingBottom: 40 }}
+        >
           <View
             style={{
               width: 64,
@@ -40,14 +42,18 @@ export default function Onboarding() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.serifBold, fontSize: 26, lineHeight: 32, color: color.ink }}>C</Text>
+            <Text
+              style={{ fontFamily: font.serifBold, fontSize: 26, lineHeight: 32, color: color.ink }}
+            >
+              C
+            </Text>
           </View>
 
           <Text style={type.hero}>Fifteen honest minutes beats three distracted hours.</Text>
 
           <Text style={[type.lede, { maxWidth: 320 }]}>
-            Choose a topic, read the snapshot, then answer five questions. That's a session. We'll keep
-            the streak for you.
+            Choose a topic, read the snapshot, then answer five questions. That's a session. We'll
+            keep the streak for you.
           </Text>
 
           <View style={{ gap: 12, marginTop: 6 }}>
@@ -64,7 +70,9 @@ export default function Onboarding() {
                 >
                   {String(i + 1).padStart(2, '0')}
                 </Text>
-                <Text style={[type.body, { color: color.ink, flex: 1, fontSize: 13.5 }]}>{point}</Text>
+                <Text style={[type.body, { color: color.ink, flex: 1, fontSize: 13.5 }]}>
+                  {point}
+                </Text>
               </View>
             ))}
           </View>

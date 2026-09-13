@@ -48,7 +48,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
-        <View style={{ flex: 1, paddingHorizontal: gutter.setup, paddingTop: 26, paddingBottom: 24 }}>
+        <View
+          style={{ flex: 1, paddingHorizontal: gutter.setup, paddingTop: 26, paddingBottom: 24 }}
+        >
           <Eyebrow size={10} tracking={0.16} style={{ color: color.rust }}>
             SOMETHING BROKE
           </Eyebrow>

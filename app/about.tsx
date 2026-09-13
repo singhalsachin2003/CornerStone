@@ -47,8 +47,8 @@ export default function About() {
 
         <Text style={[type.screenTitle, { marginTop: 16 }]}>Cornerstone</Text>
         <Text style={[type.secondary, { marginTop: 6 }]}>
-          Version {version} · {ALL_TOPICS.length} topic areas · {cards} snapshot cards ·{' '}
-          {questions} questions
+          Version {version} · {ALL_TOPICS.length} topic areas · {cards} snapshot cards · {questions}{' '}
+          questions
         </Text>
 
         <Section title="WHAT THIS IS">
@@ -58,8 +58,8 @@ export default function About() {
             you miss returns on a spaced-repetition schedule.
           </Body>
           <Body>
-            Everything is stored on your device. There is no account, and no study data leaves
-            your phone.
+            Everything is stored on your device and the app works fully offline. An account is
+            optional — without one, no study data leaves your phone.
           </Body>
         </Section>
 
@@ -84,14 +84,14 @@ export default function About() {
             published at the time of writing) and the 2026 FRM curriculum.
           </Body>
           <Body>
-            Both bodies revise their curricula annually: CFA Institute typically mid-year, GARP
-            each December. This app is a planning map, not the curriculum. Always confirm weights
-            and readings against the official documents for your own exam window before building
-            a study plan.
+            Both bodies revise their curricula annually: CFA Institute typically mid-year, GARP each
+            December. This app is a planning map, not the curriculum. Always confirm weights and
+            readings against the official documents for your own exam window before building a study
+            plan.
           </Body>
           <Callout>
-            Questions here are written to practise the reasoning the exams reward. They are not
-            past papers and are not drawn from any official question bank.
+            Questions here are written to practise the reasoning the exams reward. They are not past
+            papers and are not drawn from any official question bank.
           </Callout>
         </Section>
 

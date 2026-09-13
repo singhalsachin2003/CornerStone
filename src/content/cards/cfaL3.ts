@@ -75,9 +75,9 @@ export const CFA_L3_CARDS: CardBank = {
     {
       kicker: 'APPRAISAL',
       title: 'Match the risk measure to the mandate',
-      body: 'The Sharpe ratio uses total risk and suits a whole portfolio. The information ratio uses active risk and suits a benchmarked mandate. Treynor and Jensen\'s alpha use beta and assume the rest is diversified away.',
+      body: "The Sharpe ratio uses total risk and suits a whole portfolio. The information ratio uses active risk and suits a benchmarked mandate. Treynor and Jensen's alpha use beta and assume the rest is diversified away.",
       formula: 'IR = (R_p − R_b) / σ(R_p − R_b)',
-      exam: 'If the portfolio is the investor\'s only holding, Sharpe. If it is one sleeve of many, the beta-based measures are appropriate.',
+      exam: "If the portfolio is the investor's only holding, Sharpe. If it is one sleeve of many, the beta-based measures are appropriate.",
     },
     {
       kicker: 'SELECTION',
@@ -144,14 +144,14 @@ export const CFA_L3_CARDS: CardBank = {
     {
       kicker: 'SOFT DOLLARS',
       title: 'Brokerage is a client asset',
-      body: 'Standard III(A) makes client brokerage the client\'s property. It may be used for research that benefits the client, but never to pay for the manager\'s own operating costs or to reward referrals.',
+      body: "Standard III(A) makes client brokerage the client's property. It may be used for research that benefits the client, but never to pay for the manager's own operating costs or to reward referrals.",
       formula: null,
       exam: 'Directed brokerage arranged by the client is permissible; the manager must still seek best execution and disclose the trade-off.',
     },
     {
       kicker: 'RISK DISCLOSURE',
       title: 'Communicate the process and its limits',
-      body: 'Standard V(B) requires disclosure of the basic process, including significant limitations and the risks inherent in it. A model\'s assumptions are part of what must be communicated.',
+      body: "Standard V(B) requires disclosure of the basic process, including significant limitations and the risks inherent in it. A model's assumptions are part of what must be communicated.",
       formula: null,
       exam: 'A change in investment process is a material change and must be promptly disclosed to all clients, not just new ones.',
     },
@@ -182,7 +182,7 @@ export const CFA_L3_CARDS: CardBank = {
     {
       kicker: 'EXECUTION',
       title: 'The benchmark you choose defines the cost you report',
-      body: 'Arrival price, VWAP and TWAP measure very different things. A benchmark that the trader can influence — VWAP over the trader\'s own participation — weakens the measurement.',
+      body: "Arrival price, VWAP and TWAP measure very different things. A benchmark that the trader can influence — VWAP over the trader's own participation — weakens the measurement.",
       formula: null,
       exam: 'Match algorithm to urgency: scheduled algorithms for low urgency and liquid names, liquidity-seeking for urgent or illiquid orders.',
     },
@@ -201,7 +201,7 @@ export const CFA_L3_CARDS: CardBank = {
       title: 'Three multiples and one rate',
       body: 'DPI is realised — cash returned over paid-in. RVPI is unrealised value over paid-in. TVPI is their sum. IRR is money-weighted and can be manipulated by subscription-line facilities.',
       formula: 'TVPI = DPI + RVPI',
-      exam: 'Early in a fund\'s life TVPI is mostly RVPI, so it depends on the GP\'s own marks. That dependence is the examinable weakness.',
+      exam: "Early in a fund's life TVPI is mostly RVPI, so it depends on the GP's own marks. That dependence is the examinable weakness.",
     },
     {
       kicker: 'PRIVATE DEBT',
@@ -225,7 +225,7 @@ export const CFA_L3_CARDS: CardBank = {
       title: 'Goals-based planning replaces one risk number with several',
       body: 'Each goal gets its own horizon, required probability of success and sub-portfolio. Aggregate risk is the result of the goal structure rather than a single stated risk tolerance.',
       formula: null,
-      exam: 'A high-priority near-term goal is funded with low-risk assets regardless of the client\'s overall risk tolerance.',
+      exam: "A high-priority near-term goal is funded with low-risk assets regardless of the client's overall risk tolerance.",
     },
     {
       kicker: 'HUMAN CAPITAL',
@@ -244,9 +244,9 @@ export const CFA_L3_CARDS: CardBank = {
     {
       kicker: 'TRANSFER',
       title: 'Lifetime gifts usually beat bequests',
-      body: 'A gift made early removes future appreciation from the taxable estate and starts the recipient\'s compounding sooner. Relative tax rates and the time horizon determine the size of the advantage.',
+      body: "A gift made early removes future appreciation from the taxable estate and starts the recipient's compounding sooner. Relative tax rates and the time horizon determine the size of the advantage.",
       formula: 'RV_gift = FV_gift / FV_bequest',
-      exam: 'If the recipient\'s tax rate is lower and the horizon is long, the gift dominates. Compute the ratio rather than reasoning qualitatively.',
+      exam: "If the recipient's tax rate is lower and the horizon is long, the gift dominates. Compute the ratio rather than reasoning qualitatively.",
     },
   ],
 };

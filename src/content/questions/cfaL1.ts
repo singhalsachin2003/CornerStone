@@ -6,7 +6,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A member works in a jurisdiction whose regulation permits front-running client orders. The Code and Standards prohibit it. The member must:',
       given: null,
-      opts: ['Follow local law', 'Follow the stricter Code and Standards', 'Disclose the practice and proceed', 'Seek written employer approval'],
+      opts: [
+        'Follow local law',
+        'Follow the stricter Code and Standards',
+        'Disclose the practice and proceed',
+        'Seek written employer approval',
+      ],
       a: 1,
       why: 'Members follow the most strict of applicable law, the Code and the Standards. Less strict local law never lowers the bar.',
       ref: 'Standard I(A) — Knowledge of the Law',
@@ -14,15 +19,25 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'An analyst accepts a paid consulting role outside her firm without informing her employer. She has most likely violated:',
       given: null,
-      opts: ['Standard III(A) Loyalty, Prudence and Care', 'Standard IV(B) Additional Compensation Arrangements', 'Standard V(A) Diligence and Reasonable Basis', 'No standard, because the work is outside the firm'],
+      opts: [
+        'Standard III(A) Loyalty, Prudence and Care',
+        'Standard IV(B) Additional Compensation Arrangements',
+        'Standard V(A) Diligence and Reasonable Basis',
+        'No standard, because the work is outside the firm',
+      ],
       a: 1,
-      why: 'Additional compensation arrangements that could conflict with the employer\'s interest require written consent from all parties involved.',
+      why: "Additional compensation arrangements that could conflict with the employer's interest require written consent from all parties involved.",
       ref: 'Standard IV(B) — Additional Compensation Arrangements',
     },
     {
       text: 'A member publishes a research summary that omits the fact that his firm holds an 8% beneficial ownership stake in the issuer. This most likely violates:',
       given: null,
-      opts: ['Standard VI(A) Disclosure of Conflicts', 'Standard II(B) Market Manipulation', 'Standard III(D) Performance Presentation', 'Standard VII(A) Conduct as Participants'],
+      opts: [
+        'Standard VI(A) Disclosure of Conflicts',
+        'Standard II(B) Market Manipulation',
+        'Standard III(D) Performance Presentation',
+        'Standard VII(A) Conduct as Participants',
+      ],
       a: 0,
       why: 'Beneficial ownership that could reasonably impair independence must be disclosed prominently. Omitting it breaches Standard VI(A).',
       ref: 'Standard VI(A) — Disclosure of Conflicts',
@@ -30,7 +45,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Which action best satisfies Standard V(B), Communication with Clients and Prospective Clients?',
       given: null,
-      opts: ['Presenting projections as assured outcomes', 'Distinguishing between fact and opinion', 'Omitting the process used to reach the conclusion', 'Reporting only the recommendations that performed well'],
+      opts: [
+        'Presenting projections as assured outcomes',
+        'Distinguishing between fact and opinion',
+        'Omitting the process used to reach the conclusion',
+        'Reporting only the recommendations that performed well',
+      ],
       a: 1,
       why: 'Members must distinguish fact from opinion and describe the basic process by which conclusions were reached, including its limitations.',
       ref: 'Standard V(B) — Communication with Clients',
@@ -38,7 +58,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A portfolio manager recommends a security after reading a single sell-side note and performing no further work. The security subsequently performs well. The manager has:',
       given: null,
-      opts: ['Not violated the Standards, because the result was favourable', 'Violated Standard V(A) regardless of the outcome', 'Violated Standard III(A) only if a client lost money', 'Violated Standard I(C) Misrepresentation'],
+      opts: [
+        'Not violated the Standards, because the result was favourable',
+        'Violated Standard V(A) regardless of the outcome',
+        'Violated Standard III(A) only if a client lost money',
+        'Violated Standard I(C) Misrepresentation',
+      ],
       a: 1,
       why: 'Standard V(A) requires a reasonable and adequate basis supported by appropriate research. The outcome is irrelevant — the process is what is judged.',
       ref: 'Standard V(A) — Diligence and Reasonable Basis',
@@ -100,7 +125,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'The inventory–sales ratio rises sharply. This most likely indicates the economy is:',
       given: null,
-      opts: ['Entering an expansion', 'Entering a contraction', 'At a cyclical trough', 'Unaffected — the ratio is not cyclical'],
+      opts: [
+        'Entering an expansion',
+        'Entering a contraction',
+        'At a cyclical trough',
+        'Unaffected — the ratio is not cyclical',
+      ],
       a: 1,
       why: 'Sales fall before firms cut production, so unsold inventory builds up. A rising inventory–sales ratio is a classic early-contraction signal.',
       ref: 'Economics — Understanding Business Cycles, LOS 2.b',
@@ -116,7 +146,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Which of the following is most accurately described as a lagging economic indicator?',
       given: null,
-      opts: ['The slope of the yield curve', 'New orders for capital goods', 'The average duration of unemployment', 'Building permits issued'],
+      opts: [
+        'The slope of the yield curve',
+        'New orders for capital goods',
+        'The average duration of unemployment',
+        'Building permits issued',
+      ],
       a: 2,
       why: 'The average duration of unemployment continues rising after a recovery begins, making it a lagging indicator. The other three are leading.',
       ref: 'Economics — Understanding Business Cycles, LOS 2.d',
@@ -124,7 +159,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A central bank raises its policy rate to combat inflation. Compared with fiscal policy, monetary policy most likely has:',
       given: null,
-      opts: ['A longer enactment lag but a shorter impact lag', 'A shorter enactment lag but a longer impact lag', 'Shorter lags on both dimensions', 'Longer lags on both dimensions'],
+      opts: [
+        'A longer enactment lag but a shorter impact lag',
+        'A shorter enactment lag but a longer impact lag',
+        'Shorter lags on both dimensions',
+        'Longer lags on both dimensions',
+      ],
       a: 1,
       why: 'Monetary policy can be enacted quickly by committee decision, but works indirectly through rates, credit and expectations, so its impact lag is long and variable.',
       ref: 'Economics — Monetary Policy, LOS 4.f',
@@ -143,7 +183,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'During a period of rising prices with stable inventory quantities, a firm using LIFO rather than FIFO will report:',
       given: null,
-      opts: ['Higher ending inventory and higher net income', 'Lower ending inventory and lower net income', 'Higher ending inventory and lower net income', 'Lower ending inventory and higher net income'],
+      opts: [
+        'Higher ending inventory and higher net income',
+        'Lower ending inventory and lower net income',
+        'Higher ending inventory and lower net income',
+        'Lower ending inventory and higher net income',
+      ],
       a: 1,
       why: 'LIFO charges the most recent, highest costs to COGS, lowering net income, and leaves older, cheaper costs in ending inventory.',
       ref: 'FSA — Analysis of Inventories, LOS 6.b',
@@ -159,7 +204,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A firm consistently reports net income well above cash flow from operations over several years. This is best interpreted as a signal of:',
       given: null,
-      opts: ['Strong earnings quality', 'A high accruals component and potentially lower earnings quality', 'Aggressive but permissible tax planning', 'Nothing — the two measures are unrelated'],
+      opts: [
+        'Strong earnings quality',
+        'A high accruals component and potentially lower earnings quality',
+        'Aggressive but permissible tax planning',
+        'Nothing — the two measures are unrelated',
+      ],
       a: 1,
       why: 'A persistent gap between net income and operating cash flow indicates a large accruals component, which historically predicts lower earnings persistence.',
       ref: 'FSA — Financial Reporting Quality, LOS 10.d',
@@ -167,7 +217,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A company capitalises rather than expenses a cost in the current year. In that year, the firm will report:',
       given: null,
-      opts: ['Lower net income and lower assets', 'Higher net income and higher assets', 'Higher net income and lower assets', 'Lower net income and higher assets'],
+      opts: [
+        'Lower net income and lower assets',
+        'Higher net income and higher assets',
+        'Higher net income and lower assets',
+        'Lower net income and higher assets',
+      ],
       a: 1,
       why: 'Capitalising moves the cost to the balance sheet, raising assets and deferring the expense, which raises current-year net income. Later years bear the amortisation.',
       ref: 'FSA — Analysis of Long-Term Assets, LOS 7.a',
@@ -186,7 +241,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'When NPV and IRR give conflicting rankings for two mutually exclusive projects, an analyst should most appropriately:',
       given: null,
-      opts: ['Choose the project with the higher IRR', 'Choose the project with the higher NPV', 'Choose the project with the shorter payback', 'Reject both projects'],
+      opts: [
+        'Choose the project with the higher IRR',
+        'Choose the project with the higher NPV',
+        'Choose the project with the shorter payback',
+        'Reject both projects',
+      ],
       a: 1,
       why: 'NPV measures the value added in currency terms and assumes reinvestment at the cost of capital, which is the economically defensible assumption.',
       ref: 'Corporate Issuers — Capital Investments and Capital Allocation, LOS 5.d',
@@ -210,7 +270,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'The conflict of interest between controlling and minority shareholders is best described as:',
       given: null,
-      opts: ['A principal–agent problem', 'A principal–principal problem', 'A stakeholder externality', 'A regulatory arbitrage'],
+      opts: [
+        'A principal–agent problem',
+        'A principal–principal problem',
+        'A stakeholder externality',
+        'A regulatory arbitrage',
+      ],
       a: 1,
       why: 'Both parties are owners, so it is a principal–principal conflict. The principal–agent problem sits between shareholders and managers.',
       ref: 'Corporate Issuers — Corporate Governance, LOS 3.a',
@@ -229,7 +294,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A two-for-one stock split of a constituent affects a price-weighted index by:',
       given: null,
-      opts: ['Reducing the index level permanently', 'Requiring an adjustment to the divisor', 'Increasing the constituent\'s weight', 'Having no effect on any index type'],
+      opts: [
+        'Reducing the index level permanently',
+        'Requiring an adjustment to the divisor',
+        "Increasing the constituent's weight",
+        'Having no effect on any index type',
+      ],
       a: 1,
       why: 'The divisor is adjusted so the index level is unchanged by the split. In a market-cap weighted index no adjustment is required at all.',
       ref: 'Equity Investments — Sources of Equity Returns, LOS 4.c',
@@ -253,7 +323,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Which characteristic most strongly indicates that an industry has high pricing power?',
       given: null,
-      opts: ['Low industry concentration', 'Minimal barriers to entry', 'High switching costs for customers', 'Rapid technological change'],
+      opts: [
+        'Low industry concentration',
+        'Minimal barriers to entry',
+        'High switching costs for customers',
+        'Rapid technological change',
+      ],
       a: 2,
       why: 'High switching costs lock customers in and reduce buyer power, which supports pricing power. The other three erode it.',
       ref: 'Equity Investments — Industry and Competitive Analysis, LOS 9.c',
@@ -272,7 +347,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A bond pays a 6% annual coupon while the market yield on comparable bonds is 4.5%. The bond most likely trades at:',
       given: null,
-      opts: ['A discount to par', 'Par value', 'A premium to par', 'A price that cannot be determined'],
+      opts: [
+        'A discount to par',
+        'Par value',
+        'A premium to par',
+        'A price that cannot be determined',
+      ],
       a: 2,
       why: 'When the coupon rate exceeds the required yield, the cash flows are richer than the market demands, so the price is bid above par.',
       ref: 'Fixed Income — Bond Valuation: Prices and Yields, LOS 6.b',
@@ -280,7 +360,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Compared with a duration-only estimate, adding a positive convexity adjustment for a large yield increase will:',
       given: null,
-      opts: ['Lower the estimated price', 'Raise the estimated price', 'Leave the estimate unchanged', 'Reverse the sign of the estimate'],
+      opts: [
+        'Lower the estimated price',
+        'Raise the estimated price',
+        'Leave the estimate unchanged',
+        'Reverse the sign of the estimate',
+      ],
       a: 1,
       why: 'Positive convexity means the true price–yield curve lies above the tangent line, so the convexity term is additive for moves in either direction.',
       ref: 'Fixed Income — Yield-Based Bond Convexity, LOS 12.b',
@@ -288,7 +373,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Spread duration measures the sensitivity of a corporate bond’s price to a change in:',
       given: null,
-      opts: ['The benchmark government yield', 'The credit spread only', 'Both the benchmark and the spread', 'The realised default frequency'],
+      opts: [
+        'The benchmark government yield',
+        'The credit spread only',
+        'Both the benchmark and the spread',
+        'The realised default frequency',
+      ],
       a: 1,
       why: 'Spread duration isolates the credit spread component, holding the benchmark curve fixed. Effective duration captures the benchmark move.',
       ref: 'Fixed Income — Credit Risk, LOS 14.b',
@@ -296,7 +386,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Which statement about Macaulay and modified duration is correct?',
       given: null,
-      opts: ['Modified duration always exceeds Macaulay duration', 'They are always equal', 'Macaulay duration divided by (1 + periodic yield) gives modified duration', 'Macaulay duration is measured in percent'],
+      opts: [
+        'Modified duration always exceeds Macaulay duration',
+        'They are always equal',
+        'Macaulay duration divided by (1 + periodic yield) gives modified duration',
+        'Macaulay duration is measured in percent',
+      ],
       a: 2,
       why: 'ModDur = MacDur / (1 + periodic yield), so modified duration is always slightly smaller. Macaulay duration is expressed in years.',
       ref: 'Fixed Income — Yield-Based Bond Duration Measures, LOS 11.a',
@@ -315,7 +410,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'According to put–call parity, a synthetic long call can be constructed from:',
       given: 'c + X/(1+r)ᵀ = p + S₀',
-      opts: ['Long put, long stock, short bond', 'Short put, long stock, long bond', 'Long put, short stock, long bond', 'Short put, short stock, short bond'],
+      opts: [
+        'Long put, long stock, short bond',
+        'Short put, long stock, long bond',
+        'Long put, short stock, long bond',
+        'Short put, short stock, short bond',
+      ],
       a: 0,
       why: 'Rearranging gives c = p + S₀ − X/(1+r)ᵀ: long put, long the underlying, and short a bond with face value equal to the strike.',
       ref: 'Derivatives — Option Replication Using Put–Call Parity, LOS 9.a',
@@ -339,7 +439,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Which of the following best describes the credit risk of an exchange-traded futures contract relative to an otherwise identical forward?',
       given: null,
-      opts: ['Higher, because of daily settlement', 'Lower, because of daily settlement and the clearinghouse', 'Identical, because the payoffs are identical', 'Undefined, because futures carry no credit risk at all'],
+      opts: [
+        'Higher, because of daily settlement',
+        'Lower, because of daily settlement and the clearinghouse',
+        'Identical, because the payoffs are identical',
+        'Undefined, because futures carry no credit risk at all',
+      ],
       a: 1,
       why: 'Daily mark-to-market settlement and the clearinghouse acting as counterparty substantially reduce credit risk relative to a bilateral forward.',
       ref: 'Derivatives — Derivative Instrument and Market Features, LOS 1.c',
@@ -366,7 +471,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'The J-curve effect in private equity refers to:',
       given: null,
-      opts: ['Rising fees over a fund\'s life', 'Early negative returns followed by later positive returns', 'The shape of the capital call schedule', 'Persistent underperformance versus public markets'],
+      opts: [
+        "Rising fees over a fund's life",
+        'Early negative returns followed by later positive returns',
+        'The shape of the capital call schedule',
+        'Persistent underperformance versus public markets',
+      ],
       a: 1,
       why: 'Fees and early write-downs are recognised before exits generate gains, so reported returns are negative early and recover later.',
       ref: 'Alternative Investments — Investments in Private Capital, LOS 3.b',
@@ -374,7 +484,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'An illiquid strategy reports a Sharpe ratio far above comparable liquid strategies. The most likely explanation is:',
       given: null,
-      opts: ['Genuinely superior risk-adjusted skill', 'Return smoothing from appraisal-based valuation', 'A higher risk-free rate assumption', 'Survivorship bias in the risk-free rate'],
+      opts: [
+        'Genuinely superior risk-adjusted skill',
+        'Return smoothing from appraisal-based valuation',
+        'A higher risk-free rate assumption',
+        'Survivorship bias in the risk-free rate',
+      ],
       a: 1,
       why: 'Stale and appraisal-based marks smooth reported returns, understating volatility and inflating the Sharpe ratio. It is a measurement artefact.',
       ref: 'Alternative Investments — Performance and Returns, LOS 2.d',
@@ -382,7 +497,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Compared with a direct investment in a hedge fund, a fund-of-funds most likely offers:',
       given: null,
-      opts: ['Lower total fees and higher manager concentration', 'Higher total fees and greater diversification', 'Identical fees and identical diversification', 'Lower fees and greater diversification'],
+      opts: [
+        'Lower total fees and higher manager concentration',
+        'Higher total fees and greater diversification',
+        'Identical fees and identical diversification',
+        'Lower fees and greater diversification',
+      ],
       a: 1,
       why: 'A fund-of-funds adds a second layer of fees but provides diversification across managers and access to closed funds.',
       ref: 'Alternative Investments — Hedge Funds, LOS 6.b',
@@ -393,7 +513,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'Two assets have a correlation of exactly +1.0. Combining them in a portfolio will produce:',
       given: 'ρ₁,₂ = +1.0',
-      opts: ['A reduction in portfolio standard deviation', 'No diversification benefit', 'A risk-free portfolio at some weight', 'A portfolio with zero expected return'],
+      opts: [
+        'A reduction in portfolio standard deviation',
+        'No diversification benefit',
+        'A risk-free portfolio at some weight',
+        'A portfolio with zero expected return',
+      ],
       a: 1,
       why: 'With perfect positive correlation the portfolio standard deviation is the weighted average of the individual standard deviations — no benefit at all.',
       ref: 'Portfolio Management — Portfolio Risk and Return: Part I, LOS 1.d',
@@ -409,7 +534,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A security plots above the security market line. It is best described as:',
       given: null,
-      opts: ['Overvalued, with a negative alpha', 'Undervalued, with a positive alpha', 'Correctly valued', 'Undervalued, but only if beta exceeds 1'],
+      opts: [
+        'Overvalued, with a negative alpha',
+        'Undervalued, with a positive alpha',
+        'Correctly valued',
+        'Undervalued, but only if beta exceeds 1',
+      ],
       a: 1,
       why: 'Plotting above the SML means the expected return exceeds what the CAPM requires for its beta — a positive alpha, so it is undervalued.',
       ref: 'Portfolio Management — Portfolio Risk and Return: Part II, LOS 2.f',
@@ -417,7 +547,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'A client has substantial wealth and a long horizon but becomes visibly anxious during drawdowns. The adviser should most appropriately:',
       given: null,
-      opts: ['Follow the higher ability to take risk', 'Follow the lower willingness to take risk and educate the client', 'Average the two assessments', 'Decline the engagement'],
+      opts: [
+        'Follow the higher ability to take risk',
+        'Follow the lower willingness to take risk and educate the client',
+        'Average the two assessments',
+        'Decline the engagement',
+      ],
       a: 1,
       why: 'When willingness and ability conflict, the lower governs. The adviser should adopt the more conservative position while educating the client.',
       ref: 'Portfolio Management — Basics of Portfolio Planning and Construction, LOS 4.b',
@@ -425,7 +560,12 @@ export const CFA_L1_QUESTIONS: QuizBank = {
     {
       text: 'An investor holds a losing position because selling would confirm the loss. This bias is best classified and remedied as:',
       given: null,
-      opts: ['A cognitive error, to be corrected with information', 'An emotional bias, to be moderated', 'A cognitive error, to be moderated', 'An emotional bias, to be corrected with information'],
+      opts: [
+        'A cognitive error, to be corrected with information',
+        'An emotional bias, to be moderated',
+        'A cognitive error, to be moderated',
+        'An emotional bias, to be corrected with information',
+      ],
       a: 1,
       why: 'Loss aversion is an emotional bias arising from feeling rather than faulty reasoning, so it is generally moderated and accommodated rather than corrected.',
       ref: 'Portfolio Management — The Behavioral Biases of Individuals, LOS 5.b',

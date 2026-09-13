@@ -113,7 +113,7 @@ export const CFA_L2_CARDS: CardBank = {
     {
       kicker: 'FX TRANSLATION',
       title: 'Functional currency decides the method',
-      body: 'If the functional currency is the local currency, use the current rate method and put the adjustment in equity. If it is the parent\'s currency, use the temporal method and run the gain or loss through income.',
+      body: "If the functional currency is the local currency, use the current rate method and put the adjustment in equity. If it is the parent's currency, use the temporal method and run the gain or loss through income.",
       formula: null,
       exam: 'Current rate method translates all assets and liabilities at the current rate. Temporal keeps non-monetary items at historical rates.',
     },
@@ -144,9 +144,9 @@ export const CFA_L2_CARDS: CardBank = {
     {
       kicker: 'COST OF CAPITAL',
       title: 'Beta must be relevered to the subject firm',
-      body: 'Take a comparable\'s equity beta, unlever it to remove that firm\'s capital structure, then relever using the subject firm\'s target debt-to-equity ratio. The pure-play method is this sequence.',
+      body: "Take a comparable's equity beta, unlever it to remove that firm's capital structure, then relever using the subject firm's target debt-to-equity ratio. The pure-play method is this sequence.",
       formula: 'β_U = β_E / [1 + (1−t)·D/E]',
-      exam: 'Using the comparable\'s D/E in the relevering step is the planted error. Unlever with theirs, relever with the subject\'s.',
+      exam: "Using the comparable's D/E in the relevering step is the planted error. Unlever with theirs, relever with the subject's.",
     },
     {
       kicker: 'RESTRUCTURING',
@@ -192,7 +192,7 @@ export const CFA_L2_CARDS: CardBank = {
     {
       kicker: 'TERM STRUCTURE',
       title: 'Forward rates are breakeven rates, not forecasts',
-      body: 'The forward curve is implied by today\'s spot curve under no-arbitrage. If your rate view matches the forwards, every riding-the-curve strategy earns the same return — a view only pays if it differs from the forwards.',
+      body: "The forward curve is implied by today's spot curve under no-arbitrage. If your rate view matches the forwards, every riding-the-curve strategy earns the same return — a view only pays if it differs from the forwards.",
       formula: '(1+z₂)² = (1+z₁)(1+f₁,₁)',
       exam: '"Will outperform if rates evolve as implied by forwards" is almost always false. That is the definition of no advantage.',
     },
@@ -213,7 +213,7 @@ export const CFA_L2_CARDS: CardBank = {
     {
       kicker: 'CREDIT',
       title: 'Structural and reduced-form models ask different questions',
-      body: 'Structural models treat equity as a call on the firm\'s assets and derive default from the capital structure. Reduced-form models take default as an exogenous jump process estimated from observable data.',
+      body: "Structural models treat equity as a call on the firm's assets and derive default from the capital structure. Reduced-form models take default as an exogenous jump process estimated from observable data.",
       formula: 'CVA = Σ PD·LGD·discount',
       exam: 'Structural models need unobservable asset values; reduced-form models need a stable estimation sample. Know the criticism of each.',
     },
