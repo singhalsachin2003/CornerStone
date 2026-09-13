@@ -21,6 +21,7 @@ import {
 import { color } from '@/theme/tokens';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useAccessStore } from '@/store/useAccessStore';
+import { useSyncStore } from '@/store/useSyncStore';
 import { isPreExistingInstall } from '@/access';
 
 // expo-router renders this for any uncaught error in the route tree.
@@ -40,7 +41,8 @@ export default function RootLayout() {
   });
   const hydrated = useStudyStore((s) => s.hydrated);
   const accessHydrated = useAccessStore((s) => s.hydrated);
-  const ready = fontsLoaded && hydrated && accessHydrated;
+  const syncHydrated = useSyncStore((s) => s.hydrated);
+  const ready = fontsLoaded && hydrated && accessHydrated && syncHydrated;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
@@ -65,6 +67,18 @@ export default function RootLayout() {
     if (!accessHydrated) return;
     useAccessStore.getState().refresh();
   }, [accessHydrated]);
+
+  // Back progress up, once both stores hold what they are going to hold.
+  //
+  // Fired and not awaited, and nothing that renders waits on it. A device with no
+  // signal, an expired token or a paused free-tier project — which on the free
+  // plan is any project after a quiet week — has to behave exactly like the app
+  // did before sync existed.
+  useEffect(() => {
+    if (!hydrated || !syncHydrated) return;
+    const sync = useSyncStore.getState();
+    sync.refreshSession().then(() => sync.sync());
+  }, [hydrated, syncHydrated]);
 
   if (!ready) return <View style={{ flex: 1, backgroundColor: color.paper }} />;
 

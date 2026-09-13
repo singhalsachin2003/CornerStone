@@ -17,6 +17,8 @@ import {
 } from '@/store/useStudyStore';
 import { OTC_LEARN_PLAY_URL } from '@/links';
 import { useAccess } from '@/access';
+import { isSyncConfigured } from '@/sync/client';
+import { useSyncStore } from '@/store/useSyncStore';
 import { premiumTotals } from '@/content';
 import { openExternal } from '@/share';
 import {
@@ -60,6 +62,7 @@ export default function Profile() {
   const variant = useStudyStore((s) => s.variant);
   const setVariant = useStudyStore((s) => s.setVariant);
   const access = useAccess();
+  const syncEmail = useSyncStore((s) => s.email);
   const studyDays = useStudyStore((s) => s.studyDays);
   const answered = useStudyStore((s) => s.questionsAnswered);
   const correct = useStudyStore((s) => s.questionsCorrect);
@@ -234,6 +237,34 @@ export default function Profile() {
               </Text>
               <Text style={[type.meta, { marginTop: 5, color: color.brassBody }]}>
                 {accessDetail(access)}
+              </Text>
+            </Pressable>
+          </>
+        )}
+
+        {/* ACCOUNT — hidden entirely in a build with no sync credentials, the same
+            way the access row is hidden when nothing is for sale. */}
+        {isSyncConfigured() && (
+          <>
+            <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
+              ACCOUNT
+            </Eyebrow>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/account')}
+              style={({ pressed }) => ({
+                borderWidth: 1,
+                borderColor: pressed ? color.ink : color.ruleStrong,
+                backgroundColor: color.surface,
+                borderRadius: radius.card,
+                padding: 16,
+              })}
+            >
+              <Text style={type.rowLabel}>{syncEmail ?? 'Back up your progress'}</Text>
+              <Text style={[type.meta, { marginTop: 5 }]}>
+                {syncEmail
+                  ? 'Signed in — your progress is copied up when the app can reach the server.'
+                  : 'Optional. An account survives a reinstall or a new phone.'}
               </Text>
             </Pressable>
           </>
