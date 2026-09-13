@@ -152,7 +152,48 @@ settled before accounts are offered to anyone:
 
 ## The project
 
-**Not created yet.** When it is:
+**Created 2026-09-13.** `CornerStone`, free plan, ref `cxigwjqdoxeadkcndili`, region
+**Northeast Asia (Seoul)**.
+
+Seoul was the dashboard default rather than a choice, and it is further from a UK
+or Indian user than it needs to be. Not worth recreating over, for the same reason
+OTC Learn did not recreate its Tokyo project: sync is a background backup and
+nothing on screen waits on it, so a hundred milliseconds either way is invisible.
+
+Verified from outside the dashboard on the day it was applied:
+
+- All seven tables exist, RLS enabled on each, four policies each.
+- **Every table refuses an unauthenticated insert with `42501`**, "new row violates
+  row-level security policy". That is the check that matters — the publishable key
+  ships inside the app bundle, so anyone who installs the app has it. A `select`
+  returning `[]` proves nothing on an empty database; a refused write proves the
+  policy is live.
+
+`EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` are set in
+the **production** EAS environment only. Preview and development are deliberately
+left unset, so an internal test build does not write test accounts and test
+progress into the same database real users share.
+
+Applying the schema through the SQL editor raises "Potential issue detected — this
+query includes destructive operations". That is the `drop policy if exists` line
+before each `create policy`, which is how the file stays safe to run twice; every
+dropped policy is recreated in the same statement block and no data is touched.
+
+### Notes for the next project
+
+- The free plan allows **2 active projects** and this fills the allowance — OTC
+  Learn holds the other.
+- 500 MB database and 5 GB egress are irrelevant at this scale: a user's entire
+  synced state is a few kilobytes.
+- The URL and the **publishable** key are what the app needs. The publishable key
+  is meant to ship in the bundle; it grants only what row level security allows.
+  The `sb_secret_` key is a server credential and must never reach a build —
+  `src/sync/client.ts` refuses one outright.
+- Both are inlined by Babel at build time rather than read at runtime, so the
+  client takes its configuration as an argument with the env values only as
+  defaults, or it cannot be tested.
+
+### The original notes, for reference
 
 - The free plan allows **2 active projects** and OTC Learn already occupies one,
   so Cornerstone takes the second and fills the allowance.
