@@ -69,7 +69,8 @@
     "check:applinks": "tsx scripts/check-applinks.ts",
     "check:pristine": "tsx scripts/check-node-modules-pristine.ts",
     "setup:supabase": "tsx scripts/setup-supabase.ts",
-    "check:glossary": "tsx scripts/check-glossary.ts"
+    "check:glossary": "tsx scripts/check-glossary.ts",
+    "check:play": "tsx scripts/check-play.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"

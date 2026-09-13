@@ -516,6 +516,17 @@ The code is done and verified; everything below needs the Console, an account, o
      live build (versionCode 5) does not. versionCode 7 and 8 do. So: upload an AAB to a
      track → create the products → add them to an offering in RevenueCat → rebuild.
 
+   **`npm run check:play` answers "which of these is next?" without opening the Console.**
+   It reads the tracks and the subscription list through the Android Publisher API — the
+   Console is unreachable from this machine, because Chrome is signed in as a Google account
+   that is not the developer account. Measured 2026-09-13: all four tracks still on
+   versionCode 5, no subscriptions.
+
+   **The service account's release grant has propagated.** `edits.insert` now succeeds, where
+   it needed a separate "Release to testing tracks" permission that Google documents as taking
+   up to 36 hours. So `eas submit` is technically unblocked and the upload is waiting only on
+   a go-ahead, not on a permission.
+
 
    **Pricing — decided 2026-09-13: mirror OTC Learn.** Read from the Android Publisher API
    rather than retyped from memory, so these are the live values, not an approximation:
@@ -537,6 +548,12 @@ The code is done and verified; everything below needs the Console, an account, o
    Letting Play auto-convert INR 199/year into other markets gives about $2.30/year, which is
    almost certainly under-priced for this audience — so set per-region prices deliberately, or
    keep it India-only deliberately. Either is fine; drifting into one by default is not.
+
+   **[`docs/PRICING.md`](PRICING.md) reduces this to one choice**: it carries the two-band
+   table (a USD anchor at 3.99/24.99 with a named list of markets overridden down to INR
+   29/199), the India-only alternative stated as a deliberate option, the product listing
+   text, and why the anchor has to be USD rather than INR. Pick a column; everything else
+   about the product is already specified.
 
    **Setting the key early is safe.** Guard 2 (`productAvailable`) reads the offering, the
    offering is empty, so `gatingActive` is false and every segment stays open to everyone.
