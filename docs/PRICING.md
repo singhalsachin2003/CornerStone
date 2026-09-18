@@ -24,7 +24,38 @@ Android Publisher API rather than taken from memory. **The yearly price is a 43%
 discount on twelve months** (INR 348 → 199); keep that ratio if the amounts ever
 move, because it is what makes the annual plan the obvious choice.
 
-## Settled 2026-09-18: India only, deliberately
+## Settled 2026-09-18: two bands, 173 regions — LIVE
+
+**Applied to the live product on 2026-09-18** via `npm run set:regions -- --commit`.
+Both base plans are ACTIVE in **173 regions**, all available to new subscribers.
+
+| Band         | Monthly  | Yearly    | Regions                             |
+| ------------ | -------- | --------- | ----------------------------------- |
+| **Anchor**   | USD 3.99 | USD 24.99 | everywhere not listed below         |
+| **Override** | INR 29   | INR 199   | IN PK BD LK NP NG KE GH EG VN PH ID |
+
+Play converts each band into local currency itself — GBP 3.59, JPY 680, AUD 5.99,
+PKR 79, NGN 435 — using `pricing:convertRegionPrices`. **Never hand-build an FX
+table**: Play returns the price _point_ each market expects (JPY 680, not JPY 597).
+
+**India was reached first and briefly shipped alone**, which is why it is pinned:
+converting INR 29 rounds it to INR 30, and Play restricts changing a price in a
+region that already has one, so re-setting it would have been a price rise on a
+live product. The script refuses to alter any already-priced region.
+
+**Why India-only was abandoned within the hour.** Guard 2 turns gating _off_ wherever
+no product can be bought — "never lock what cannot be bought". With prices in India
+alone, that meant every candidate outside India got all 139 premium segments free
+and permanently, and every one of them installing would have been grandfathered.
+The guard was right; the pricing was the bug.
+
+**The regions version is asked for, never remembered.** Pinning `2022/02` by hand
+failed: `Invalid currency for region code BG ... Expected BGN but got EUR` — Bulgaria
+has since adopted the euro. `convertRegionPrices` returns the version its prices
+belong to, and the script now sends that, so prices and version cannot disagree.
+Latest as of this write: **2025/03**.
+
+## Superseded: the India-only option
 
 **`IN` alone — INR 29/month, INR 199/year — and everywhere else treated as not
 yet launched.** Sachin chose this on 2026-09-18, presented against the two-band
