@@ -49,19 +49,52 @@ const PRICES = {
 } as const;
 
 /**
+ * Play's limits, which it enforces on the create call rather than anywhere you
+ * can see while drafting. `BENEFIT_LIMIT` is the one that bites: 40 characters
+ * is shorter than it sounds, and the first draft of all three lines here
+ * exceeded it. Checked locally in `assertListingFits` so the API is not the
+ * thing that discovers it.
+ */
+const BENEFIT_LIMIT = 40;
+const TITLE_LIMIT = 55;
+const MAX_BENEFITS = 4;
+
+/**
  * Deliberately omits progress backup and the glossary. Both are free and stay
  * free, so listing either as a subscription benefit would be untrue — and it is
  * the kind of untrue a Play reviewer reads.
+ *
+ * "more" is doing real work in the second line: the free core stays free
+ * permanently and these counts are what a subscription adds on top, so a phrasing
+ * that reads as the total would misdescribe what is being sold.
  */
 const LISTING = {
   languageCode: 'en-GB',
   title: 'Cornerstone Plus',
   benefits: [
-    'Every practice segment, across all 38 topic areas',
-    '417 cards and 834 questions beyond the free core',
-    'New segments added for each exam cycle',
+    'Every segment, all 38 topic areas',
+    '417 more cards, 834 more questions',
+    'New segments each exam cycle',
   ],
 };
+
+function assertListingFits() {
+  const problems: string[] = [];
+  if (LISTING.title.length > TITLE_LIMIT) {
+    problems.push(`title is ${LISTING.title.length}, limit ${TITLE_LIMIT}`);
+  }
+  if (LISTING.benefits.length > MAX_BENEFITS) {
+    problems.push(`${LISTING.benefits.length} benefits, limit ${MAX_BENEFITS}`);
+  }
+  for (const benefit of LISTING.benefits) {
+    if (benefit.length > BENEFIT_LIMIT) {
+      problems.push(`benefit is ${benefit.length}, limit ${BENEFIT_LIMIT}: "${benefit}"`);
+    }
+  }
+  if (problems.length) {
+    throw new Error(`Listing will be rejected by Play:\n  ${problems.join('\n  ')}`);
+  }
+}
 
 const basePlan = (id: keyof typeof PRICES) => ({
   basePlanId: id,
@@ -153,8 +186,14 @@ async function main() {
   console.log(`  monthly      INR ${PRICES.monthly.units}  ${PRICES.monthly.period}   IN only`);
   console.log(`  yearly       INR ${PRICES.yearly.units}  ${PRICES.yearly.period}   IN only`);
   console.log(`  title        ${LISTING.title}`);
-  for (const benefit of LISTING.benefits) console.log(`               • ${benefit}`);
+  for (const benefit of LISTING.benefits) {
+    console.log(
+      `               • ${benefit.padEnd(BENEFIT_LIMIT)}  ${benefit.length}/${BENEFIT_LIMIT}`,
+    );
+  }
   console.log(`  regions ver  ${regionsVersion}\n`);
+
+  assertListingFits();
 
   const token = await accessToken();
 

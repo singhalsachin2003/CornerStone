@@ -89,9 +89,11 @@ an existing subscriber's price freely afterwards.
    `com.android.vending.BILLING` was on a track, and versionCode 5 does not
    declare it. The permission comes from the Play Billing library, not from the
    RevenueCat key, so even a keyless build unblocks this.
-2. **Create `cornerstone_premium`** with the two base plans, priced `IN` only.
-   `npm run create:subscription` does it from this spec; it prints the plan and
-   changes nothing unless passed `--commit`.
+2. ~~**Create `cornerstone_premium`**~~ **DONE 2026-09-18.** Both base plans read
+   back **ACTIVE**, `IN` only, at INR 29 and INR 199, via
+   `npm run create:subscription -- --commit`. Base plans are created in DRAFT and
+   are not purchasable until activated, which the script does and then proves by
+   reading the product back.
 3. **Add both base plans to an offering in RevenueCat**, attached to the
    `premium` entitlement.
 4. **Rebuild.** Nothing in the app changes.
@@ -110,9 +112,20 @@ afterwards:
 
 - **Title:** Cornerstone Plus
 - **Benefits:**
-  - Every practice segment, across all 38 topic areas
-  - 417 cards and 834 questions beyond the free core
-  - New segments added for each exam cycle
+  - Every segment, all 38 topic areas
+  - 417 more cards, 834 more questions
+  - New segments each exam cycle
+
+**Play caps a benefit line at 40 characters and enforces it only on the create
+call**, with `"Benefit cannot be longer than 40 characters for the listing in
+en-GB"`. The first draft of all three lines above was over — 49, 48 and 37 — and
+the rejection is the whole request, so nothing is half-created. `npm run
+create:subscription` now checks the lengths locally and prints each line with its
+count, so the API is no longer what discovers this.
+
+**"more" is load-bearing in the second line.** The free core stays free
+permanently; 417 and 834 are what a subscription _adds_. A phrasing that reads as
+the total would misdescribe what is being sold.
 
 **The name is "Cornerstone Plus", not "Premium".** That is what `profile.tsx` puts on
 screen, and the Play listing title is what a buyer reads on the purchase sheet — the two
