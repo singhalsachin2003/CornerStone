@@ -9,6 +9,7 @@ study segments added since, and anyone who installed the app before the subscrip
 existed keeps all of it.
 
 - [Privacy policy](PRIVACY.md)
+- [Delete your account](DELETE-ACCOUNT.md)
 
 Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by
 or sponsored by CFA Institute or the Global Association of Risk Professionals.

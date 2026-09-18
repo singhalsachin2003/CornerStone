@@ -7,6 +7,11 @@ description: A study app for CFA and FRM candidates. Nothing leaves your device.
 exclude:
   - RELEASE_CHECKLIST.md
   - STORE_LISTING.md
+  # Added 2026-09-18, having been published by accident for a day: PRICING.md is
+  # the same kind of working note, written after this list and never added to it.
+  # It carries the price bands, the markets overridden down and the reasoning —
+  # a page for us, not for candidates.
+  - PRICING.md
 
 # Jekyll skips dot-directories by default, which would silently drop the App Links
 # statement from the published site. It is served at /CornerStone/.well-known/
