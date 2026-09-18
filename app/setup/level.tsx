@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, PrimaryButton } from '@/components/primitives';
 import { color, font, gutter, radius } from '@/theme/tokens';
-import { eyebrow, type } from '@/theme/type';
+import { type } from '@/theme/type';
 import { EXAMS, PATHWAYS, PathwayKey, topicsFor } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { buildPlacementSession, useSessionStore } from '@/store/useSessionStore';
@@ -133,7 +133,13 @@ export default function LevelPicker() {
             marginTop: 14,
           })}
         >
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+            }}
+          >
             <Eyebrow size={10} tracking={0.12} style={{ color: color.brass }}>
               NOT SURE WHERE TO START?
             </Eyebrow>
@@ -143,8 +149,8 @@ export default function LevelPicker() {
           </View>
           <Text style={[type.serif18, { marginTop: 9 }]}>Take the placement quiz</Text>
           <Text style={[type.secondary, { color: color.brassBody, marginTop: 5 }]}>
-            Five questions across the {exam.name} syllabus. We'll recommend a level and pre-fill your
-            topic progress.
+            Five questions across the {exam.name} syllabus. We'll recommend a level and pre-fill
+            your topic progress.
           </Text>
         </Pressable>
 
@@ -198,7 +204,9 @@ function PathwayRow({
             justifyContent: 'center',
           }}
         >
-          {active && <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: color.ink }} />}
+          {active && (
+            <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: color.ink }} />
+          )}
         </View>
         <Text style={[type.rowLabel, { flex: 1 }]}>{name}</Text>
       </View>

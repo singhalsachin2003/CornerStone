@@ -7,3 +7,11 @@ description: A study app for CFA and FRM candidates. Nothing leaves your device.
 exclude:
   - RELEASE_CHECKLIST.md
   - STORE_LISTING.md
+
+# Jekyll skips dot-directories by default, which would silently drop the App Links
+# statement from the published site. It is served at /CornerStone/.well-known/
+# rather than the host root, so Android will not read it there — see
+# scripts/check-applinks.ts — but publishing it is still what makes the file
+# verifiable at the URL it is copied from.
+include:
+  - .well-known

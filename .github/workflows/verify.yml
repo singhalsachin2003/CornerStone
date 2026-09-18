@@ -1,0 +1,27 @@
+# One gate, the same one `npm run verify` runs locally. If these diverge, the local
+# command is the one people actually run, so CI mirrors it rather than restating it.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # 22, not 20, and the reason is load-bearing rather than housekeeping.
+          # `@supabase/realtime-js` reaches for a global `WebSocket`, which Node
+          # only exposes unflagged from 22 — on 20 it throws "Node.js detected
+          # but native WebSocket not found" and takes three syncClient tests
+          # with it. That failure is invisible locally, where Node is newer, so
+          # `npm run verify` passes on the desk and fails here. Pinning below 22
+          # reintroduces it.
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run verify

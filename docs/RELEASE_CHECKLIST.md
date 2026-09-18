@@ -1,9 +1,10 @@
-# Release checklist — Cornerstone v1.0 (Android)
+# Release checklist — Cornerstone (Android)
 
 Everything in here needs your accounts or your judgement. The code side is done.
 
 Verified state at time of writing: `eas-cli` 21.2.0 installed, logged in as **singhalsachin2003**,
-repo is **public**, `app.json` version `1.0.0`, `versionCode` managed remotely by EAS.
+repo is **public**, `app.json` version `1.1.0`, `versionCode` managed remotely by EAS.
+v1.0 shipped as versionCode 5; v1.1 is the subscription release.
 
 ---
 
@@ -92,15 +93,15 @@ current directory. Save all four together — the file alone is useless without 
 Put them in a password manager, not just this laptop, and then delete the `.jks` from the repo
 directory (`.gitignore` already blocks `*.jks`, but do not rely on that as your only guard).
 
-**Downloaded 30 July 2026.** The identifiers below are *not* secret — they are derivable from any
+**Downloaded 30 July 2026.** The identifiers below are _not_ secret — they are derivable from any
 signed artifact and Play Console displays them — so they live here as a verification anchor. The
 keystore password and key password are secret and belong only in a password manager.
 
-| | |
-| --- | --- |
-| Key alias | `d003461026a518e508da4affee7387c8` |
-| SHA256 | `E7:CD:2E:98:74:0C:D8:46:2C:92:E7:80:2C:D2:85:14:B1:E8:ED:B6:8E:C0:CE:B3:84:91:49:EA:26:03:2D:A6` |
-| Certificate validity | 29 Jul 2026 → 14 Dec 2053 |
+|                      |                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| Key alias            | `d003461026a518e508da4affee7387c8`                                                                |
+| SHA256               | `E7:CD:2E:98:74:0C:D8:46:2C:92:E7:80:2C:D2:85:14:B1:E8:ED:B6:8E:C0:CE:B3:84:91:49:EA:26:03:2D:A6` |
+| Certificate validity | 29 Jul 2026 → 14 Dec 2053                                                                         |
 
 After the first upload, Play Console → **App integrity** shows the upload certificate
 fingerprint. It must equal the SHA256 above. To check a local keystore matches:
@@ -150,12 +151,12 @@ developer account. A mismatch is a common review query.
 
 [play.google.com/console](https://play.google.com/console) → **Create app**
 
-| Field | Value |
-| --- | --- |
-| App name | `Cornerstone: Exam Study` |
+| Field            | Value                                       |
+| ---------------- | ------------------------------------------- |
+| App name         | `Cornerstone: Exam Study`                   |
 | Default language | English (United Kingdom) or (United States) |
-| App or game | **App** |
-| Free or paid | **Free** |
+| App or game      | **App**                                     |
+| Free or paid     | **Free**                                    |
 
 > Do not put CFA or FRM in the app name. See `docs/STORE_LISTING.md` for why.
 
@@ -165,17 +166,17 @@ developer account. A mismatch is a common review query.
 
 All under **Policy → App content**. Answers for this app:
 
-| Section | Answer |
-| --- | --- |
-| App access | All functionality available without restrictions — **no login required** |
-| Ads | **No ads** |
-| Content rating | Complete questionnaire → category **Reference/Education**; answer *No* to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3** |
-| Target audience | **18+**. Do not tick any child age band — that triggers Families policy |
-| News app | **No** |
-| Data safety | **No data collected, no data shared.** See the pre-filled answers at the bottom of `docs/PRIVACY.md` |
-| Government app | **No** |
-| Financial features | **None.** This is study content *about* finance, not a financial product. Do not tick anything here |
-| Privacy policy | Paste the URL from Step 3 |
+| Section            | Answer                                                                                                                                                                                   |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App access         | All functionality available without restrictions — **no login required**                                                                                                                 |
+| Ads                | **No ads**                                                                                                                                                                               |
+| Content rating     | Complete questionnaire → category **Reference/Education**; answer _No_ to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3** |
+| Target audience    | **18+**. Do not tick any child age band — that triggers Families policy                                                                                                                  |
+| News app           | **No**                                                                                                                                                                                   |
+| Data safety        | **No data collected, no data shared.** See the pre-filled answers at the bottom of `docs/PRIVACY.md`                                                                                     |
+| Government app     | **No**                                                                                                                                                                                   |
+| Financial features | **None.** This is study content _about_ finance, not a financial product. Do not tick anything here                                                                                      |
+| Privacy policy     | Paste the URL from Step 3                                                                                                                                                                |
 
 ---
 
@@ -184,7 +185,7 @@ All under **Policy → App content**. Answers for this app:
 **Main store listing** — copy verbatim from `docs/STORE_LISTING.md`:
 
 - [ ] App name, short description, full description
-- [ ] **App icon** — 512×512, 32-bit PNG. Alpha *is* allowed here. Downscale with:
+- [ ] **App icon** — 512×512, 32-bit PNG. Alpha _is_ allowed here. Downscale with:
       `sips -z 512 512 assets/icon.png --out /tmp/icon-512.png`
 - [ ] **Feature graphic** — upload `store/feature-graphic.png` as-is. Play requires 1024×500
       with **no alpha** here (the opposite of the icon rule); this file is already 24-bit RGB
@@ -243,7 +244,7 @@ than the 10–35 minutes a paid plan sees.
 Upload to **Testing → Internal testing** first, not straight to Production:
 
 - [ ] Create a release, upload the `.aab`
-- [ ] Release notes: *"First release."*
+- [ ] Release notes: _"First release."_
 - [ ] Add your own Google account as a tester, install from the opt-in link, and use it for a
       day or two on a real phone
 
@@ -268,7 +269,7 @@ them, so the goal is to give CFA Institute and GARP nothing worth complaining ab
 ### Trademarks — the live risk, and what was changed
 
 The title was already clean and that is the single most important thing. The gap was that the
-two most *prominent* marketing surfaces used the marks bare while every other surface carried
+two most _prominent_ marketing surfaces used the marks bare while every other surface carried
 the symbol:
 
 - **Feature graphic** — now reads "for CFA® and FRM® candidates". Regenerate with
@@ -325,30 +326,298 @@ script (`npm run store:screenshot`) rather than a hand-built device state — se
 
 - **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
   No SDK and no data leaves the app; this is why v1.0 ships without a crash reporter.
-- **Content fixes need a full release** in v1.0, because over-the-air updates are deliberately
-  disabled for zero network egress. If that becomes painful, re-add `expo-updates` — but the
-  privacy policy and Data Safety form must be updated in the same release.
+- **Content fixes ship over the air from v1.1.** `updates.enabled` is on, pointed at
+  `https://u.expo.dev/<projectId>`, with a channel per build profile in `eas.json`. Publish
+  with `eas update --branch production`. This is what makes retiring a promotional code a
+  minutes-long job rather than a store release, and the promo table depends on it because
+  every code in it is public.
 
-  Costed out on 31 July 2026 and **rejected for v1.0**. What it actually takes:
+  What it cost, and what had to change with it — all done, listed so the next person can
+  check none of it has drifted:
 
-  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, which is on our blocked
-    list. It has to come off — blocking it strips the permission from a library that calls
-    `ConnectivityManager`. It is normal-protection-level, so no user-facing prompt, but it
-    changes the documented APK permission list above from three entries to four.
-  - `PRIVACY.md` is published and states "no outbound network requests of any kind" and "no
-    over-the-air update service", and promises the policy will be updated *before* any release
-    that adds them. The app would contact `u.expo.dev` on every launch.
-  - Play **Data Safety** currently answers "no data collected" and would need revisiting.
-  - Use `runtimeVersion.policy: "fingerprint"`, not the `appVersion` default that
-    `eas update:configure` writes. With `version` pinned at 1.0.0 and `appVersionSource: remote`,
-    `appVersion` holds the runtime constant across native changes — so forgetting to bump
-    `version` after adding a native module pushes JS onto a build that cannot run it.
+  - **`runtimeVersion.policy` is `fingerprint`, not `appVersion`.** With
+    `appVersionSource: remote`, `appVersion` holds the runtime constant across native
+    changes, so forgetting to bump `version` after adding a native module pushes JS onto a
+    binary that cannot run it. v1.1 added `react-native-purchases`, which turns that from a
+    hypothetical into the next mistake waiting to happen.
+  - **`PRIVACY.md` was rewritten before this shipped**, as the previous version promised it
+    would be. It now describes the update service and the subscription explicitly.
+  - **Data Safety must be corrected** — see `docs/PRIVACY.md` for the exact answers.
+  - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, and it was on the
+    blocked list. **It has been removed from that list** — blocking it strips the permission
+    from a library that calls `ConnectivityManager`.
+
+    **Verified on the merged release manifest, 2026-09-12** (`npx expo prebuild --platform
+android --clean` then `cd android && ./gradlew :app:processReleaseManifest`, reading
+    `app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml`):
+
+    ```
+    android.permission.ACCESS_NETWORK_STATE          ← new in v1.1 (expo-updates)
+    android.permission.INTERNET
+    android.permission.POST_NOTIFICATIONS
+    android.permission.RECEIVE_BOOT_COMPLETED
+    com.android.vending.BILLING                      ← new in v1.1 (Play Billing 8.3.0)
+    io.cornerstone.study.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION   ← app-scoped, grants nothing
+    ```
+
+    `com.android.vending.BILLING` arrives from `com.android.billingclient:billing:8.3.0`,
+    pulled in by `com.revenuecat.purchases:purchases:10.20.0`. **This is the declaration Play
+    requires before it will let you create a subscription product**, so the manifest side of
+    that dependency is now confirmed rather than assumed.
+
+    When grepping the merged manifest, match on the `<uses-permission` element rather than on
+    the word "permission" in the name — `com.android.vending.BILLING` does not contain it, and
+    a name-based filter silently reports the one permission you are actually looking for as
+    missing.
+
   - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
-    without deduping. Check `app.json` by hand afterwards.
+    without deduping. Check `app.json` by hand if it is ever run.
 
-  The build quota is not the reason to want this: the free plan allows 15 Android builds a
-  month, far more than this app ships. The only real cost of staying build-only is the 4–5 hour
-  free-tier queue.
+- **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
+  No SDK and no data leaves the app for this.
+
+## Before the v1.1 release — the monetisation additions
+
+The code is done and verified; everything below needs the Console, an account, or a build.
+
+1. **Export the signing keystore** — `eas credentials --platform android`. EAS holds the only
+   copy. One-way door, blocked by nothing, do it first.
+2. **Build once, then check the artifact**, not the build log:
+
+   ```bash
+   unzip -q x.aab -d out
+   bundletool dump manifest --bundle=x.aab | grep uses-permission   # BILLING must be there
+   grep -rhoE "goog_[A-Za-z0-9]{20,}" out | sort -u        # the key lives in app.config
+   grep -rhoE "\btest_[A-Za-z0-9]{20,}" out | sort -u     # and so would a test key
+   python3 -c "import json;print(json.load(open('out/base/assets/app.config'))['extra']['purchases'])"
+   ```
+
+   **Grep the whole artifact, not the JS bundle.** `extra` is not bundled with the JS — it is
+   written to `base/assets/app.config` and read at runtime through `expo-constants`. Searching
+   only `index.android.bundle` reports "no key" on a build that has one, which is exactly the
+   false negative that would send you rebuilding a correct artifact. versionCode 9 is the first
+   build where this mattered, and it caught it.
+
+   `aapt2 dump xmltree` cannot read an AAB manifest — it is protobuf-encoded.
+   **Play refuses to create subscription products until an uploaded binary declares
+   `com.android.vending.BILLING`**, so the build comes before the product, which is the
+   opposite of how it looks. That permission comes from the Play Billing library, **not**
+   from the RevenueCat key — so a build with no key still declares it and is still enough
+   to unblock product creation in the Console.
+
+   ### A local Android build breaks the next EAS build — run `npm ci` in between
+
+   **This cost a failed EAS build and it will do so again.** `runtimeVersion.policy` is
+   `fingerprint`, so the runtime version is a hash over the project including dependency
+   sources. A local `./gradlew assembleRelease` **edits files inside `node_modules`**: AGP 8
+   forbids the `package` attribute in a library manifest, so the build strips it from every
+   dependency that still declares one.
+
+   ```
+   published:  <manifest package="org.reactnative.maskedview" xmlns:android="...">
+   after build: <manifest  xmlns:android="...">
+   ```
+
+   EAS then computes a different runtime version from its own clean install and fails:
+
+   ```
+   Runtime version calculated on local machine not equal to runtime version
+   calculated during build.
+   ```
+
+   That failure is correct — updates published from a mutated tree would never reach the
+   binary. Measured on build `5d2e32d8`: a one-package diff in
+   `@react-native-masked-view/masked-view`. After `npm ci` the local fingerprint matched EAS
+   exactly (`e2c7f2d6196ed093b9f6cde208cb3522efae8e88`).
+
+   **`.fingerprintignore` cannot fix this** — the mutated file is a legitimate input, being
+   the dependency's own manifest. Only `npm ci` restores it.
+
+   ```bash
+   npm run check:pristine   # fails if a local build has mutated node_modules
+   npm ci                   # the fix
+   ```
+
+   ### The v1.1 AAB exists: versionCode 7, verified 2026-09-12
+
+   EAS build `76b88d2b`, `store/cornerstone-versionCode7.aab` (81 MB, gitignored like its
+   predecessor). versionCode 6 was burnt on the fingerprint failure above; Play only requires
+   increasing numbers, so the gap costs nothing.
+
+   Verified with `bundletool dump manifest` and by unpacking the bundle:
+
+   - **Permissions** — `INTERNET`, `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`,
+     `ACCESS_NETWORK_STATE`, **`com.android.vending.BILLING`**, plus the app-scoped
+     `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`.
+   - **App Links** — the `autoVerify` intent filter is present.
+   - **No `goog_` and no `test_` key** in the JS bundle. This build cannot sell anything and
+     the paywall is off for every user, which is the correct state until
+     `REVENUECAT_ANDROID_KEY` is set in the EAS production environment.
+   - **Paid content ships** — segment names across all three tranches, plus `PLAYREVIEW`.
+   - **Dex** — `com.revenuecat.purchases`, `com.android.billingclient`,
+     `expo.modules.updates`, `ExpoStoreReview`.
+   - versionName `1.1.0`, runtime version `e77f444479ac3963b803ca5dc088d0c04f6715c7`.
+
+   **This artifact is already enough to unblock subscription product creation**, because
+   BILLING comes from the Play Billing library rather than from the RevenueCat key. Upload it
+   to internal testing, create the products, add the key, then rebuild.
+
+   ### A full local release build was run on 2026-09-12, and it passed
+
+   ```bash
+   npx expo prebuild --platform android --clean
+   cd android && ./gradlew :app:assembleRelease      # 10m38s, BUILD SUCCESSFUL
+   ```
+
+   Verified on `app/build/outputs/apk/release/app-release.apk`:
+
+   - **Permissions** — the six listed above, `com.android.vending.BILLING` among them.
+   - **No `goog_` key in the bundle**, because `REVENUECAT_ANDROID_KEY` was unset. That is
+     the correct inert state, not a failure: the access rule turns the paywall off for
+     everyone in a build that cannot sell.
+   - **Premium content ships** — segment names and the `PLAYREVIEW` code are both in
+     `assets/index.android.bundle` (7.1 MB).
+   - **Native modules linked** — `com.revenuecat.purchases`, `com.android.billingclient`,
+     `expo.modules.updates` and `ExpoStoreReview` all present in the dex.
+   - versionName `1.1.0`, minSdk 24, targetSdk 36.
+
+   **Two grep traps, both of which produced a wrong answer first time:**
+
+   - Matching permissions on the word "permission" in the name reports `BILLING` as missing,
+     because `com.android.vending.BILLING` does not contain it. Match the `<uses-permission`
+     element instead.
+   - `grep -oE "test_[A-Za-z0-9]+"` over the bundle hits `…shortest_paths` abutting
+     `paywall_components_localizations` in a string table. Anchor it with `\b` and require
+     a realistic key length, or it cries wolf on every build.
+
+3. **RevenueCat — project and entitlement exist; products do not.** Done on 2026-09-13:
+
+   | Thing             | Value                                                                          |
+   | ----------------- | ------------------------------------------------------------------------------ |
+   | Project           | `Cornerstone`, id `fd227857`, category Education, platform React Native        |
+   | App configuration | `Cornerstone (Play Store)`, id `appef6dc1dad0`, package `io.cornerstone.study` |
+   | Public SDK key    | `goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv` — public by design, it ships in the bundle  |
+   | Entitlement       | `premium` / "Cornerstone Premium", **no products attached yet**                |
+
+   `REVENUECAT_ANDROID_KEY` is set in the EAS `production`, `preview` and `development`
+   environments, so the next build carries the key. **Verified in versionCode 9**, EAS build
+   `eff5b1dc`, saved at `store/cornerstone-versionCode9.aab`: `extra.purchases` reads
+   `{entitlementId: 'premium', revenueCatAndroidKey: 'goog_…Dyv'}`, `com.android.vending.BILLING`
+   is declared, the runtime version is the fingerprint policy, and the Supabase URL and
+   publishable key are in the JS bundle.
+
+   **Two things are deliberately still missing, and the order between them is forced:**
+
+   - **The Play service account JSON was not uploaded to RevenueCat.** It is a private key
+     and the file at `~/.config/otc-learn/play-service-account.json` never leaves this
+     machine on my account. Sachin uploads it at
+     `app.revenuecat.com/projects/fd227857/apps/appef6dc1dad0`. Without it RevenueCat
+     cannot validate a Play transaction, so this must be done before anyone can buy.
+   - **No Play subscription products, therefore no offering.** Play refuses to create a
+     subscription until an uploaded binary declares `com.android.vending.BILLING`, and the
+     live build (versionCode 5) does not. versionCode 7 and 8 do. So: upload an AAB to a
+     track → create the products → add them to an offering in RevenueCat → rebuild.
+
+   **`npm run check:play` answers "which of these is next?" without opening the Console.**
+   It reads the tracks and the subscription list through the Android Publisher API — the
+   Console is unreachable from this machine, because Chrome is signed in as a Google account
+   that is not the developer account. Measured 2026-09-13: all four tracks still on
+   versionCode 5, no subscriptions.
+
+   **The service account's release grant has propagated.** `edits.insert` now succeeds, where
+   it needed a separate "Release to testing tracks" permission that Google documents as taking
+   up to 36 hours. So `eas submit` is technically unblocked and the upload is waiting only on
+   a go-ahead, not on a permission.
+
+   **Pricing — decided 2026-09-13: mirror OTC Learn.** Read from the Android Publisher API
+   rather than retyped from memory, so these are the live values, not an approximation:
+
+   |                           | OTC Learn (`otc_learn_pro`)  | Cornerstone (to create)               |
+   | ------------------------- | ---------------------------- | ------------------------------------- |
+   | Subscription id           | `otc_learn_pro`              | `cornerstone_premium`                 |
+   | Monthly base plan         | `monthly`, `P1M`, **INR 29** | `monthly`, `P1M`, **INR 29**          |
+   | Yearly base plan          | `yearly`, `P1Y`, **INR 199** | `yearly`, `P1Y`, **INR 199**          |
+   | Regions priced            | **IN only**                  | IN only, unless Sachin says otherwise |
+   | Intro offers / free trial | none                         | none                                  |
+
+   RevenueCat sees those as `cornerstone_premium:monthly` and `cornerstone_premium:yearly`
+   — Play's `<subscription>:<basePlan>` form — and both attach to the `premium` entitlement.
+
+   **One thing to settle before this goes live: OTC Learn is priced for India only.** CFA and
+   FRM candidates are not, and Play simply makes the subscription unavailable everywhere else.
+   Mirroring the amounts is decided; mirroring the _single region_ is a separate choice.
+   Letting Play auto-convert INR 199/year into other markets gives about $2.30/year, which is
+   almost certainly under-priced for this audience — so set per-region prices deliberately, or
+   keep it India-only deliberately. Either is fine; drifting into one by default is not.
+
+   **[`docs/PRICING.md`](PRICING.md) reduces this to one choice**: it carries the two-band
+   table (a USD anchor at 3.99/24.99 with a named list of markets overridden down to INR
+   29/199), the India-only alternative stated as a deliberate option, the product listing
+   text, and why the anchor has to be USD rather than INR. Pick a column; everything else
+   about the product is already specified.
+
+   **Setting the key early is safe.** Guard 2 (`productAvailable`) reads the offering, the
+   offering is empty, so `gatingActive` is false and every segment stays open to everyone.
+   The paywall turns itself on only when a real product appears — nothing about that
+   depends on another release.
+
+4. **Correct Data Safety and Sign-in details — in the same publishing cycle as the release
+   that turns gating on, and NOT before it.** Checked in the Console on 2026-09-13; both are
+   still on their 9 Aug answers, and both of those answers are _currently correct_.
+
+   **Sign-in details must stay "No" until gating is actually on.** Play's "Yes" list does
+   include subscriptions and referral codes, so the eventual answer is Yes — but the reviewer
+   instructions we hand over say to redeem `PLAYREVIEW` at Profile → Cornerstone Plus, and
+   **that route does not exist while gating is off.** `profile.tsx` renders the ACCESS block
+   only when `access.gating` is true, and `paywall.tsx` hides the "HAVE A CODE?" field when
+   the state is `unavailable`, which is exactly the not-gating case. Answering Yes today
+   would hand a reviewer steps they physically cannot perform, which is a rejection, not a
+   formality. Gating only comes on once products exist in a RevenueCat offering.
+
+   **Data safety is the same shape of problem inverted.** The public page
+   (`play.google.com/store/apps/datasafety?id=io.cornerstone.study`) reads **"No data
+   collected"**, which is true of versionCode 5 — it has no accounts, no purchases and no
+   Supabase. Declaring email and purchases now would over-declare for the build that is
+   actually live. It becomes _under_-declared, which is the dangerous direction, the moment a
+   build carrying Supabase and RevenueCat reaches production. So it changes with that
+   release.
+
+   Publishing a Play product needs no new binary, so nothing else will ever force either form
+   to be revisited — set a reminder against the release itself.
+
+5. ~~**Publish `assetlinks.json` at the host root.**~~ **DONE 2026-09-13.** `ace134f` is
+   pushed; `https://singhalsachin2003.github.io/.well-known/assetlinks.json` returns HTTP 200
+   as `application/json` — the content type matters, Android will not read it otherwise — and
+   vouches for `com.otclearn.app` with one fingerprint and `io.cornerstone.study` with two.
+
+   Both Cornerstone fingerprints were checked against the Console's own **Digital Asset Links
+   JSON** block before pushing, not against the copy buttons: app signing `A0:50:DF:A5:…:50:9D`
+   and upload `E7:CD:2E:98:…:2D:A6`, the latter also matching the exported keystore. The diff
+   left OTC Learn's fingerprint byte-identical and only re-indented it.
+
+   **Google's `digitalassetlinks.googleapis.com/v1/statements:list` caches for about eight
+   minutes**, so a read straight after publishing returns the pre-push statement list and
+   looks like a failure. Re-read after the `maxAge` in the response elapses before concluding
+   anything is wrong.
+
+   **That host already vouches for OTC Learn.** `/.well-known/assetlinks.json` is a list so
+   one domain can vouch for several apps; the merge appends `io.cornerstone.study` and
+   leaves `com.otclearn.app` exactly as it was. Overwriting the file with Cornerstone's
+   copy from `docs/.well-known/` would silently unverify OTC Learn's links, which work
+   today — so re-run the merge, never a copy, if this ever has to be redone.
+
+   Cornerstone carries two fingerprints: the Play app signing key (what store installs
+   present) and the upload key (what a locally built APK presents). Both belong in the file.
+
+   **Take the fingerprint from the "Digital Asset Links JSON" block at the bottom of the App
+   signing page, never from the fingerprint copy buttons above it.** Clicking the Classical
+   key's SHA-256 button produced a different value from the one Google puts in its own
+   generated snippet — only the snippet is authoritative, and the difference is a silent way
+   to publish a file that verifies nothing.
+
+   Cornerstone's Play app id is **4973277887599855563**, and
+   `.../app/<id>/keymanagement` loads the App signing page directly — the nav path in the
+   playbook is not needed.
 
 ## Annual maintenance
 

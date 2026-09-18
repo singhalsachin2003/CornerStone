@@ -186,7 +186,9 @@ await page.addInitScript(
 await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'networkidle' });
 await page.waitForTimeout(2500);
 
-const heading = await page.evaluate(() => document.body.innerText.split('\n').slice(0, 2).join(' · '));
+const heading = await page.evaluate(() =>
+  document.body.innerText.split('\n').slice(0, 2).join(' · '),
+);
 await page.screenshot({ path: OUT });
 
 await browser.close();

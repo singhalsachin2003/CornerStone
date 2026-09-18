@@ -7,24 +7,33 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "channel": "development",
       "android": {
         "buildType": "apk"
       }
     },
     "preview": {
       "distribution": "internal",
+      "channel": "preview",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
       "autoIncrement": true,
+      "channel": "production",
       "android": {
         "buildType": "app-bundle"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "../.config/otc-learn/play-service-account.json",
+        "track": "internal",
+        "releaseStatus": "completed"
+      }
+    }
   }
 }

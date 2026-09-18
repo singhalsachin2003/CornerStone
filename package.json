@@ -1,11 +1,12 @@
 {
   "name": "cornerstone",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/archivo": "^0.4.2",
     "@expo-google-fonts/source-serif-4": "^0.4.1",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@supabase/supabase-js": "^2.116.0",
     "expo": "~57.0.8",
     "expo-constants": "~57.0.7",
     "expo-font": "~57.0.1",
@@ -14,11 +15,16 @@
     "expo-router": "~57.0.8",
     "expo-splash-screen": "~57.0.5",
     "expo-status-bar": "~57.0.1",
+    "expo-store-review": "~57.0.2",
     "expo-system-ui": "~57.0.1",
+    "expo-updates": "~57.0.22",
+    "lucide-react-native": "^1.41.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.0",
     "react-native-gesture-handler": "~2.32.0",
+    "react-native-purchases": "^10.9.1",
+    "react-native-purchases-ui": "^10.9.1",
     "react-native-reanimated": "4.5.0",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
@@ -30,13 +36,20 @@
   "devDependencies": {
     "@types/jest": "~29.5.14",
     "@types/react": "~19.2.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "jest": "~29.7.0",
     "playwright-core": "^1.62.0",
+    "prettier": "^3.9.6",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.1",
     "typescript": "~6.0.3"
   },
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -50,7 +63,19 @@
     "check:syllabus": "tsx scripts/verify-syllabus.ts",
     "test": "jest",
     "store:graphic": "node scripts/make-feature-graphic.mjs",
-    "store:screenshot": "node scripts/capture-home-screenshot.mjs"
+    "store:screenshot": "node scripts/capture-home-screenshot.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json}\"",
+    "verify": "npm run lint && npm run format:check && npm run typecheck && npm run check:content && npm run check:syllabus && npm run check:glossary && npm run check:applinks && npm test",
+    "preview:access": "node scripts/preview-access-screens.mjs",
+    "check:applinks": "tsx scripts/check-applinks.ts",
+    "check:pristine": "tsx scripts/check-node-modules-pristine.ts",
+    "setup:supabase": "tsx scripts/setup-supabase.ts",
+    "check:glossary": "tsx scripts/check-glossary.ts",
+    "check:play": "tsx scripts/check-play.ts",
+    "create:subscription": "tsx scripts/create-subscription.ts",
+    "check:aab": "tsx scripts/check-aab.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"

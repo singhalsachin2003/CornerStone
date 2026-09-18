@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Share2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, OutlineButton, PrimaryButton } from '@/components/primitives';
@@ -9,6 +10,8 @@ import { type } from '@/theme/type';
 import { EXAMS, topicByKey } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useSessionStore } from '@/store/useSessionStore';
+import { resultShareMessage, shareText } from '@/share';
+import { maybeAskForReview } from '@/storeReview';
 
 export default function Results() {
   const router = useRouter();
@@ -16,7 +19,8 @@ export default function Results() {
   const setLevel = useStudyStore((s) => s.setLevel);
   const examKey = useStudyStore((s) => s.exam);
 
-  const { mode, topicKey, title, questions, origins, answers, elapsed, restart } = useSessionStore();
+  const { mode, topicKey, title, questions, origins, answers, elapsed, restart } =
+    useSessionStore();
 
   const [delta, setDelta] = useState<{ before: number; after: number } | null>(null);
   const committed = useRef(false);
@@ -47,6 +51,21 @@ export default function Results() {
   const ringColor = pct >= 70 ? color.sage : pct >= 40 ? color.brass : color.rust;
 
   const topic = topicKey ? topicByKey(topicKey) : undefined;
+  const shareTitle = topic?.name ?? title ?? 'a practice session';
+
+  /**
+   * Ask for a store review after a session that went well, and only then —
+   * `maybeAskForReview` decides both halves of that. The delay is not
+   * decoration: the sheet covers the screen, and appearing on the same frame as
+   * the score would hide what the reader came to see. Leaving first cancels it.
+   */
+  useEffect(() => {
+    if (answers.length === 0) return;
+    const timer = setTimeout(() => {
+      void maybeAskForReview(answers.filter((a) => a.ok).length, questions.length);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [answers, questions.length]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
@@ -155,7 +174,14 @@ export default function Results() {
                   </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: font.sans, fontSize: 13.5, lineHeight: 19, color: color.ink }}>
+                  <Text
+                    style={{
+                      fontFamily: font.sans,
+                      fontSize: 13.5,
+                      lineHeight: 19,
+                      color: color.ink,
+                    }}
+                  >
                     {truncate(q.text, 74)}
                   </Text>
                   <Text style={[type.meta, { marginTop: 4 }]}>
@@ -213,6 +239,27 @@ export default function Results() {
             </Text>
           </View>
         )}
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Share this result"
+          onPress={() => {
+            void shareText(resultShareMessage(shareTitle, correct, total));
+          }}
+          hitSlop={12}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'center',
+            gap: 8,
+            marginTop: 18,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+          }}
+        >
+          <Share2 size={16} strokeWidth={2} color={color.meta} />
+          <Text style={[type.meta, { color: color.meta }]}>Share this result</Text>
+        </Pressable>
 
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
           <OutlineButton
@@ -286,7 +333,9 @@ function StatRow({
 }) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <Text style={{ fontFamily: font.sans, fontSize: 12.5, color: color.bodyOnPaper }}>{label}</Text>
+      <Text style={{ fontFamily: font.sans, fontSize: 12.5, color: color.bodyOnPaper }}>
+        {label}
+      </Text>
       <Text style={{ fontFamily: font.sansSemi, fontSize: 12.5, color: valueColor }}>{value}</Text>
     </View>
   );
@@ -300,7 +349,8 @@ function headline(pct: number): string {
 
 function note(pct: number, mode: string): string {
   if (mode === 'placement') return "Here's where we'd suggest you begin.";
-  if (pct >= 80) return 'You are ahead of the average candidate here. Keep it warm with the review queue.';
+  if (pct >= 80)
+    return 'You are ahead of the average candidate here. Keep it warm with the review queue.';
   return 'Nothing unusual — this is exactly what the review queue is for.';
 }
 

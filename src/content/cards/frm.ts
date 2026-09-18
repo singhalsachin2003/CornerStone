@@ -23,7 +23,7 @@ export const FRM_CARDS: CardBank = {
     {
       kicker: 'PERFORMANCE',
       title: 'Risk-adjusted measures differ in the risk they charge for',
-      body: 'The Sharpe ratio charges total risk, Treynor charges systematic risk, and the information ratio charges tracking error. Jensen\'s alpha is a return in excess of the CAPM prediction.',
+      body: "The Sharpe ratio charges total risk, Treynor charges systematic risk, and the information ratio charges tracking error. Jensen's alpha is a return in excess of the CAPM prediction.",
       formula: 'Sharpe = (R_p − R_f)/σ_p',
       exam: 'For a fully diversified portfolio, Sharpe and Treynor rank identically. Divergent rankings imply undiversified specific risk.',
     },
@@ -85,7 +85,7 @@ export const FRM_CARDS: CardBank = {
     {
       kicker: 'SWAPS',
       title: 'A swap is two bonds, or a strip of forwards',
-      body: 'Value the fixed leg as a coupon bond and the floating leg as a note that prices at par on each reset date. The difference is the swap\'s value, which is zero at inception.',
+      body: "Value the fixed leg as a coupon bond and the floating leg as a note that prices at par on each reset date. The difference is the swap's value, which is zero at inception.",
       formula: 'V = B_fixed − B_floating',
       exam: 'Between resets the floating leg is worth par plus the accrued next coupon, discounted. That is the step candidates skip.',
     },
@@ -145,7 +145,7 @@ export const FRM_CARDS: CardBank = {
       title: 'Backtesting counts exceptions',
       body: 'Compare realised losses with the VaR forecast and count breaches. Too many and the model understates risk; the Basel traffic-light zones set green, yellow and red bands on the exception count.',
       formula: 'Expected breaches = (1 − a) × N',
-      exam: 'Kupiec tests unconditional coverage. Clustering of breaches is a conditional coverage failure, which Christoffersen\'s test detects.',
+      exam: "Kupiec tests unconditional coverage. Clustering of breaches is a conditional coverage failure, which Christoffersen's test detects.",
     },
     {
       kicker: 'TAILS',
@@ -167,9 +167,9 @@ export const FRM_CARDS: CardBank = {
     {
       kicker: 'STRUCTURAL',
       title: 'Merton treats equity as a call on the firm’s assets',
-      body: 'Shareholders hold a call on the firm\'s assets struck at the face value of debt. Default occurs when asset value falls below that strike at maturity, and distance to default measures how far away that is.',
+      body: "Shareholders hold a call on the firm's assets struck at the face value of debt. Default occurs when asset value falls below that strike at maturity, and distance to default measures how far away that is.",
       formula: 'DD = [ln(V/D) + (μ−½σ²)T] / (σ√T)',
-      exam: 'Higher asset volatility raises equity value and raises default probability at the same time. That is the model\'s key insight.',
+      exam: "Higher asset volatility raises equity value and raises default probability at the same time. That is the model's key insight.",
     },
     {
       kicker: 'PORTFOLIO',
@@ -276,7 +276,7 @@ export const FRM_CARDS: CardBank = {
       title: 'Hedge fund indices are biased upward',
       body: 'Self-selected reporting, backfill and survivorship all inflate reported hedge fund index returns, while smoothing of illiquid marks understates volatility and correlation.',
       formula: null,
-      exam: 'Name the specific bias the stem describes. Backfill bias comes from adding a fund\'s prior history when it joins the index.',
+      exam: "Name the specific bias the stem describes. Backfill bias comes from adding a fund's prior history when it joins the index.",
     },
     {
       kicker: 'ILLIQUID ASSETS',
@@ -291,7 +291,7 @@ export const FRM_CARDS: CardBank = {
     {
       kicker: 'THE TOPIC',
       title: 'This is the one topic you cannot study from last year',
-      body: 'Current Issues is a rotating reading list replaced substantially each cycle. Pull the current year\'s readings directly from GARP rather than relying on any third-party summary.',
+      body: "Current Issues is a rotating reading list replaced substantially each cycle. Pull the current year's readings directly from GARP rather than relying on any third-party summary.",
       formula: null,
       exam: 'Items are comprehension-level on the assigned readings. Reading them once carefully beats memorising a summary.',
     },

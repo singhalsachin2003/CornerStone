@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import { Question, questionsFor, topicByKey } from '@/content';
+import {
+  Question,
+  accessibleQuestionEntries,
+  allQuestionsFor,
+  questionsFor,
+  topicByKey,
+} from '@/content';
 import { SessionAnswer } from './useStudyStore';
 import { ReviewItem } from './review';
 import { shuffleOptions, shuffleSession } from './shuffle';
@@ -105,19 +111,48 @@ export const useSessionStore = create<SessionState>((set, get) => ({
 // Session builders
 // ---------------------------------------------------------------------------
 
-export function buildTopicSession(topicKey: string) {
+/**
+ * A topic run over everything this install may study.
+ *
+ * Origins carry the question's index in the *canonical bank* — core first, then
+ * premium in authored order — not in the shuffled session and not in the filtered
+ * subset. That is what keeps a review-queue id meaning the same question after a
+ * subscription starts, and after one lapses.
+ */
+export function buildTopicSession(topicKey: string, hasPremium: boolean) {
   const topic = topicByKey(topicKey);
-  const bank = questionsFor(topicKey);
-  // Origins carry the question's index in the *bank*, not in the shuffled session, so
-  // review-queue ids stay stable no matter what order the candidate saw them in.
+  const entries = accessibleQuestionEntries(topicKey, hasPremium);
   const [questions, origins] = shuffleSession(
-    bank,
-    bank.map((_, i) => ({ topicKey, qIdx: i })),
+    entries.map((e) => e.question),
+    entries.map((e) => ({ topicKey, qIdx: e.qIdx })),
   );
   return {
     mode: 'topic' as const,
     topicKey,
     title: topic?.name ?? 'Topic',
+    questions,
+    origins,
+  };
+}
+
+/** A run over one segment only, free or premium. */
+export function buildSegmentSession(segment: {
+  topicKey: string;
+  name: string;
+  questions: Question[];
+  questionOffset: number;
+}) {
+  const [questions, origins] = shuffleSession(
+    segment.questions,
+    segment.questions.map((_, i) => ({
+      topicKey: segment.topicKey,
+      qIdx: segment.questionOffset + i,
+    })),
+  );
+  return {
+    mode: 'topic' as const,
+    topicKey: segment.topicKey,
+    title: segment.name,
     questions,
     origins,
   };
@@ -138,7 +173,15 @@ export function buildPlacementSession(topics: { key: string; name: string }[], e
     mode: 'placement' as const,
     topicKey: null,
     title: `${examName} placement`,
-    questions: picked.map((p) => questionsFor(p.topicKey)[p.qIdx]),
+    // Options are shuffled here as they are everywhere else. This was the one
+    // builder that did not, and it is the one where it mattered most: placement
+    // always draws question 0 from the same five areas, so without shuffling a
+    // candidate sees an identical paper on every retake — and across the authored
+    // banks the correct answer sits in the second slot about four times in five,
+    // which made "pick B" a better placement strategy than reading the question.
+    // Question *selection* stays deterministic on purpose: a placement test that
+    // asks different things each time cannot place anyone.
+    questions: picked.map((p) => shuffleOptions(questionsFor(p.topicKey)[p.qIdx])),
     origins: picked,
   };
 }
@@ -150,13 +193,29 @@ export function buildPlacementSession(topics: { key: string; name: string }[], e
  * shuffled — a queued question is one the candidate already got wrong, and recognising
  * the shape of the right answer is exactly the failure mode review exists to break.
  */
-export function buildReviewSession(due: ReviewItem[]) {
-  const items = [...due].sort((a, b) => a.dueOn.localeCompare(b.dueOn)).slice(0, 10);
-  const origins = items.map((i) => ({ topicKey: i.topicKey, qIdx: i.qIdx }));
-  const questions = origins
-    .map((o) => questionsFor(o.topicKey)[o.qIdx])
-    .filter(Boolean)
-    .map(shuffleOptions);
+export function buildReviewSession(due: ReviewItem[], hasPremium: boolean) {
+  const sorted = [...due].sort((a, b) => a.dueOn.localeCompare(b.dueOn));
+
+  // Resolve first, then take ten. A queue item can fail to resolve two ways: the
+  // content moved under it, or it is a premium question held by somebody whose
+  // access has lapsed. Either way the item is skipped rather than dropped from the
+  // queue — access can come back, and the schedule should survive the gap.
+  //
+  // Filtering questions and origins separately is what this replaces: the two
+  // arrays are parallel, and filtering one of them silently misattributes every
+  // answer after the first gap.
+  const resolved: { question: Question; origin: { topicKey: string; qIdx: number } }[] = [];
+  for (const item of sorted) {
+    if (resolved.length >= 10) break;
+    const bank = allQuestionsFor(item.topicKey);
+    const question = bank[item.qIdx];
+    if (!question) continue;
+    if (!hasPremium && item.qIdx >= questionsFor(item.topicKey).length) continue;
+    resolved.push({ question, origin: { topicKey: item.topicKey, qIdx: item.qIdx } });
+  }
+
+  const origins = resolved.map((r) => r.origin);
+  const questions = resolved.map((r) => shuffleOptions(r.question));
   return {
     mode: 'review' as const,
     topicKey: null,

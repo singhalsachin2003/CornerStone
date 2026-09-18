@@ -83,7 +83,13 @@ describe('shuffleOptions', () => {
 });
 
 describe('shuffleSession', () => {
-  const bank = [q({ text: 'Q1' }), q({ text: 'Q2' }), q({ text: 'Q3' }), q({ text: 'Q4' }), q({ text: 'Q5' })];
+  const bank = [
+    q({ text: 'Q1' }),
+    q({ text: 'Q2' }),
+    q({ text: 'Q3' }),
+    q({ text: 'Q4' }),
+    q({ text: 'Q5' }),
+  ];
   const origins = bank.map((_, i) => ({ topicKey: 'cfa-l1-ethics', qIdx: i }));
 
   it('keeps each question paired with its bank index', () => {
@@ -104,7 +110,11 @@ describe('shuffleSession', () => {
 
   it('varies the order across sessions', () => {
     const orders = new Set(
-      Array.from({ length: 60 }, () => shuffleSession(bank, origins)[0].map((x) => x.text).join('')),
+      Array.from({ length: 60 }, () =>
+        shuffleSession(bank, origins)[0]
+          .map((x) => x.text)
+          .join(''),
+      ),
     );
     // A retake that always replayed the same order would give exactly one.
     expect(orders.size).toBeGreaterThan(1);

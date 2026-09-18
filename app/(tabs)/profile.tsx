@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ExternalLink, LineChart } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Toggle } from '@/components/primitives';
@@ -8,11 +9,19 @@ import { type } from '@/theme/type';
 import { EXAMS, PATHWAYS, formatExamDate, topicsFor } from '@/content';
 import {
   GUEST_NAME,
+  bookmarkCount,
   Settings,
   TopicVariant,
   currentStreak,
   useStudyStore,
 } from '@/store/useStudyStore';
+import { GLOSSARY_COUNT } from '@/content/glossary';
+import { OTC_LEARN_PLAY_URL } from '@/links';
+import { useAccess } from '@/access';
+import { isSyncConfigured } from '@/sync/client';
+import { useSyncStore } from '@/store/useSyncStore';
+import { premiumTotals } from '@/content';
+import { openExternal } from '@/share';
 import {
   cancelDailyReminder,
   reminderTimeLabel,
@@ -21,7 +30,11 @@ import {
 } from '@/notifications';
 
 const SETTING_ROWS: { key: keyof Settings; name: string; note: string }[] = [
-  { key: 'spacedRepetition', name: 'Spaced repetition', note: 'Resurface missed questions on a schedule' },
+  {
+    key: 'spacedRepetition',
+    name: 'Spaced repetition',
+    note: 'Resurface missed questions on a schedule',
+  },
   {
     key: 'dailyReminder',
     name: 'Daily reminder',
@@ -49,6 +62,8 @@ export default function Profile() {
   const toggleSetting = useStudyStore((s) => s.toggleSetting);
   const variant = useStudyStore((s) => s.variant);
   const setVariant = useStudyStore((s) => s.setVariant);
+  const access = useAccess();
+  const syncEmail = useSyncStore((s) => s.email);
   const studyDays = useStudyStore((s) => s.studyDays);
   const answered = useStudyStore((s) => s.questionsAnswered);
   const correct = useStudyStore((s) => s.questionsCorrect);
@@ -60,23 +75,16 @@ export default function Profile() {
     [examKey, levelKey, pathway],
   );
 
-  if (!examKey || !levelKey) return null;
-  const exam = EXAMS[examKey];
-  const level = exam.levels.find((l) => l.key === levelKey);
-  const streak = currentStreak(studyDays);
-  const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-  const bookmarks =
-    Object.keys(bookmarkedQuestions).length + Object.keys(bookmarkedCards).length;
+  // Every hook in this component runs before the `!examKey` early return below.
+  // Switching exam clears the level whenever that exam has never been opened, so
+  // this screen really can re-render with no level after having had one — and a
+  // hook called only on the first of those renders is the "rendered fewer hooks
+  // than expected" crash, not a hypothetical.
 
   // The OS is the source of truth for notifications: the candidate can revoke
   // permission in system settings at any time, and the toggle must not claim
   // otherwise. If scheduling fails we leave the switch off.
   const [reminderBlocked, setReminderBlocked] = useState(false);
-
-  // Until the candidate names themselves the store holds the guest placeholder,
-  // which is a prompt rather than a value: the field opens empty so they type over
-  // nothing, and clearing the field puts them back to guest.
-  const isGuest = name === GUEST_NAME;
 
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState('');
@@ -115,6 +123,20 @@ export default function Profile() {
     // Intentionally mount-only: this reconciles persisted state with the OS once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!examKey || !levelKey) return null;
+  const exam = EXAMS[examKey];
+  const level = exam.levels.find((l) => l.key === levelKey);
+  const streak = currentStreak(studyDays);
+  const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  // Counts only live bookmarks: a removed one keeps its entry so the removal can
+  // survive a cross-device merge, and counting entries would count those too.
+  const bookmarks = bookmarkCount(bookmarkedQuestions) + bookmarkCount(bookmarkedCards);
+
+  // Until the candidate names themselves the store holds the guest placeholder,
+  // which is a prompt rather than a value: the field opens empty so they type over
+  // nothing, and clearing the field puts them back to guest.
+  const isGuest = name === GUEST_NAME;
   // The other programme, if it has been started — surfaced so switching is discoverable.
   const otherExam = (Object.keys(levelByExam) as (keyof typeof levelByExam)[]).find(
     (k) => k !== examKey,
@@ -139,7 +161,9 @@ export default function Profile() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>{initials}</Text>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>
+              {initials}
+            </Text>
           </View>
           <View style={{ flex: 1 }}>
             {editingName ? (
@@ -191,6 +215,62 @@ export default function Profile() {
           <StatTile value={`${accuracy}%`} label="ACCURACY" />
         </View>
 
+        {/* ACCESS — shown only when there is something true to say. A build with
+            nothing for sale says nothing rather than advertising an empty shop. */}
+        {access.gating && (
+          <>
+            <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
+              ACCESS
+            </Eyebrow>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/paywall')}
+              style={({ pressed }) => ({
+                borderWidth: 1,
+                borderColor: pressed ? color.brass : color.brassTintBorder,
+                backgroundColor: color.brassTintBg,
+                borderRadius: radius.card,
+                padding: 16,
+              })}
+            >
+              <Text style={[type.rowLabel, { color: color.brassText }]}>
+                {accessHeadline(access)}
+              </Text>
+              <Text style={[type.meta, { marginTop: 5, color: color.brassBody }]}>
+                {accessDetail(access)}
+              </Text>
+            </Pressable>
+          </>
+        )}
+
+        {/* ACCOUNT — hidden entirely in a build with no sync credentials, the same
+            way the access row is hidden when nothing is for sale. */}
+        {isSyncConfigured() && (
+          <>
+            <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
+              ACCOUNT
+            </Eyebrow>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/account')}
+              style={({ pressed }) => ({
+                borderWidth: 1,
+                borderColor: pressed ? color.ink : color.ruleStrong,
+                backgroundColor: color.surface,
+                borderRadius: radius.card,
+                padding: 16,
+              })}
+            >
+              <Text style={type.rowLabel}>{syncEmail ?? 'Back up your progress'}</Text>
+              <Text style={[type.meta, { marginTop: 5 }]}>
+                {syncEmail
+                  ? 'Signed in — your progress is copied up when the app can reach the server.'
+                  : 'Optional. An account survives a reinstall or a new phone.'}
+              </Text>
+            </Pressable>
+          </>
+        )}
+
         {/* STUDY */}
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           STUDY
@@ -230,7 +310,9 @@ export default function Profile() {
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           APPEARANCE
         </Eyebrow>
-        <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)', paddingVertical: 15 }}>
+        <View
+          style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)', paddingVertical: 15 }}
+        >
           <Text style={type.rowLabel}>Topic list style</Text>
           <Text style={[type.meta, { marginTop: 3 }]}>
             Index also switches snapshot cards to the dark treatment.
@@ -269,9 +351,12 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* ACCOUNT */}
+        {/* YOUR STUDIES — renamed from ACCOUNT. The sign-in card above took that
+            heading when backup was added, and two sections called ACCOUNT on one
+            screen read as a rendering fault. Nothing here is an account setting:
+            it is the exam, the level, the topic count and the bookmarks. */}
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
-          ACCOUNT
+          YOUR STUDIES
         </Eyebrow>
         <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)' }}>
           <DisclosureRow
@@ -288,14 +373,85 @@ export default function Profile() {
           )}
           <DisclosureRow label="Topics in this level" value={`${topics.length} areas`} />
           <DisclosureRow label="Bookmarks" value={`${bookmarks} saved`} />
+          <DisclosureRow
+            label="Glossary"
+            value={`${GLOSSARY_COUNT} terms →`}
+            onPress={() => router.push('/glossary')}
+          />
           <DisclosureRow label="About & legal" value="→" onPress={() => router.push('/about')} />
         </View>
+
+        <Eyebrow size={10} tracking={0.14} style={{ marginTop: 26, marginBottom: 10 }}>
+          MORE FROM US
+        </Eyebrow>
+        <MoreFromUs />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function StatTile({ value, label, tint = color.ink }: { value: string; label: string; tint?: string }) {
+/**
+ * The other app on the same developer account.
+ *
+ * Derivatives are a syllabus topic here rather than a different subject, so the
+ * two audiences are close to the same people — and until now neither app had
+ * ever mentioned the other. It sits at the bottom of Profile rather than
+ * anywhere on the study path: an advertisement between a card set and a quiz
+ * would cost more than the install it might win.
+ */
+function MoreFromUs() {
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel="OTC Learn on Google Play"
+      onPress={() => void openExternal(OTC_LEARN_PLAY_URL)}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 13,
+        borderWidth: 1,
+        borderColor: 'rgba(22,35,59,.12)',
+        backgroundColor: color.surface,
+        borderRadius: radius.card,
+        padding: 15,
+        opacity: pressed ? 0.6 : 1,
+      })}
+    >
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: radius.row,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: color.paper,
+        }}
+      >
+        <LineChart size={20} strokeWidth={2} color={color.ink} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontFamily: font.sansSemi, fontSize: 13.5, color: color.ink }}>
+          OTC Learn
+        </Text>
+        <Text style={[type.meta, { marginTop: 3 }]}>
+          Our app for over-the-counter derivatives — 36 products, each with a lesson, a worked
+          example and a question bank.
+        </Text>
+      </View>
+      <ExternalLink size={16} strokeWidth={2} color={color.muted} />
+    </Pressable>
+  );
+}
+
+function StatTile({
+  value,
+  label,
+  tint = color.ink,
+}: {
+  value: string;
+  label: string;
+  tint?: string;
+}) {
   return (
     <View
       style={{
@@ -343,4 +499,44 @@ function DisclosureRow({
       <Text style={{ fontFamily: font.sans, fontSize: 14, color: color.muted }}>{value}</Text>
     </Pressable>
   );
+}
+
+/**
+ * One line per access state, all of them true.
+ *
+ * `not-gating` never reaches here — the block is rendered only when gating is on —
+ * but it is handled rather than defaulted, so adding a state to the rule fails the
+ * typecheck instead of quietly showing the wrong sentence.
+ */
+function accessHeadline(access: ReturnType<typeof useAccess>): string {
+  switch (access.reason) {
+    case 'grandfathered':
+      return 'You have everything, permanently';
+    case 'subscribed':
+      return 'Cornerstone Plus is active';
+    case 'promo':
+      return access.promoDaysRemaining === 1
+        ? 'One day of full access left'
+        : `${access.promoDaysRemaining} days of full access left`;
+    case 'locked':
+      return 'Cornerstone Plus';
+    case 'not-gating':
+      return 'Everything is open';
+  }
+}
+
+function accessDetail(access: ReturnType<typeof useAccess>): string {
+  const totals = premiumTotals();
+  switch (access.reason) {
+    case 'grandfathered':
+      return 'You were here before the subscription existed, so every segment is yours.';
+    case 'subscribed':
+      return 'Manage or cancel through Google Play.';
+    case 'promo':
+      return 'The core of every topic area stays free when it runs out.';
+    case 'locked':
+      return `${totals.segments} further segments · ${totals.questions} questions`;
+    case 'not-gating':
+      return 'Nothing in this build is behind a paywall.';
+  }
 }

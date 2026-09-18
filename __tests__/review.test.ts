@@ -1,5 +1,8 @@
 import {
   BASE_INTERVALS,
+  activeItems,
+  isRetired,
+  pruneRetired,
   ReviewItem,
   addDays,
   dayKey,
@@ -78,6 +81,7 @@ describe('scheduleLapse', () => {
       step: 2,
       dueOn: addDays(10),
       lapses: 1,
+      updatedAt: 0,
     };
     const relapsed = scheduleLapse(promoted, 'cfa-l1-fixed', 2);
     expect(relapsed.step).toBe(0);
@@ -94,6 +98,7 @@ describe('schedulePromotion', () => {
     step: 0,
     dueOn: addDays(1),
     lapses: 1,
+    updatedAt: 0,
   };
 
   it('advances one rung and pushes the due date out', () => {
@@ -103,17 +108,72 @@ describe('schedulePromotion', () => {
     expect(next.lapses).toBe(1); // promotion is not a lapse
   });
 
-  it('retires an item after enough clean passes', () => {
-    let item: ReviewItem | null = base;
+  /**
+   * Retirement used to delete the item. It now leaves a tombstone, because a
+   * deletion cannot be represented by an absent row: a second device still
+   * holding its own copy would treat that copy as newer and put the question
+   * back on the next merge.
+   */
+  it('retires an item after enough clean passes, as a tombstone rather than a deletion', () => {
+    let item = base;
     let promotions = 0;
-    while (item && promotions < 20) {
+    while (!isRetired(item) && promotions < 20) {
       item = schedulePromotion(item);
       promotions++;
     }
-    expect(item).toBeNull();
+    expect(isRetired(item)).toBe(true);
+    expect(item.retiredAt).toBeGreaterThan(0);
     // Graduation must be reachable, and not instant.
     expect(promotions).toBeGreaterThan(1);
     expect(promotions).toBeLessThan(20);
+  });
+
+  it('stamps every promotion so a merge can order two devices', () => {
+    const promoted = schedulePromotion(base, 1_700_000_000_000);
+    expect(promoted.updatedAt).toBe(1_700_000_000_000);
+  });
+
+  it('brings a retired item back when it is missed again, keeping the lapse count', () => {
+    const retired: ReviewItem = { ...base, step: 9, retiredAt: 111, updatedAt: 111, lapses: 2 };
+    const relapsed = scheduleLapse(retired, retired.topicKey, retired.qIdx, 222);
+    expect(relapsed.retiredAt).toBeUndefined();
+    expect(relapsed.step).toBe(0);
+    expect(relapsed.lapses).toBe(3);
+    expect(relapsed.updatedAt).toBe(222);
+  });
+});
+
+describe('tombstones', () => {
+  const mk = (id: string, retiredAt?: number): ReviewItem => ({
+    id,
+    topicKey: 'cfa-l1-fixed',
+    qIdx: 0,
+    step: 0,
+    dueOn: '2026-01-01',
+    lapses: 1,
+    updatedAt: 0,
+    retiredAt,
+  });
+
+  it('never counts a retired item as due, however old its due date', () => {
+    expect(isDue(mk('a', 999), '2030-01-01')).toBe(false);
+    expect(dueItems([mk('a', 999), mk('b')], '2030-01-01').map((i) => i.id)).toEqual(['b']);
+  });
+
+  it('excludes retired items from the active queue', () => {
+    expect(activeItems([mk('a', 999), mk('b')]).map((i) => i.id)).toEqual(['b']);
+  });
+
+  /**
+   * A tombstone only has to outlive the slowest device that might still hold the
+   * live item. Keeping them forever would grow the queue without bound for a
+   * long-term user, which is the thing the pruning exists to prevent.
+   */
+  it('prunes tombstones past the retention window and keeps live items forever', () => {
+    const now = 1_000_000_000_000;
+    const day = 86_400_000;
+    const queue = [mk('old', now - 100 * day), mk('recent', now - 10 * day), mk('live')];
+    expect(pruneRetired(queue, now).map((i) => i.id)).toEqual(['recent', 'live']);
   });
 });
 
@@ -125,6 +185,7 @@ describe('isDue / dueItems', () => {
     step: 0,
     dueOn,
     lapses: 1,
+    updatedAt: 0,
   });
 
   it('treats today as due, and overdue as due', () => {
