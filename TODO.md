@@ -11,11 +11,11 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026**, production on versionCode 11; versionCode 12 built, verified, not yet uploaded.
+Last reviewed: **18 September 2026**, production on versionCode 12.
 
 ---
 
-## 1. ~~Hermes memory regression~~ — FIXED, versionCode 12 built and verified
+## 1. ~~Hermes memory regression~~ — FIXED AND SHIPPED (versionCode 12)
 
 **Done 18 September 2026.** `npx expo install expo@^57.0.9 --fix` took `expo` 57.0.8 →
 **57.0.24** and `react-native` 0.86.0 → **0.86.3**, past the 0.86.2 that carries Hermes
@@ -33,10 +33,10 @@ vc12   2,477,320 bytes   Hermes 250829098.0.17   <- fixed
 That is the check worth repeating on any future engine bump — `expo-doctor` reads the source
 tree and the upgrade command reports its own success; neither one opens the artifact.
 
-**versionCode 11 is still live in production with the affected Hermes** until vc12 is
-promoted. `store/cornerstone-versionCode12.aab` passes all 23 `check:aab` checks and is on no
-track yet. Nothing observed in Android vitals; a memory regression shows as OOM crashes on
-low-end devices rather than anything visible on a desk.
+**Shipped 18 September 2026** — versionCode 12 is on production and internal, edit
+`13462923101069420875`. Nothing was ever observed in Android vitals; a memory regression
+shows as OOM crashes on low-end devices rather than anything visible on a desk, so the fix
+went out on the strength of the upstream advisory rather than on evidence of harm.
 
 The upgrade brought new React Compiler lint rules with it — see item 2.
 
