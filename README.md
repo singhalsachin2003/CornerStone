@@ -36,6 +36,12 @@ npm run android    # straight to a connected device or emulator
 npm run web
 ```
 
+## Before a release
+
+**[`TODO.md`](TODO.md) is the list to read before pushing.** Non-blocking work only —
+real defects and improvements that nothing is waiting on. Anything blocking is raised at
+the time rather than filed there.
+
 ## Checks
 
 ```bash
