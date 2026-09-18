@@ -56,7 +56,18 @@ const EXPECTED_STRINGS = [
   'Cornerstone Plus', // the paywall and Profile row
   'Search a term or abbreviation', // the glossary screen's search placeholder
   'Back up your progress', // the optional account screen
+  'nothing leaves your device', // onboarding's corrected privacy line, new in vc11
 ];
+
+/**
+ * Strings that must NOT ship. A build is not verified by what it contains alone
+ * when the point of the build was to remove something.
+ *
+ * `Everything stays on your device` was onboarding's unqualified promise, made
+ * before the user is told an optional account exists and untrue once one does.
+ * versionCode 10 and every build before it carry it; `41f91e7` replaced it.
+ */
+const FORBIDDEN_STRINGS = ['Everything stays on your device'];
 
 /** Native modules that must be linked, read from the dex. */
 const EXPECTED_DEX = [
@@ -157,6 +168,15 @@ function main() {
         { encoding: 'utf8' },
       ).trim();
       check(Number(hits) > 0, `"${term}" ships`, `${hits} hit(s)`);
+    }
+
+    for (const term of FORBIDDEN_STRINGS) {
+      const hits = execFileSync(
+        'sh',
+        ['-c', `grep -ac ${JSON.stringify(term)} ${JSON.stringify(bundle)} || true`],
+        { encoding: 'utf8' },
+      ).trim();
+      check(Number(hits) === 0, `"${term}" is GONE`, `${hits} hit(s)`);
     }
 
     const supabase = execFileSync(
