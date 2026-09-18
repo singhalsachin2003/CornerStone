@@ -373,6 +373,31 @@ android --clean` then `cd android && ./gradlew :app:processReleaseManifest`, rea
   - `eas update:configure` appends to `android.permissions` and `android.blockedPermissions`
     without deduping. Check `app.json` by hand if it is ever run.
 
+  - **Do the housekeeping commits BEFORE cutting the build, never after.** With
+    `runtimeVersion.policy: fingerprint`, the runtime version is a hash over inputs that
+    include **`.gitignore`** (as `bareGitIgnore`) and **`package.json`'s `scripts` block**
+    (as `packageJson:scripts`) — not just dependencies and native config. So adding an npm
+    script or one `.gitignore` line **changes the runtime version and severs OTA
+    compatibility with every binary already built**, including the one built minutes
+    earlier.
+
+    Measured on 2026-09-18: versionCode 10 was built at fingerprint
+    `74c30a06ff4b3197213df6fb52ddf966a1d651ee`; adding `.aab-url.txt` to `.gitignore` and
+    two npm scripts moved the tree to `c8cc38792a2dbc06f255e95bc55afcfd6fb72dec`. An
+    `eas update --branch production` from that tree would have published an update matching
+    **no binary in existence** — inert, and worse, a record implying a fix had shipped.
+
+    **Check before publishing an update**, and compare against the binary you intend to
+    reach:
+
+    ```bash
+    npx expo-updates fingerprint:generate --platform android   # the tree
+    npx eas build:view <build-id> | grep Runtime                # the binary
+    ```
+
+    `--debug` on the first lists all 81 fingerprint sources with the reason each is
+    included, which is how to find what moved it.
+
 - **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
   No SDK and no data leaves the app for this.
 
