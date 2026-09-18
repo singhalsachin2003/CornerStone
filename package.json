@@ -77,7 +77,8 @@
     "create:subscription": "tsx scripts/create-subscription.ts",
     "check:aab": "tsx scripts/check-aab.ts",
     "set:regions": "tsx scripts/set-subscription-regions.ts",
-    "users": "tsx scripts/supabase-users.ts"
+    "users": "tsx scripts/supabase-users.ts",
+    "promote": "tsx scripts/promote-release.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"
