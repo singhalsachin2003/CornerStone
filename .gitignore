@@ -63,3 +63,6 @@ coverage/
 # Regenerate with: node scripts/make-feature-graphic.mjs
 store/feature-graphic.svg
 store/feature-graphic@2x.png
+
+# Written by the build poll; a transient URL, not a fact worth tracking.
+.aab-url.txt

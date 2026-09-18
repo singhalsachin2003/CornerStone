@@ -71,7 +71,8 @@
     "setup:supabase": "tsx scripts/setup-supabase.ts",
     "check:glossary": "tsx scripts/check-glossary.ts",
     "check:play": "tsx scripts/check-play.ts",
-    "create:subscription": "tsx scripts/create-subscription.ts"
+    "create:subscription": "tsx scripts/create-subscription.ts",
+    "check:aab": "tsx scripts/check-aab.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"
