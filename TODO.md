@@ -11,20 +11,32 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026**, production on versionCode 11, versionCode 12 building.
+Last reviewed: **18 September 2026**, production on versionCode 11; versionCode 12 built, verified, not yet uploaded.
 
 ---
 
-## 1. ~~Hermes memory regression~~ — FIXED IN TREE, ships in versionCode 12
+## 1. ~~Hermes memory regression~~ — FIXED, versionCode 12 built and verified
 
 **Done 18 September 2026.** `npx expo install expo@^57.0.9 --fix` took `expo` 57.0.8 →
 **57.0.24** and `react-native` 0.86.0 → **0.86.3**, past the 0.86.2 that carries Hermes
 `250829098.0.16`. **`npx expo-doctor` now reports 21/21 checks passing**, and it cleared the
 14 out-of-date packages at the same time.
 
-**versionCode 11 is still live in production with the affected Hermes** until versionCode 12
-ships. Nothing observed in Android vitals; the regression is a memory one, so evidence would
-be OOM crashes on low-end devices rather than anything visible on a desk.
+**Confirmed in the artifacts, not in package.json.** Reading `libhermesvm.so` out of each
+AAB and grepping it for a version string:
+
+```
+vc11   2,474,552 bytes   Hermes 250829098.0.14   <- affected
+vc12   2,477,320 bytes   Hermes 250829098.0.17   <- fixed
+```
+
+That is the check worth repeating on any future engine bump — `expo-doctor` reads the source
+tree and the upgrade command reports its own success; neither one opens the artifact.
+
+**versionCode 11 is still live in production with the affected Hermes** until vc12 is
+promoted. `store/cornerstone-versionCode12.aab` passes all 23 `check:aab` checks and is on no
+track yet. Nothing observed in Android vitals; a memory regression shows as OOM crashes on
+low-end devices rather than anything visible on a desk.
 
 The upgrade brought new React Compiler lint rules with it — see item 2.
 
