@@ -34,6 +34,26 @@ export default function Home() {
     [examKey, levelKey, pathway],
   );
 
+  /**
+   * The three topic areas worth an hour next: least known first, but only
+   * counted where the exam pays for it. A 15–20% area at 30% mastery is a
+   * better use of an evening than a 5–8% area at 10%, and sorting on mastery
+   * alone would say the opposite.
+   *
+   * This fills what was the bottom half of an empty screen. A dashboard whose
+   * lower 40% is blank reads as unfinished, and this is the question a
+   * candidate opening the app actually has.
+   */
+  const weakest = useMemo(() => {
+    if (topics.length === 0) return [];
+    return [...topics]
+      .filter((t) => (mastery[t.key] ?? 0) < 70)
+      .map((t) => ({ topic: t, gap: (100 - (mastery[t.key] ?? 0)) * weightOf(t) }))
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 3)
+      .map((entry) => entry.topic);
+  }, [topics, mastery]);
+
   if (!examKey || !levelKey) return null;
 
   const exam = EXAMS[examKey];
@@ -60,26 +80,6 @@ export default function Home() {
   // the one word in the app that reads like a database default. Somebody who
   // has simply not set a name gets the greeting on its own.
   const firstName = name === GUEST_NAME ? null : name.split(/\s+/)[0];
-
-  /**
-   * The three topic areas worth an hour next: least known first, but only
-   * counted where the exam pays for it. A 15–20% area at 30% mastery is a
-   * better use of an evening than a 5–8% area at 10%, and sorting on mastery
-   * alone would say the opposite.
-   *
-   * This fills what was the bottom half of an empty screen. A dashboard whose
-   * lower 40% is blank reads as unfinished, and this is the question a
-   * candidate opening the app actually has.
-   */
-  const weakest = useMemo(() => {
-    if (topics.length === 0) return [];
-    return [...topics]
-      .filter((t) => (mastery[t.key] ?? 0) < 70)
-      .map((t) => ({ topic: t, gap: (100 - (mastery[t.key] ?? 0)) * weightOf(t) }))
-      .sort((a, b) => b.gap - a.gap)
-      .slice(0, 3)
-      .map((entry) => entry.topic);
-  }, [topics, mastery]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top']}>
