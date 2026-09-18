@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Run the same gate CI runs, before the commit exists.
+#
+# This is here because of a specific failure on 18 September 2026: an unused
+# variable was introduced, `prettier` and `tsc` were run, `eslint` was not, and
+# `main` went red twice. Typecheck does not flag an unused local; lint does. The
+# whole point is that the gate is `npm run verify` and nothing narrower — running
+# a subset is exactly the mistake this prevents.
+#
+# It costs about 11 seconds. Every stage was measured before choosing to run all
+# of them: lint 3.2s, tests 4.7s, typecheck 1.5s, format 0.9s, and the four
+# content checks 1.3s together. `check:applinks` fetches the published file but
+# is best-effort, so committing offline still works.
+#
+# Bypass with `git commit --no-verify` when you genuinely mean to — a
+# work-in-progress commit on a branch, say. Do not make a habit of it on `main`.
+
+git_dir=$(git rev-parse --git-dir)
+
+# A merge or rebase re-commits work that was already checked, often with
+# conflict markers mid-resolution. Failing there is noise, not signal.
+if [ -e "$git_dir/MERGE_HEAD" ] || [ -d "$git_dir/rebase-merge" ] || [ -d "$git_dir/rebase-apply" ]; then
+  exit 0
+fi
+
+printf 'pre-commit: npm run verify — about 11s, skip with --no-verify\n'
+start=$(date +%s)
+
+if npm run verify >/tmp/cornerstone-precommit.log 2>&1; then
+  printf 'pre-commit: passed in %ss\n' "$(( $(date +%s) - start ))"
+  exit 0
+fi
+
+printf '\npre-commit: FAILED — the commit was not made.\n\n'
+
+# Surface the ERRORS, not the tail. A plain `tail` here buried the one error
+# under seventeen warnings the first time this was tested, which is precisely
+# the kind of output people learn to ignore. eslint prefixes errors with
+# "error", tsc with "error TS", and jest marks failures with a bullet.
+if grep -nE "^\s*[0-9]+:[0-9]+\s+error|error TS[0-9]+|✕|●.*›|FAIL " /tmp/cornerstone-precommit.log > /tmp/cornerstone-precommit-errors.log 2>/dev/null &&
+   [ -s /tmp/cornerstone-precommit-errors.log ]; then
+  head -20 /tmp/cornerstone-precommit-errors.log
+else
+  # Nothing matched the known shapes — show the end and let the human read it.
+  tail -25 /tmp/cornerstone-precommit.log
+fi
+
+printf '\nFull output: /tmp/cornerstone-precommit.log\n'
+printf 'Fix it, or commit with --no-verify if you mean to.\n'
+exit 1

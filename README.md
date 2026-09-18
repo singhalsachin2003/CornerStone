@@ -36,6 +36,18 @@ npm run android    # straight to a connected device or emulator
 npm run web
 ```
 
+## Hooks
+
+`npm install` points git at `.githooks/`, so **`npm run verify` runs before every commit**.
+It costs about 11 seconds and is the same gate CI runs — the point being that a commit which
+succeeds locally cannot redden `main`. `git commit --no-verify` skips it when you mean to.
+
+If commits are not being checked, git was never pointed at the directory:
+
+```bash
+git config core.hooksPath .githooks   # what `npm install` does for you
+```
+
 ## Before a release
 
 **[`TODO.md`](TODO.md) is the list to read before pushing.** Non-blocking work only —
