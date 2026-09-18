@@ -8,6 +8,7 @@ import { color, font, gutter, radius } from '@/theme/tokens';
 import { type } from '@/theme/type';
 import { EXAMS, cardsFor, topicsFor } from '@/content';
 import {
+  GUEST_NAME,
   currentStreak,
   daysToExam,
   dueCount,
@@ -55,7 +56,30 @@ export default function Home() {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const firstName = name.split(/\s+/)[0];
+  // "Good afternoon, Guest" is the first line on the first screen, and Guest is
+  // the one word in the app that reads like a database default. Somebody who
+  // has simply not set a name gets the greeting on its own.
+  const firstName = name === GUEST_NAME ? null : name.split(/\s+/)[0];
+
+  /**
+   * The three topic areas worth an hour next: least known first, but only
+   * counted where the exam pays for it. A 15–20% area at 30% mastery is a
+   * better use of an evening than a 5–8% area at 10%, and sorting on mastery
+   * alone would say the opposite.
+   *
+   * This fills what was the bottom half of an empty screen. A dashboard whose
+   * lower 40% is blank reads as unfinished, and this is the question a
+   * candidate opening the app actually has.
+   */
+  const weakest = useMemo(() => {
+    if (topics.length === 0) return [];
+    return [...topics]
+      .filter((t) => (mastery[t.key] ?? 0) < 70)
+      .map((t) => ({ topic: t, gap: (100 - (mastery[t.key] ?? 0)) * weightOf(t) }))
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 3)
+      .map((entry) => entry.topic);
+  }, [topics, mastery]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top']}>
@@ -80,7 +104,7 @@ export default function Home() {
             <Text
               style={{ fontFamily: font.sans, fontSize: 13, lineHeight: 16, color: color.muted }}
             >
-              {greeting}, {firstName}
+              {firstName === null ? greeting : `${greeting}, ${firstName}`}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5 }}>
               <Text style={type.homeTitle}>
@@ -278,9 +302,64 @@ export default function Home() {
             </Text>
           </Pressable>
         </View>
+
+        {weakest.length > 0 && (
+          <>
+            <Eyebrow size={9.5} tracking={0.14} style={{ marginTop: 26, marginBottom: 10 }}>
+              WORTH AN HOUR NEXT
+            </Eyebrow>
+            {weakest.map((topic) => (
+              <Pressable
+                key={topic.key}
+                accessibilityRole="button"
+                accessibilityLabel={`${topic.name}. ${mastery[topic.key] ?? 0} percent. ${topic.weight} of the exam.`}
+                onPress={() => router.push({ pathname: '/snapshot', params: { topic: topic.key } })}
+                style={({ pressed }) => ({
+                  borderTopWidth: 1,
+                  borderTopColor: color.ruleSoft,
+                  paddingVertical: 13,
+                  opacity: pressed ? 0.6 : 1,
+                })}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    gap: 12,
+                  }}
+                >
+                  <Text style={[type.rowLabel, { flex: 1 }]} numberOfLines={1}>
+                    {topic.name}
+                  </Text>
+                  <Text style={type.tileMeta}>
+                    {mastery[topic.key] ?? 0}% · {topic.weight}
+                  </Text>
+                </View>
+                <ProgressTrack pct={mastery[topic.key] ?? 0} height={3} style={{ marginTop: 9 }} />
+              </Pressable>
+            ))}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+/**
+ * A topic's exam weight as a number the sort can use.
+ *
+ * `weight` is a published *band* — "15–20%" — because that is what the exam
+ * bodies actually publish, so this takes the midpoint, which is the same thing
+ * `weightedProgress` does with it. Anything unparseable counts as an average
+ * topic rather than as zero: an unrecognised band should not silently drop an
+ * area out of the list.
+ */
+function weightOf(topic: { weight: string }): number {
+  const numbers = topic.weight.match(/\d+(?:\.\d+)?/g);
+  if (numbers === null || numbers.length === 0) return 10;
+  const values = numbers.map(Number);
+  return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
 /**

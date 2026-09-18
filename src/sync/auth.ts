@@ -45,6 +45,17 @@ function readable(message: string): string {
   if (m.includes('rate limit') || m.includes('too many requests')) {
     return 'Too many attempts just now. Wait a few minutes and try again.';
   }
+  // The most common failure of all, and the only one whose fix is obvious.
+  // Without this branch a candidate on the underground reads "Network request
+  // failed", which tells them nothing they can act on.
+  if (
+    m.includes('network request failed') ||
+    m.includes('failed to fetch') ||
+    m.includes('networkerror') ||
+    m.includes('timeout')
+  ) {
+    return 'No connection. Your studying is safe on this device and will back up when you are online.';
+  }
   return message;
 }
 
@@ -91,4 +102,46 @@ export function describePasswordProblem(password: string): string | null {
 export function looksLikeEmail(value: string): boolean {
   const trimmed = value.trim();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+}
+
+/**
+ * Deletes the account and everything backed up to it.
+ *
+ * Play requires this to exist in the app, not only on a web page. It removes
+ * the *server's* copy: every table cascades from the auth row, so one call
+ * takes progress, review queue, bookmarks, study days and settings with it —
+ * see `supabase/schema.sql`.
+ *
+ * It deliberately leaves this device alone. Cornerstone has always worked
+ * without an account, so deleting one should hand the candidate back that app
+ * rather than wipe the studying they did while signed in, and Profile already
+ * carries an explicit reset for anyone who wants the rest gone.
+ *
+ * The subscription is not touched either, and cannot be: it belongs to the
+ * Google Play account rather than to this one. The screen says so, because
+ * "delete my account" is otherwise a reasonable thing to read as "cancel my
+ * subscription", and being wrong about that costs the candidate money.
+ */
+export async function deleteAccount(): Promise<AuthOutcome> {
+  const client = getSyncClient();
+  if (!client) return { kind: 'not-configured' };
+
+  try {
+    const { error } = await client.rpc('delete_account');
+    if (error) return { kind: 'failed', message: readable(error.message) };
+  } catch (error) {
+    return {
+      kind: 'failed',
+      message: readable(error instanceof Error ? error.message : String(error)),
+    };
+  }
+
+  // The rows are gone, so the session means nothing whatever the revoke does.
+  try {
+    await client.auth.signOut();
+  } catch {
+    // The account no longer exists; a failed revoke cannot make it exist again.
+  }
+
+  return { kind: 'ok' };
 }

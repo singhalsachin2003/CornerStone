@@ -9,6 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { color, radius, shadow } from '@/theme/tokens';
 import { eyebrow, type } from '@/theme/type';
 
@@ -69,14 +70,21 @@ export function OutlineButton({
   label,
   onPress,
   style,
+  labelStyle,
+  accessibilityHint,
 }: {
   label: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  /** For the one caller that is destructive and has to look it. */
+  labelStyle?: StyleProp<TextStyle>;
+  accessibilityHint?: string;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
       onPress={onPress}
       style={({ pressed }) => [
         styles.outline,
@@ -84,7 +92,7 @@ export function OutlineButton({
         style,
       ]}
     >
-      <Text style={[type.button, { color: color.ink, fontSize: 14 }]}>{label}</Text>
+      <Text style={[type.button, { color: color.ink, fontSize: 14 }, labelStyle]}>{label}</Text>
     </Pressable>
   );
 }
@@ -155,14 +163,15 @@ export function SelectableCard({
 /** 44×26 pill toggle; knob animates left 3 → 21 over 180ms. */
 export function Toggle({ value, onToggle }: { value: boolean; onToggle: () => void }) {
   const anim = useRef(new Animated.Value(value ? 1 : 0)).current;
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     Animated.timing(anim, {
       toValue: value ? 1 : 0,
-      duration: 180,
+      duration: reducedMotion ? 0 : 180,
       useNativeDriver: false,
     }).start();
-  }, [value, anim]);
+  }, [value, anim, reducedMotion]);
 
   const left = anim.interpolate({ inputRange: [0, 1], outputRange: [3, 21] });
   const track = anim.interpolate({

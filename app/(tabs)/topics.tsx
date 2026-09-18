@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useDeferredValue, useMemo, useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, ProgressTrack } from '@/components/primitives';
+import { Search, X } from 'lucide-react-native';
 import { Ring } from '@/components/Ring';
 import {
   color,
@@ -45,6 +46,33 @@ export default function Topics() {
     [examKey, levelKey, pathway],
   );
 
+  const [query, setQuery] = useState('');
+  // Deferred for the same reason the glossary defers: typing re-filters on every
+  // keystroke, and the list is the expensive half of this screen.
+  const deferredQuery = useDeferredValue(query);
+
+  /**
+   * Thirty-eight areas across five levels, and until now the only way to reach
+   * one was to know which area it lived in. That is a fine assumption for a
+   * candidate three months in and a bad one for somebody who has just been told
+   * to revise Value at Risk.
+   *
+   * Matching runs over the area name and its segment names, because the segment
+   * is where the searchable words actually are — "Value at Risk" is a segment of
+   * "Valuation and Risk Models", and searching only area names would find
+   * nothing for it.
+   */
+  const visible = useMemo(() => {
+    const needle = deferredQuery.trim().toLowerCase();
+    if (needle === '') return topics;
+    return topics.filter((t) => {
+      if (t.name.toLowerCase().includes(needle)) return true;
+      return premiumSegmentsFor(t.key).some((segment) =>
+        segment.name.toLowerCase().includes(needle),
+      );
+    });
+  }, [topics, deferredQuery]);
+
   if (!examKey || !levelKey) return null;
   const exam = EXAMS[examKey];
   const level = exam.levels.find((l) => l.key === levelKey);
@@ -66,20 +94,89 @@ export default function Topics() {
         <Text style={type.secondary}>
           {exam.name} {level?.name} · {topics.length} areas, weighted as in the real exam
         </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            marginTop: 14,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor: color.rule,
+            borderRadius: radius.row,
+            backgroundColor: color.surface,
+          }}
+        >
+          <Search size={15} color={color.muted} strokeWidth={2} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search a topic or segment"
+            placeholderTextColor={color.meta}
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
+            accessibilityLabel="Search topics"
+            style={{
+              flex: 1,
+              fontFamily: font.sans,
+              fontSize: 14,
+              color: color.ink,
+              // Android centres poorly without this and the text sits high.
+              paddingVertical: 0,
+            }}
+          />
+          {query.length > 0 && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Clear search"
+              hitSlop={10}
+              onPress={() => setQuery('')}
+            >
+              <X size={15} color={color.muted} strokeWidth={2} />
+            </Pressable>
+          )}
+        </View>
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {variant === 'a' && (
-          <LedgerList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
-        )}
-        {variant === 'b' && (
-          <TileGrid topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
-        )}
-        {variant === 'c' && (
-          <IndexList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
+        {visible.length === 0 ? (
+          <Text
+            style={[
+              type.secondary,
+              { paddingHorizontal: gutter.screen, paddingTop: 24, textAlign: 'center' },
+            ]}
+          >
+            Nothing matches “{query.trim()}”. The glossary may have it — it covers both programmes
+            and is always free.
+          </Text>
+        ) : (
+          <>
+            {variant === 'a' && (
+              <LedgerList
+                topics={visible}
+                mastery={mastery}
+                onOpen={open}
+                premium={access.premium}
+              />
+            )}
+            {variant === 'b' && (
+              <TileGrid topics={visible} mastery={mastery} onOpen={open} premium={access.premium} />
+            )}
+            {variant === 'c' && (
+              <IndexList
+                topics={visible}
+                mastery={mastery}
+                onOpen={open}
+                premium={access.premium}
+              />
+            )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>

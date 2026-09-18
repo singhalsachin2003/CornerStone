@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  withTiming,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -11,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { BackLink, Eyebrow, SegmentedBar } from '@/components/primitives';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { color, font, gutter, radius, shadow } from '@/theme/tokens';
 import { monoBlock, type } from '@/theme/type';
 import { accessibleCardsFor, accessibleQuestionEntries, segmentByKey, topicByKey } from '@/content';
@@ -64,6 +66,7 @@ export default function Snapshot() {
   const [revealed, setRevealed] = useState(false);
 
   const dragX = useSharedValue(0);
+  const reducedMotion = useReducedMotion();
 
   const t = tokensFor(variant);
   const card = cards[idx];
@@ -109,7 +112,12 @@ export default function Snapshot() {
     })
     .onEnd((e) => {
       const dx = e.translationX;
-      dragX.value = withSpring(0, { damping: 18, stiffness: 180 });
+      // The drag itself stays — following a finger is direct manipulation, not
+      // animation. What goes under reduce-motion is the springy settle the app
+      // invents afterwards, which is the part that actually provokes symptoms.
+      dragX.value = reducedMotion
+        ? withTiming(0, { duration: 0 })
+        : withSpring(0, { damping: 18, stiffness: 180 });
       if (dx < -COMMIT) runOnJS(goNext)();
       else if (dx > COMMIT) runOnJS(goPrev)();
     });

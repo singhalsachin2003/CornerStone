@@ -1,12 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, OutlineButton, PrimaryButton, Rule } from '@/components/primitives';
 import { color, font, gutter, radius } from '@/theme/tokens';
 import { type } from '@/theme/type';
 import { isSyncConfigured } from '@/sync/client';
-import { describePasswordProblem, looksLikeEmail, signIn, signOut, signUp } from '@/sync/auth';
+import {
+  deleteAccount,
+  describePasswordProblem,
+  looksLikeEmail,
+  signIn,
+  signOut,
+  signUp,
+} from '@/sync/auth';
 import { useSyncStore } from '@/store/useSyncStore';
 
 /**
@@ -83,6 +98,51 @@ export default function Account() {
     clearAfterSignOut();
     setBusy(false);
     setNotice(null);
+  }, [clearAfterSignOut]);
+
+  /**
+   * Two taps, and the second names what it does rather than saying "OK".
+   *
+   * The body spells out the two things a candidate will otherwise assume
+   * wrongly: that their studying goes with it, and that their subscription
+   * gets cancelled. Neither is true, and being wrong about the second costs
+   * them money.
+   */
+  const onDelete = useCallback(() => {
+    Alert.alert(
+      'Delete your account?',
+      'Your account and everything backed up to it are permanently deleted from the server. This cannot be undone.\n\nStudying already on this phone is kept, and Cornerstone keeps working without an account. Your subscription is separate — it belongs to your Google Play account and is not affected.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete account',
+          style: 'destructive',
+          onPress: () => {
+            void (async () => {
+              setBusy(true);
+              setNotice(null);
+              const outcome = await deleteAccount();
+              setBusy(false);
+
+              if (outcome.kind === 'ok') {
+                clearAfterSignOut();
+                setNotice('Your account has been deleted.');
+                return;
+              }
+
+              // A deletion that quietly did not happen is the one failure here
+              // a candidate must not be left believing succeeded.
+              setNotice(
+                outcome.kind === 'failed'
+                  ? outcome.message
+                  : 'This build has no account system configured.',
+              );
+            })();
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   }, [clearAfterSignOut]);
 
   return (
@@ -186,6 +246,24 @@ export default function Account() {
             <Text style={[type.meta, { marginTop: 10 }]}>
               Signing out leaves everything on this device exactly as it is. Nothing is deleted.
             </Text>
+
+            {/* Below its own rule rather than beside Sign out: a destructive
+                action sitting next to a harmless one is a mis-tap waiting to
+                happen, and the two are not peers. */}
+            <Rule style={{ marginTop: 26, marginBottom: 18 }} />
+            <Eyebrow size={9.5} tracking={0.14}>
+              DELETE ACCOUNT
+            </Eyebrow>
+            <Text style={[type.body, { marginTop: 10, color: color.inkBody }]}>
+              Permanently deletes your account and everything backed up to it. Studying already on
+              this phone is kept, and your subscription is not affected.
+            </Text>
+            <OutlineButton
+              label={busy ? 'Working…' : 'Delete account'}
+              onPress={onDelete}
+              style={{ marginTop: 14, borderColor: color.rust }}
+              labelStyle={{ color: color.rust }}
+            />
           </>
         )}
 
