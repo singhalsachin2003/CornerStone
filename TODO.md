@@ -11,9 +11,38 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026** · production **versionCode 12** · 4 open, 0 blocking.
+Last reviewed: **18 September 2026** · production **versionCode 12** · 5 open, **1 of them
+does not belong here** (item 0 — a live Play policy exposure, filed at the top so it is not
+lost, but it breaks this file's own "nothing blocking" rule and should be treated as urgent).
 
 ---
+
+## 0. NOT NON-BLOCKING — no in-app account deletion, and the app is live
+
+**This breaks the inclusion rule at the top of this file and is recorded here anyway so it is
+not lost. Treat it as urgent, not as backlog.**
+
+Both Cornerstone and OTC Learn let users create accounts and neither offers an in-app way to
+delete one. `app/account.tsx` has Sign in, Create account and Sign out — verified 18 Sept
+2026 — and deletion is handed to an email address on
+[the delete-account page](https://singhalsachin2003.github.io/CornerStone/DELETE-ACCOUNT.html)
+published the same day.
+
+**Play requires both halves.** Developers must provide an in-app path to delete the account
+and its data, **and** a web link resource — the web page is explicitly not a substitute.
+Exposure is update rejection or listing removal, and it lands on both apps at once.
+([Play policy](https://support.google.com/googleplay/android-developer/answer/13327111))
+
+Worse, the Data Safety declaration filed on 18 September answers **Yes** to "can users
+request deletion", describing the route that does not satisfy the requirement.
+
+**The fix is small because the schema already supports it.** RLS is per-user on every table,
+so a Supabase RPC that deletes the caller's rows and their auth record is a short function; the
+UI is a Delete account row behind a typed confirmation. **Keep the web page** — it is the other
+half of the requirement, not a thing to replace.
+
+**Timing matters:** a policy strike on a listing that has just started being promoted is the
+worst possible moment, so do this before driving install traffic.
 
 ## 1. Three React Compiler lint findings, demoted to warnings
 
@@ -81,6 +110,34 @@ ignore the line, which is worse than printing nothing.
 
 Either drop the line once products exist, or have it say plainly that it cannot see
 RevenueCat and name the curl above.
+
+## 5. Cross-repo findings — raised against OTC Learn, NOT verified from this repo
+
+From a review on 18 September 2026 covering both apps. **OTC Learn is not checked out on this
+machine, so nothing below was verified here** — the Cornerstone half of each claim was, and is
+noted. Verify against OTC Learn before acting.
+
+- **`mergeNotes` is last-write-wins and silently drops one side.** A note is the only thing
+  the user authors, and the only merge in that file that loses something unrecoverable —
+  every other rule is safe by construction (counters take the max, sets union). Write offline
+  on two phones, sync, and one version is gone with no record it existed. Suggested fix:
+  when both sides changed since the last watermark, concatenate under a separator rather than
+  dropping the loser. **Cornerstone is not affected — it has no notes**; `src/sync/` merges
+  mastery, review queue, bookmarks, study days and settings only. Confirmed by grep.
+- **OTC Learn has no runtime clamp on promo grant days.** Its test asserts `days <= 365` on
+  the table, which catches a typo in CI — but the promo table ships by `eas update`, and an
+  OTA push does not pass CI. A `days: 600` typo pushed over the air cannot be taken back once
+  a device has made the grant. **Cornerstone already clamps at runtime**: `MAX_GRANT_DAYS =
+365` and `Math.min(code.days, MAX_GRANT_DAYS)` in `src/access/promoCode.ts:17,73` —
+  verified. The fix in OTC Learn is the same one `Math.min`.
+- **~1,000 lines of identical domain logic exist in both repos and have already diverged.**
+  `EASE = 2.3`, `MAX_INTERVAL = 120`, intervals `[1, 4, 10]`, `LEARNING_RATE = 0.35` are
+  written out twice under different filenames. Cornerstone's `redeem` clamps the grant and
+  refuses when no premium content exists; OTC Learn's `redeemPromoCode` does neither, and the
+  outcome vocabularies differ (`campaign-ended` vs `expired`). **Recommendation was explicitly
+  not to extract a shared package as a project in itself** — instead, the next time review
+  scheduling or the access rules are touched, do it in a shared workspace package rather than
+  twice.
 
 ---
 

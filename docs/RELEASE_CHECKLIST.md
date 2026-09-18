@@ -166,17 +166,17 @@ developer account. A mismatch is a common review query.
 
 All under **Policy → App content**. Answers for this app:
 
-| Section            | Answer                                                                                                                                                                                   |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App access         | All functionality available without restrictions — **no login required**                                                                                                                 |
-| Ads                | **No ads**                                                                                                                                                                               |
-| Content rating     | Complete questionnaire → category **Reference/Education**; answer _No_ to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3** |
-| Target audience    | **18+**. Do not tick any child age band — that triggers Families policy                                                                                                                  |
-| News app           | **No**                                                                                                                                                                                   |
-| Data safety        | **No data collected, no data shared.** See the pre-filled answers at the bottom of `docs/PRIVACY.md`                                                                                     |
-| Government app     | **No**                                                                                                                                                                                   |
-| Financial features | **None.** This is study content _about_ finance, not a financial product. Do not tick anything here                                                                                      |
-| Privacy policy     | Paste the URL from Step 3                                                                                                                                                                |
+| Section            | Answer                                                                                                                                                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| App access         | All functionality available without restrictions — **no login required**                                                                                                                                                                         |
+| Ads                | **No ads**                                                                                                                                                                                                                                       |
+| Content rating     | Complete questionnaire → category **Reference/Education**; answer _No_ to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3**                                                         |
+| Target audience    | **18+**. Do not tick any child age band — that triggers Families policy                                                                                                                                                                          |
+| News app           | **No**                                                                                                                                                                                                                                           |
+| Data safety        | **v1.0 was "no data collected". FROM v1.1 THAT IS FALSE** — the app collects email, name, purchase history and backed-up study activity, all optional. Use the answers at the bottom of `docs/PRIVACY.md`, which are current. Filed 18 Sept 2026 |
+| Government app     | **No**                                                                                                                                                                                                                                           |
+| Financial features | **None.** This is study content _about_ finance, not a financial product. Do not tick anything here                                                                                                                                              |
+| Privacy policy     | Paste the URL from Step 3                                                                                                                                                                                                                        |
 
 ---
 
@@ -300,11 +300,27 @@ Standard or a Guidance passage.
 - No `WebView`, no `eval`, no dynamic `require`, no native modules of our own.
 - No secrets tracked; `.gitignore` covers `*.jks`, `*.keystore`, `*.p12`, `.env`.
 - Four permissions, all justified above, none in the dangerous class except notifications.
-- Data Safety answers match reality because the app makes no network requests at all.
+- ~~Data Safety answers match reality because the app makes no network requests at all.~~
+  **False from v1.1.** The app now makes three optional network calls — an update check, an
+  entitlement check if the candidate subscribes, and a progress backup if they create an
+  account. The Data Safety declaration was corrected on 18 September 2026 and is in review;
+  `docs/PRIVACY.md` holds the answers that were filed.
 
-**`npm audit` reports advisories — ignore them, and do not run `npm audit fix --force`.** Every
-one traces to a single `uuid@7.0.3` advisory reached through
-`expo-splash-screen → @expo/config-plugins → xcode`. `xcode` parses iOS project files during
+**`npm audit` reports advisories — ignore them, and do not run `npm audit fix --force`.**
+
+**Corrected 18 September 2026: it is no longer a single chain.** `npm audit --json` now
+reports **six** distinct advisory roots — `@xmldom/xmldom`, `brace-expansion`,
+`decode-uri-component`, `image-size`, `js-yaml` and `uuid`. The original claim that every one
+traced to `uuid@7.0.3` through `expo-splash-screen → @expo/config-plugins → xcode` was true
+when written and would now mislead whoever checks next.
+
+**The conclusion is unchanged:** all of them are build-time tooling — prebuild, bundling,
+config plugins — and none is in the shipped bundle. Re-derive the roots rather than trusting
+this list:
+
+````bash
+npm audit --json | python3 -c "import sys,json;print(sorted({v.get('name') for x in json.load(sys.stdin)['vulnerabilities'].values() for v in x['via'] if isinstance(v,dict)}))"
+``` `xcode` parses iOS project files during
 prebuild; it never runs on an Android device and is not in the shipped bundle. The suggested
 "fix" downgrades to `expo@46`, which would break the app.
 
@@ -329,10 +345,10 @@ prebuild; it never runs on an Android device and is not in the shipped bundle. T
   ```bash
   unzip -q -o store/cornerstone-versionCodeNN.aab "base/lib/arm64-v8a/libhermesvm.so" -d /tmp/hv
   strings -a /tmp/hv/base/lib/arm64-v8a/libhermesvm.so | grep -oE '25082909[0-9]\.[0-9]+\.[0-9]+' | sort -u
-  ```
+````
 
-  Measured on 2026-09-18: versionCode 11 returned `250829098.0.14` and versionCode 12
-  returned `250829098.0.17`, which is what actually proved the fix had shipped.
+Measured on 2026-09-18: versionCode 11 returned `250829098.0.14` and versionCode 12
+returned `250829098.0.17`, which is what actually proved the fix had shipped.
 
 ### Fixed since
 
