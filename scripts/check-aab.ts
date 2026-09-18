@@ -22,6 +22,12 @@
  * 4. **Anchor the test-key search.** `grep -oE "test_[A-Za-z0-9]+"` hits
  *    `…shortest_paths` abutting `paywall_components_localizations` in a string
  *    table and cries wolf on every build.
+ * 5. **Hermes stores a string containing ANY non-ASCII character as UTF-16LE**,
+ *    and an ASCII search then reports a string that is plainly there as missing.
+ *    `No account needed — without one, nothing leaves your device.` is absent as
+ *    UTF-8 and present as UTF-16LE in versionCode 11, purely because of the em
+ *    dash. This app's copy is full of em dashes, so content checks search both
+ *    encodings and say which one matched.
  *
  * `aapt2 dump xmltree` cannot read an AAB manifest — it is protobuf-encoded —
  * so the manifest comes from `bundletool`.
@@ -158,30 +164,38 @@ function main() {
     ).trim();
     check(all === '', 'no RevenueCat test key anywhere in the artifact', all);
 
-    // ---- Content. Trap 2: -a, because this is Hermes bytecode ----
-    console.log('\nContent (index.android.bundle is Hermes bytecode — grep -a is mandatory)');
-    const bundle = join(assets, 'index.android.bundle');
+    // ---- Content. Traps 2 and 5: Hermes bytecode, and UTF-16 for non-ASCII ----
+    console.log('\nContent (Hermes bytecode — searched as UTF-8 and UTF-16LE)');
+    const bundle = readFileSync(join(assets, 'index.android.bundle'));
+
+    /** Counts occurrences in both encodings Hermes may have used. */
+    const occurrences = (term: string) => {
+      const count = (buf: Buffer) => {
+        let n = 0;
+        for (let i = bundle.indexOf(buf); i !== -1; i = bundle.indexOf(buf, i + 1)) n += 1;
+        return n;
+      };
+      const utf8 = count(Buffer.from(term, 'utf8'));
+      const utf16 = count(Buffer.from(term, 'utf16le'));
+      return { utf8, utf16, total: utf8 + utf16 };
+    };
+
     for (const term of EXPECTED_STRINGS) {
-      const hits = execFileSync(
-        'sh',
-        ['-c', `grep -ac ${JSON.stringify(term)} ${JSON.stringify(bundle)} || true`],
-        { encoding: 'utf8' },
-      ).trim();
-      check(Number(hits) > 0, `"${term}" ships`, `${hits} hit(s)`);
+      const { utf8, utf16, total } = occurrences(term);
+      check(total > 0, `"${term}" ships`, total ? `as ${utf8 ? 'UTF-8' : 'UTF-16LE'}` : '0 hits');
     }
 
     for (const term of FORBIDDEN_STRINGS) {
-      const hits = execFileSync(
-        'sh',
-        ['-c', `grep -ac ${JSON.stringify(term)} ${JSON.stringify(bundle)} || true`],
-        { encoding: 'utf8' },
-      ).trim();
-      check(Number(hits) === 0, `"${term}" is GONE`, `${hits} hit(s)`);
+      const { total } = occurrences(term);
+      check(total === 0, `"${term}" is GONE`, total ? `${total} hit(s) — still present` : '');
     }
 
     const supabase = execFileSync(
       'sh',
-      ['-c', `grep -aoE "https://[a-z]+\\.supabase\\.co" ${JSON.stringify(bundle)} | sort -u`],
+      [
+        '-c',
+        `grep -aoE "https://[a-z]+\\.supabase\\.co" ${JSON.stringify(join(assets, 'index.android.bundle'))} | sort -u`,
+      ],
       { encoding: 'utf8' },
     ).trim();
     check(supabase !== '', 'Supabase URL present', supabase || '(missing)');
