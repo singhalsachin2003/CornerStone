@@ -51,7 +51,7 @@ npm run preview:access   # renders the five paywall states to .expo-web/access-p
 ```
 
 Tests target the pure logic rather than components, because that logic is what fails
-*silently*: a wrong review interval, an off-by-one streak or a shuffle that loses the answer
+_silently_: a wrong review interval, an off-by-one streak or a shuffle that loses the answer
 index corrupts a candidate's data without ever throwing.
 
 `check:content` fails the build if a topic area or segment has no content, if a question does not
@@ -147,14 +147,14 @@ and `npm run check:glossary` plus the test suite both fail the build if that cha
 subscription sells the pipeline of new segments — a dictionary is not something that renews, and
 one that can be taken away is not a reference.
 
-| Programme | Level | Areas | Source |
-| --- | --- | --- | --- |
-| CFA | Level I | 10 | 2027 topic outline |
-| CFA | Level II | 10 | 2026 topic outline (newest published) |
-| CFA | Level III | 5 core + 1 pathway | 2027 topic outline |
-| CFA | L III pathways | 3 (Portfolio Mgmt, Private Markets, Private Wealth) | 2027 pathway outlines |
-| FRM | Part I | 4 | 2026 curriculum |
-| FRM | Part II | 6 | 2026 curriculum |
+| Programme | Level          | Areas                                               | Source                                |
+| --------- | -------------- | --------------------------------------------------- | ------------------------------------- |
+| CFA       | Level I        | 10                                                  | 2027 topic outline                    |
+| CFA       | Level II       | 10                                                  | 2026 topic outline (newest published) |
+| CFA       | Level III      | 5 core + 1 pathway                                  | 2027 topic outline                    |
+| CFA       | L III pathways | 3 (Portfolio Mgmt, Private Markets, Private Wealth) | 2027 pathway outlines                 |
+| FRM       | Part I         | 4                                                   | 2026 curriculum                       |
+| FRM       | Part II        | 6                                                   | 2026 curriculum                       |
 
 Exam weights are the published **bands** (e.g. Ethics at Level I is "15–20%", not a point
 estimate). The band midpoint is used internally to weight syllabus progress — the home screen's
@@ -208,6 +208,7 @@ increments its lapse count; three clean passes retire it from the queue.
 ## Release readiness
 
 Done:
+
 - **Permissions** — verified from the built APK with `aapt2`, not from the config. Through
   versionCode 5 the release build shipped exactly three: `INTERNET`, `POST_NOTIFICATIONS`,
   `RECEIVE_BOOT_COMPLETED` (plus an app-scoped `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` that
@@ -215,7 +216,7 @@ Done:
   users).
 
   **v1.1 adds two, both consequences of shipping updates and a subscription:**
-  `ACCESS_NETWORK_STATE`, which had to come *off* the blocked list because `expo-updates`
+  `ACCESS_NETWORK_STATE`, which had to come _off_ the blocked list because `expo-updates`
   calls `ConnectivityManager` and blocking it strips the permission from a library that needs
   it; and `com.android.vending.BILLING`, which arrives through the Play Billing library and is
   what Play requires before it will let you create a subscription product at all.
@@ -230,6 +231,7 @@ Done:
   **`expo prebuild` cannot show you this** — library manifests merge during the Gradle build.
   Always check the artifact:
   `aapt2 dump permissions build.apk | grep uses-permission`.
+
 - **Daily reminder** — a real scheduled local notification (`src/notifications.ts`), off by
   default so the OS prompt appears when the candidate asks for it rather than on first launch.
   Revoking permission in system settings is detected and reflected in the toggle.
@@ -239,6 +241,7 @@ Done:
   break delivery — the system alarm holds the wakelock, not the app. The alarm carries
   `window=+1h`, meaning Android may batch it up to an hour late. That is the deliberate cost of
   not requesting exact-alarm permission, and is immaterial for a study nudge.
+
 - **Error boundary** — `src/components/ErrorBoundary.tsx`, exported from the root layout, with
   a recovery path that states progress is safe.
 - **Zero network egress** — v1.0 deliberately ships with no analytics, no crash reporting and
@@ -260,6 +263,7 @@ Done:
   served by GitHub Pages from `main` → `/docs`. This is the URL Play Console links to.
 
 Still outstanding:
+
 - **Signing keystore backup** — EAS generated and stores it, but export your own copy via
   `eas credentials --platform android`. Interactive only; see the release checklist. Losing this
   key means never being able to update the app.
@@ -268,7 +272,11 @@ Still outstanding:
   covers this without compromising the privacy position. `ErrorBoundary.componentDidCatch` is
   where an SDK would go if one is ever wanted.
 - **Analytics** — none by design.
-- **iOS** — `bundleIdentifier` is set but the app has never been run on iOS.
+- **iOS** — **not shipping, decided 18 September 2026.** `bundleIdentifier` is set and the app
+  has never been run on iOS. Nothing in the codebase assumes either answer, so this is a
+  decision to revisit rather than a door closed: the cost is an Apple developer account, a
+  second set of store declarations, and a separate RevenueCat app configuration and product
+  catalogue, against an Android subscription that has not yet earned its first rupee.
 - **Authentication and cross-device sync** — `src/store/persistence.ts` is the single seam;
   implement its `getItem`/`setItem`/`removeItem` against an API and nothing else changes.
 - **Question bank depth** — 5 per topic area is thin for a paid public launch.
@@ -292,7 +300,7 @@ cheapest one-off tier and recurring revenue collapses. Selling the pipeline is w
 renewal something to be a renewal of.
 
 It is enforced structurally rather than by policy: the free **core** segment of every topic area
-is *derived* from the banks that shipped in versionCode 5, not listed anywhere. Putting a price
+is _derived_ from the banks that shipped in versionCode 5, not listed anywhere. Putting a price
 on shipped content would require deleting it from `CARDS`/`QUESTIONS`, which is a conspicuous
 diff rather than an oversight.
 
@@ -300,14 +308,14 @@ diff rather than an oversight.
 
 `src/access/rules.ts` is the whole gating decision as one pure function with `now` injected, so
 every state is reachable from a test rather than from one device on one day. Three of the guards
-exist to stop the paywall doing damage in states that arrive *before* anything is for sale:
+exist to stop the paywall doing damage in states that arrive _before_ anything is for sale:
 
-| Guard | Why |
-| --- | --- |
-| No purchases key → no gating | The SDK answers "not subscribed" for everyone, and gating on that locks content for every user of a build that cannot sell them anything |
-| No buyable product → no gating | A key is not enough; merchant verification is weeks away from the line of code that adds it |
-| No premium content → no gating | A pitch for nothing is a lie |
-| Pre-existing install → permanent access | Anyone already using the app keeps all of it |
+| Guard                                   | Why                                                                                                                                      |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| No purchases key → no gating            | The SDK answers "not subscribed" for everyone, and gating on that locks content for every user of a build that cannot sell them anything |
+| No buyable product → no gating          | A key is not enough; merchant verification is weeks away from the line of code that adds it                                              |
+| No premium content → no gating          | A pitch for nothing is a lie                                                                                                             |
+| Pre-existing install → permanent access | Anyone already using the app keeps all of it                                                                                             |
 
 Grandfathering outranks a live subscription deliberately: telling somebody who has had the app
 for a year that their 30-day code is expiring would be both wrong and alarming.
@@ -315,7 +323,7 @@ for a year that their 30-day code is expiring would be both wrong and alarming.
 ### Promotional codes
 
 Codes give the paid segments away for a fixed window. They never discount, because Play's own
-promo codes grant free *trials*, are redeemable only inside Google's payment sheet, and have no
+promo codes grant free _trials_, are redeemable only inside Google's payment sheet, and have no
 API an app can call. Giving content away takes no payment, so no Play product or offer is
 involved.
 
@@ -357,13 +365,13 @@ A JSON blob per user is last-write-wins across the whole account, so a phone tha
 synced since yesterday erases a session done on a tablet this morning. Per-row lets each
 kind of state merge on its own terms:
 
-| State | Rule |
-| --- | --- |
-| Mastery | Later timestamp wins — it can legitimately fall after a bad sitting |
-| Card progress | Greater wins — the app never revises it down |
-| Counters | Greater, **never the sum**: both devices count the same history, so summing inflates on every re-sync |
-| Study days | Union |
-| Review queue, bookmarks | Later wins, with an explicit tombstone for deletions |
+| State                   | Rule                                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------------------- |
+| Mastery                 | Later timestamp wins — it can legitimately fall after a bad sitting                                   |
+| Card progress           | Greater wins — the app never revises it down                                                          |
+| Counters                | Greater, **never the sum**: both devices count the same history, so summing inflates on every re-sync |
+| Study days              | Union                                                                                                 |
+| Review queue, bookmarks | Later wins, with an explicit tombstone for deletions                                                  |
 
 A deletion cannot be an absent row. The device still holding it would treat its copy as
 newer and restore it — so a retired review item keeps a `retiredAt` and a removed bookmark
