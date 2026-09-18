@@ -9,10 +9,10 @@ Read `npm run check:play` first — it says which of the steps below is actually
 
 One subscription, `cornerstone_premium`, with two auto-renewing base plans:
 
-| Base plan  | Billing period | India price |
-| ---------- | -------------- | ----------- |
-| `monthly`  | `P1M`          | INR 29      |
-| `yearly`   | `P1Y`          | INR 199     |
+| Base plan | Billing period | India price |
+| --------- | -------------- | ----------- |
+| `monthly` | `P1M`          | INR 29      |
+| `yearly`  | `P1Y`          | INR 199     |
 
 RevenueCat reads these as `cornerstone_premium:monthly` and
 `cornerstone_premium:yearly`. No free trial, no introductory offer, no lifetime
@@ -24,34 +24,41 @@ Android Publisher API rather than taken from memory. **The yearly price is a 43%
 discount on twelve months** (INR 348 → 199); keep that ratio if the amounts ever
 move, because it is what makes the annual plan the obvious choice.
 
-## Not settled: which regions
+## Settled 2026-09-18: India only, deliberately
 
-**This is the one decision with revenue attached, and it must not be allowed to
-default.**
+**`IN` alone — INR 29/month, INR 199/year — and everywhere else treated as not
+yet launched.** Sachin chose this on 2026-09-18, presented against the two-band
+alternative below. Recording it here is the point: the failure mode this section
+was written to prevent is _arriving_ at India-only by copying `otc_learn_pro`'s
+config and never noticing that the rest of the world cannot buy. That is not what
+happened — the other option was on the table and this one was picked.
 
-`otc_learn_pro` has exactly one regional config, `IN`. That is correct for OTC
-Learn and wrong to copy here. Play makes a subscription **unavailable in every
-region it has no price for**, so mirroring OTC Learn's config would put
-Cornerstone on sale in India and nowhere else. CFA and FRM candidates are not an
-Indian audience — they sit in Toronto, London, Lagos, Karachi, Hanoi and Dubai.
+**Why it is a safe place to start.** Adding regions to a live subscription is
+allowed and does not disturb existing subscribers. Raising a price in a region
+that already has one is the part Play makes hard. **Starting narrow is
+reversible; starting cheap is not** — so India-only costs a delay, while
+auto-converting INR outward would have cost the price itself.
 
-The opposite mistake is just as easy: entering INR 199 and letting Play
-auto-convert it outward. That publishes a **$2.30-a-year** subscription to the
-United States. It is not a price for this audience; it reads as a broken product,
-and Play will not let you raise an existing subscriber's price freely afterwards.
+**What to watch.** Play makes the subscription **unavailable in every region it
+has no price for**, so from launch until regions are added, a CFA or FRM
+candidate in Toronto, London, Lagos or Dubai sees no purchase option at all —
+not an error, just an app that never offers the upgrade. Guard 2 handles this
+correctly (no product, no gating, everything open), so they get the free tier
+rather than a broken screen. **Revisit once there is any evidence of demand
+outside India** — the two-band table below is kept for exactly that moment.
 
-### Recommendation: two bands, anchored in USD
+### Kept for later: the two-band alternative
 
-Set the price in USD first and let Play convert outward from that anchor, then
-override a short list of markets downward. This is the way round that works —
-converting from INR outward gives the $2.30 problem, converting from USD inward
-gives prices nobody in South Asia will pay, so the anchor is USD and the
-overrides are the exceptions.
+Not chosen, and preserved because adding regions is the expected next move. Set
+the price in USD and let Play convert outward from that anchor, then override a
+short list of markets downward. The anchor must be USD: converting from INR
+outward gives the $2.30-a-year problem, converting from USD inward gives prices
+nobody in South Asia will pay.
 
-| Band                             | Monthly   | Yearly     |
-| -------------------------------- | --------- | ---------- |
-| **Anchor** — US, auto-converted   | USD 3.99  | USD 24.99  |
-| **Override** — see list below     | INR 29    | INR 199    |
+| Band                            | Monthly  | Yearly    |
+| ------------------------------- | -------- | --------- |
+| **Anchor** — US, auto-converted | USD 3.99 | USD 24.99 |
+| **Override** — see list below   | INR 29   | INR 199   |
 
 USD 24.99/year is a 48% discount on twelve months, which holds the same shape as
 the INR pair. It is also priced against what it is: a question bank and a card
@@ -69,28 +76,22 @@ Mainland China is deliberately absent: it is the largest CFA candidate
 population in the world and Google Play does not operate there, so it costs
 nothing to leave out.
 
-### The alternative, if the answer is "India only for now"
-
-Defensible, and cheaper to reason about: set `IN` alone, exactly like
-`otc_learn_pro`, and treat everywhere else as not yet launched. **If this is the
-choice, make it explicitly** — the failure mode is arriving at it by copying the
-reference config and never noticing that the rest of the world cannot buy.
-
-Adding regions to a live subscription later is allowed and does not disturb
-existing subscribers. Raising a price in a region that already has one is the
-part Play makes hard. **So starting narrow is reversible and starting cheap is
-not** — which is the argument for the two-band table above, or for India-only,
-and against auto-converting INR.
+**The mistake to keep avoiding**, whichever way this goes: entering INR 199 and
+letting Play auto-convert it outward publishes a **$2.30-a-year** subscription to
+the United States. It reads as a broken product, and Play will not let you raise
+an existing subscriber's price freely afterwards.
 
 ## Order of operations, which Play forces
 
-1. **Upload an AAB of versionCode 7 or later to any track.** Play will not create
-   a subscription until a binary declaring `com.android.vending.BILLING` is on
-   one. versionCode 5 is live and does not declare it. The permission comes from
-   the Play Billing library, not from the RevenueCat key, so even a keyless build
-   unblocks this.
-2. **Create `cornerstone_premium`** with the two base plans and the regional
-   prices chosen above.
+1. ~~**Upload an AAB of versionCode 7 or later to any track.**~~ **DONE
+   2026-09-18** — versionCode 9 is on `internal`; production stays on 5. Play
+   would not create a subscription until a binary declaring
+   `com.android.vending.BILLING` was on a track, and versionCode 5 does not
+   declare it. The permission comes from the Play Billing library, not from the
+   RevenueCat key, so even a keyless build unblocks this.
+2. **Create `cornerstone_premium`** with the two base plans, priced `IN` only.
+   `npm run create:subscription` does it from this spec; it prints the plan and
+   changes nothing unless passed `--commit`.
 3. **Add both base plans to an offering in RevenueCat**, attached to the
    `premium` entitlement.
 4. **Rebuild.** Nothing in the app changes.
@@ -115,9 +116,9 @@ afterwards:
 
 **The name is "Cornerstone Plus", not "Premium".** That is what `profile.tsx` puts on
 screen, and the Play listing title is what a buyer reads on the purchase sheet — the two
-must agree. The RevenueCat *entitlement* is `premium`, which is an internal id and fine;
-its display name there currently reads "Cornerstone Premium" and is worth renaming so
-nothing in the dashboard disagrees with the app.
+must agree. The RevenueCat _entitlement_ is `premium`, which is an internal id and fine;
+its display name there was renamed to "Cornerstone Plus" on 2026-09-13, so nothing in
+the dashboard disagrees with the app.
 
 **Do not list progress backup or the glossary as benefits.** Both are free and
 stay free — the account is optional for everyone and the glossary says "free,
