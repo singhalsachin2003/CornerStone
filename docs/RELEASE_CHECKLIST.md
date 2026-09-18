@@ -586,6 +586,71 @@ The code is done and verified; everything below needs the Console, an account, o
    The paywall turns itself on only when a real product appears — nothing about that
    depends on another release.
 
+### The two RevenueCat steps, in order — both need Sachin
+
+Play products exist as of 2026-09-18 (`cornerstone_premium`, base plans `monthly` and
+`yearly`, both ACTIVE, `IN` only). Nothing sells until both of the following are done, and
+**the order matters**: without credentials RevenueCat cannot read the products, so the
+offering cannot be built.
+
+#### Step A — give RevenueCat the Play service account key
+
+The key is `~/.config/otc-learn/play-service-account.json` (2,380 bytes), identity
+`otc-learn-revenuecat@otc-learn-play.iam.gserviceaccount.com`. **It is a private key, so it
+is uploaded by its owner and by nobody else.**
+
+1. Open the Play app configuration:
+   <https://app.revenuecat.com/projects/fd227857/apps/appef6dc1dad0>
+2. Find the **Service Account credentials JSON** field and upload that file (or paste its
+   contents).
+3. Save, and wait for RevenueCat to show the credentials as **valid**. It validates by
+   calling the Play API as that account.
+
+**Expect this to fail the first time, and check the Play grants before blaming RevenueCat.**
+On 2026-09-18 this same service account turned out to hold only _view_ rights on
+Cornerstone — `eas submit` failed until **Releases → "Release apps to testing tracks"** was
+granted. RevenueCat needs a different set again, on top of that, in **Play Console → Users
+and permissions → that account → App permissions → Cornerstone**:
+
+- **View app information and download bulk reports**
+- **View financial data, orders, and cancellation survey responses**
+- **Manage orders and subscriptions** — this is the one that matters at purchase time;
+  without it RevenueCat cannot acknowledge a purchase, and **Play automatically refunds any
+  purchase left unacknowledged for three days.**
+
+Google documents up to ~36 hours of propagation for a new grant, though today's took
+minutes. The Google Play Developer API is already enabled in the `otc-learn-play` project —
+every `npm run check:play` call proves it.
+
+#### Step B — put the base plans in an offering
+
+RevenueCat reads a Play base plan as `<subscriptionId>:<basePlanId>`, so the two identifiers
+are **`cornerstone_premium:monthly`** and **`cornerstone_premium:yearly`**.
+
+1. **Products** — import or add both identifiers. With Step A done they should be
+   discoverable rather than typed; if you are typing them by hand, Step A is not finished.
+2. **Entitlements** — open **`premium`** (display name "Cornerstone Plus") and attach both
+   products. `premium` is the id the app checks — `extra.purchases.entitlementId`, verified
+   present in versionCode 10 — so a different entitlement unlocks nothing.
+3. **Offerings** — create an offering, add a **Monthly** package (`$rc_monthly`) carrying
+   `cornerstone_premium:monthly` and an **Annual** package (`$rc_annual`) carrying
+   `cornerstone_premium:yearly`.
+4. **Mark that offering Current.** This is the step that actually switches the app on: the
+   SDK's `getOfferings()` returns the _current_ offering, and guard 2 (`productAvailable`)
+   reads exactly that. An offering that exists but is not current leaves gating off.
+
+#### What happens the moment Step B lands
+
+**Gating turns itself on, with no release and no code change** — that is the design, and it
+is why the RevenueCat key could safely ship ahead of the products.
+
+It turns on for **every build carrying the key**, which today means **versionCode 9 on the
+internal track**. Production is versionCode 5, which has no key and cannot gate, so real
+users are unaffected until v1.1 is promoted. Expect internal testers to start seeing the
+paywall as soon as the offering goes current, and check it there first.
+
+---
+
 4. **Correct Data Safety and Sign-in details — in the same publishing cycle as the release
    that turns gating on, and NOT before it.** Checked in the Console on 2026-09-13; both are
    still on their 9 Aug answers, and both of those answers are _currently correct_.
