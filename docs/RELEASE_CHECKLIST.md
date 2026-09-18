@@ -632,12 +632,47 @@ are **`cornerstone_premium:monthly`** and **`cornerstone_premium:yearly`**.
 2. **Entitlements** — open **`premium`** (display name "Cornerstone Plus") and attach both
    products. `premium` is the id the app checks — `extra.purchases.entitlementId`, verified
    present in versionCode 10 — so a different entitlement unlocks nothing.
-3. **Offerings** — create an offering, add a **Monthly** package (`$rc_monthly`) carrying
-   `cornerstone_premium:monthly` and an **Annual** package (`$rc_annual`) carrying
-   `cornerstone_premium:yearly`.
+3. **Offerings** — create **ONE offering containing TWO packages**. Not two offerings.
+
+   ```
+   <one offering, e.g. "default">
+     |-- $rc_monthly  ->  cornerstone_premium : monthly   (INR 29)
+     `-- $rc_annual   ->  cornerstone_premium : yearly    (INR 199)
+   ```
+
+   **This is the easiest thing on the whole list to get wrong, and it was got wrong on
+   2026-09-18.** The first attempt produced two offerings named "Monthly" and "Annual" with
+   one package each — which reads perfectly sensibly, and is wrong, because **an offering is
+   a set of choices presented together and a package is one plan within it.** The app reads
+   `offerings.current.availablePackages` (`src/purchases/facade.ts:86`), so only the current
+   offering is ever seen: with "Monthly" current, the yearly plan does not exist as far as
+   any user is concerned, and the 43%-discount annual plan cannot be bought at all.
+
+   Two offerings is a legitimate shape for A/B testing _alternative_ sets of choices. It is
+   never the shape for "monthly and yearly".
+
 4. **Mark that offering Current.** This is the step that actually switches the app on: the
    SDK's `getOfferings()` returns the _current_ offering, and guard 2 (`productAvailable`)
    reads exactly that. An offering that exists but is not current leaves gating off.
+
+5. **Verify it without a device**, by calling the same endpoint the SDK calls. The Android
+   SDK key is public by design — it ships in the bundle — so this is safe to run anywhere:
+
+   ```bash
+   curl -s -H "Authorization: Bearer goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv" \
+        -H "X-Platform: android" \
+        "https://api.revenuecat.com/v1/subscribers/anything-unique/offerings" | python3 -m json.tool
+   ```
+
+   **Correct output has one entry under `offerings` whose `identifier` equals
+   `current_offering_id`, carrying both `$rc_monthly` and `$rc_annual`.** Two entries with
+   one package each is the failure described above.
+
+   This beats testing on a device, because **Play Billing is unavailable on an emulator and
+   on any sideloaded build**: a debug-signed install returns `BILLING_UNAVAILABLE` however
+   correct the configuration is, so a device tells you nothing until the build arrives from
+   a Play track. Measured on 2026-09-18 against versionCode 10 on `Pixel_7_API_33`, which
+   has Play Store and four signed-in Google accounts and still refused.
 
 #### What happens the moment Step B lands
 
