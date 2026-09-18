@@ -310,8 +310,17 @@ prebuild; it never runs on an Android device and is not in the shipped bundle. T
 
 ### Not fixed, on purpose
 
-- `expo-doctor` reports 8 packages a patch behind. Not a security finding; batch it with the
-  next functional change rather than adding dependency churn to a release build.
+- ~~`expo-doctor` reports 8 packages a patch behind.~~ **Superseded 18 September 2026.**
+  That was fair until doctor began failing on a named **Hermes V1 memory regression**:
+  `expo@57.0.8` shipped Hermes `250829098.0.14`, and `.16` is the first with the fix.
+  **versionCode 11 went to production carrying it.** Upgraded to `expo@57.0.24` /
+  `react-native@0.86.3`, which also cleared the 14 out-of-date packages — **21/21 doctor
+  checks now pass**.
+
+  **The lesson is to read what doctor says rather than counting packages.** "A few patches
+  behind" stops being cosmetic the moment one of them is a named regression, and a _memory_
+  regression is invisible on a desk: it shows up as OOM crashes on low-end devices in
+  Android vitals.
 
 ### Fixed since
 

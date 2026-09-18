@@ -181,7 +181,7 @@ function main() {
     };
 
     for (const term of EXPECTED_STRINGS) {
-      const { utf8, utf16, total } = occurrences(term);
+      const { utf8, total } = occurrences(term);
       check(total > 0, `"${term}" ships`, total ? `as ${utf8 ? 'UTF-8' : 'UTF-16LE'}` : '0 hits');
     }
 

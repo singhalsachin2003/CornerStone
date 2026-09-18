@@ -11,44 +11,51 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026**, production on versionCode 11.
+Last reviewed: **18 September 2026**, production on versionCode 11, versionCode 12 building.
 
 ---
 
-## 1. Hermes memory regression — ships in production today
+## 1. ~~Hermes memory regression~~ — FIXED IN TREE, ships in versionCode 12
 
-`npx expo-doctor` fails on it:
+**Done 18 September 2026.** `npx expo install expo@^57.0.9 --fix` took `expo` 57.0.8 →
+**57.0.24** and `react-native` 0.86.0 → **0.86.3**, past the 0.86.2 that carries Hermes
+`250829098.0.16`. **`npx expo-doctor` now reports 21/21 checks passing**, and it cleared the
+14 out-of-date packages at the same time.
 
-```
-✖ Check for Expo SDK versions affected by Hermes V1 regressions
-  expo@57.0.8, Hermes V1 250829098.0.14
-  ≤ .15 are affected; .16 is the first with the fix.
-```
+**versionCode 11 is still live in production with the affected Hermes** until versionCode 12
+ships. Nothing observed in Android vitals; the regression is a memory one, so evidence would
+be OOM crashes on low-end devices rather than anything visible on a desk.
 
-**Why it matters more here than in most apps.** It is a _memory_ regression, and this app
-ships a ~7 MB Hermes bundle: 152 cards, 190 questions, 139 paid segments, 417 cards, 834
-questions and a 260-term glossary. Low-end Android is where it would surface, as OOM crashes
-or ANRs — so **Play Console → Android vitals is where to look for evidence**, not a local run.
+The upgrade brought new React Compiler lint rules with it — see item 2.
 
-It is a **patch bump inside SDK 57**, not a migration — currently 57.0.8 against ~57.0.24.
+## 2. Three React Compiler lint findings, demoted to warnings
 
-```bash
-npx expo install expo@^57.0.9 --fix
-npm ci                    # a dependency change needs a clean tree before EAS
-npm run verify
-npx expo-doctor           # the Hermes check must now pass
-```
+The SDK 57.0.24 upgrade brought newer `eslint-config-expo` with React Compiler rules, which
+found three things and failed the build. **They are demoted to warnings in
+`eslint.config.js`, not dismissed** — the reasoning is in the comment there. The point of
+demoting was to avoid coupling a security patch to refactoring working, shipped code; the
+findings are real and each should be dealt with on its own.
 
-Then build and **verify the artifact rather than the upgrade**: `npm run check:aab` on the new
-AAB, and confirm the Hermes version actually moved:
+In the order I would fix them:
 
-```bash
-unzip -p store/cornerstone-versionCodeNN.aab base/assets/index.android.bundle | head -c 64 | xxd | head -2
-```
+- **`react-hooks/set-state-in-effect` — `app/results.tsx:34`.** Commits mastery and the
+  review queue from an effect, guarded by `committed.current` so it runs exactly once. The
+  guard is correct and the code has shipped since v1.0; the _shape_ is what the rule objects
+  to. Most worth restructuring of the three, because a commit-once effect is exactly where a
+  cascading render would be expensive.
+- **`react-hooks/purity` — `src/access/useAccess.ts:56`.** Passes `now: Date.now()` into the
+  access rules inside a `useMemo`. Deliberate — `now` is injected precisely so the rules stay
+  pure and testable. Real consequence: a promo grant expiring mid-session does not flip until
+  something re-renders. That is acceptable, and arguably kinder than content vanishing while
+  someone is studying.
+- **`react-hooks/refs` — `src/components/primitives.tsx:157,167,168`.** Calls
+  `anim.interpolate()` during render on an `Animated.Value` held in a ref. **This is how
+  React Native's own documentation uses Animated**; the rule models the React Compiler, which
+  does not know about it. Lowest priority, and possibly nothing to do.
 
-**This also moves the OTA fingerprint**, which is fine and expected for a native change.
+Promote each back to `'error'` as its call sites are dealt with.
 
-## 2. `beta` and `alpha` are stranded on versionCode 5
+## 3. `beta` and `alpha` are stranded on versionCode 5
 
 Both tracks still serve **v1.0** — no subscription, no glossary, no account, and the privacy
 copy that was corrected in `53792fa`. Anyone opted into them is running a build from before
@@ -58,7 +65,7 @@ Either promote versionCode 11 to both, or close the tracks if nobody uses them. 
 today only because nobody is known to be on them — which is itself worth confirming rather
 than assuming.
 
-## 3. The RevenueCat offering is named `Monthly` but holds both plans
+## 4. The RevenueCat offering is named `Monthly` but holds both plans
 
 Cosmetic — the app reads `offerings.current`, never the name — but it is **the exact
 misreading that caused a real bug on 18 September**, when the setup came out as two offerings
@@ -78,7 +85,7 @@ curl -s -H "Authorization: Bearer goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv" -H "X-Platfo
 Correct is **one** entry whose `identifier` equals `current_offering_id`, holding both
 `$rc_monthly` and `$rc_annual`.
 
-## 4. `check:play` gives a stale next action
+## 5. `check:play` gives a stale next action
 
 It still prints _"Check they are in a RevenueCat offering on `premium`"_ now that the offering
 exists and is correct. The script reads the Android Publisher API and has no view of
@@ -87,13 +94,6 @@ ignore the line, which is worse than printing nothing.
 
 Either drop the line once products exist, or have it say plainly that it cannot see
 RevenueCat and name the curl above.
-
-## 5. `README.md` dismisses `expo-doctor` on out-of-date grounds
-
-It says the output is _"8 packages a patch behind. Not a security finding; batch it with the
-next functional change."_ That was fair when written. It is now **14 packages and a named
-Hermes regression** (item 1), so the note argues for ignoring something that should not be
-ignored. Fix the note when item 1 lands.
 
 ---
 
