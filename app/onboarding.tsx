@@ -93,7 +93,7 @@ export default function Onboarding() {
               textAlign: 'center',
             }}
           >
-            No account needed. Everything stays on your device.
+            No account needed — without one, nothing leaves your device.
           </Text>
         </View>
       </View>
