@@ -11,44 +11,19 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026**, production on versionCode 12.
+Last reviewed: **18 September 2026** · production **versionCode 12** · 4 open, 0 blocking.
 
 ---
 
-## 1. ~~Hermes memory regression~~ — FIXED AND SHIPPED (versionCode 12)
-
-**Done 18 September 2026.** `npx expo install expo@^57.0.9 --fix` took `expo` 57.0.8 →
-**57.0.24** and `react-native` 0.86.0 → **0.86.3**, past the 0.86.2 that carries Hermes
-`250829098.0.16`. **`npx expo-doctor` now reports 21/21 checks passing**, and it cleared the
-14 out-of-date packages at the same time.
-
-**Confirmed in the artifacts, not in package.json.** Reading `libhermesvm.so` out of each
-AAB and grepping it for a version string:
-
-```
-vc11   2,474,552 bytes   Hermes 250829098.0.14   <- affected
-vc12   2,477,320 bytes   Hermes 250829098.0.17   <- fixed
-```
-
-That is the check worth repeating on any future engine bump — `expo-doctor` reads the source
-tree and the upgrade command reports its own success; neither one opens the artifact.
-
-**Shipped 18 September 2026** — versionCode 12 is on production and internal, edit
-`13462923101069420875`. Nothing was ever observed in Android vitals; a memory regression
-shows as OOM crashes on low-end devices rather than anything visible on a desk, so the fix
-went out on the strength of the upstream advisory rather than on evidence of harm.
-
-The upgrade brought new React Compiler lint rules with it — see item 2.
-
-## 2. Three React Compiler lint findings, demoted to warnings
+## 1. Three React Compiler lint findings, demoted to warnings
 
 The SDK 57.0.24 upgrade brought newer `eslint-config-expo` with React Compiler rules, which
 found three things and failed the build. **They are demoted to warnings in
-`eslint.config.js`, not dismissed** — the reasoning is in the comment there. The point of
-demoting was to avoid coupling a security patch to refactoring working, shipped code; the
-findings are real and each should be dealt with on its own.
+`eslint.config.js`, not dismissed** — the reasoning is in the comment there. Demoting avoided
+coupling a security patch to refactoring working, shipped code; the findings are real and
+each should be dealt with on its own.
 
-In the order I would fix them:
+In the order worth fixing:
 
 - **`react-hooks/set-state-in-effect` — `app/results.tsx:34`.** Commits mastery and the
   review queue from an effect, guarded by `committed.current` so it runs exactly once. The
@@ -67,17 +42,17 @@ In the order I would fix them:
 
 Promote each back to `'error'` as its call sites are dealt with.
 
-## 3. `beta` and `alpha` are stranded on versionCode 5
+## 2. `beta` and `alpha` are stranded on versionCode 5
 
 Both tracks still serve **v1.0** — no subscription, no glossary, no account, and the privacy
 copy that was corrected in `53792fa`. Anyone opted into them is running a build from before
 any of this existed, and they still carry Expo's `"First release of this awesome app."`
 
-Either promote versionCode 11 to both, or close the tracks if nobody uses them. Harmless
+Either promote **versionCode 12** to both, or close the tracks if nobody uses them. Harmless
 today only because nobody is known to be on them — which is itself worth confirming rather
 than assuming.
 
-## 4. The RevenueCat offering is named `Monthly` but holds both plans
+## 3. The RevenueCat offering is named `Monthly` but holds both plans
 
 Cosmetic — the app reads `offerings.current`, never the name — but it is **the exact
 misreading that caused a real bug on 18 September**, when the setup came out as two offerings
@@ -97,7 +72,7 @@ curl -s -H "Authorization: Bearer goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv" -H "X-Platfo
 Correct is **one** entry whose `identifier` equals `current_offering_id`, holding both
 `$rc_monthly` and `$rc_annual`.
 
-## 5. `check:play` gives a stale next action
+## 4. `check:play` gives a stale next action
 
 It still prints _"Check they are in a RevenueCat offering on `premium`"_ now that the offering
 exists and is correct. The script reads the Android Publisher API and has no view of
@@ -115,11 +90,38 @@ RevenueCat and name the curl above.
 structurally — products ACTIVE in 173 regions, one offering current with both packages,
 credentials valid, `Manage orders and subscriptions` granted — but Play Billing refuses on
 emulators and sideloaded builds, so the `offer` state with real prices has never rendered for
-anyone. The first real transaction is the test. Watch **Android vitals** and RevenueCat.
+anyone. **The first real transaction is the test.**
 
 To try it: install from the internal-testing link on a device, **uninstalling any existing
 Cornerstone first** — otherwise grandfathering marks it a pre-existing install and hides the
 paywall entirely, which looks exactly like a bug.
+
+**Android vitals, read 18 September 2026: zero crashes and zero ANRs**, over 21 Aug – 18 Sept,
+with the default "user-perceived" filter cleared so background crashes were included too.
+
+**Do not read that as a clean bill of health.** Roughly 16 installs, and almost the whole
+window is versionCode 5 — versionCode 10 through 12 have been live for hours, not weeks. A
+memory regression needs sustained use on constrained devices to surface, so this window could
+not have caught one. The useful comparison is crash and ANR rates over the coming weeks as
+installs accumulate, against today's zero as the baseline.
+
+At this install count Play may never show a meaningful crash _rate_ at all — the percentile
+thresholds need volume. For now **any issue appearing is the signal**, not the rate.
+
+---
+
+## Recently closed
+
+- **Hermes V1 memory regression** — shipped in versionCode 10 and 11, fixed in **12**
+  (`expo` 57.0.24 / `react-native` 0.86.3, Hermes `250829098.0.17`). The technique that
+  actually proved it — reading `libhermesvm.so` out of the AAB rather than trusting
+  `expo-doctor` or the upgrade command — is written up in `docs/RELEASE_CHECKLIST.md`.
+- **CI red for five days** while `npm run verify` passed locally: CI pinned Node 20 and
+  `@supabase/realtime-js` needs the global `WebSocket` that arrives in 22.
+- **`main` reddened twice by an unused variable** committed after running only `prettier` and
+  `tsc`. Now structurally prevented: `.githooks/pre-commit` runs the full `npm run verify`
+  (~11s), wired up by a `prepare` script so a fresh clone is covered.
+- **Two Supabase test accounts** deleted; the project holds zero accounts.
 
 ## Decided, not pending
 

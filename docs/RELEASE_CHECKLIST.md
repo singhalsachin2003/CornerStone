@@ -322,6 +322,18 @@ prebuild; it never runs on an Android device and is not in the shipped bundle. T
   regression is invisible on a desk: it shows up as OOM crashes on low-end devices in
   Android vitals.
 
+  **Verify an engine bump by opening the artifact, never by trusting the tooling.**
+  `expo-doctor` reads the source tree; `npx expo install --fix` reports its own success.
+  Neither looks inside the AAB. Extract the Hermes library and grep it for a version:
+
+  ```bash
+  unzip -q -o store/cornerstone-versionCodeNN.aab "base/lib/arm64-v8a/libhermesvm.so" -d /tmp/hv
+  strings -a /tmp/hv/base/lib/arm64-v8a/libhermesvm.so | grep -oE '25082909[0-9]\.[0-9]+\.[0-9]+' | sort -u
+  ```
+
+  Measured on 2026-09-18: versionCode 11 returned `250829098.0.14` and versionCode 12
+  returned `250829098.0.17`, which is what actually proved the fix had shipped.
+
 ### Fixed since
 
 `store/screenshots/04-home-dashboard.png` showed "Good afternoon, Anaya" and an "AK" avatar from
