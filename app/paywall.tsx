@@ -3,13 +3,13 @@ import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, OutlineButton, PrimaryButton, Rule } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { premiumTotals } from '@/content';
 import { redeem, redeemMessage, useAccess } from '@/access';
 import { MANAGE_SUBSCRIPTION_URL, purchasePackage } from '@/purchases';
 import { useAccessStore } from '@/store/useAccessStore';
 import { openExternal } from '@/share';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * The paywall, which has to be honest in five states.
@@ -20,6 +20,7 @@ import { openExternal } from '@/share';
  * a screen that renders a Subscribe button in all three is lying in two of them.
  */
 export default function Paywall() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const access = useAccess();
   const products = useAccessStore((s) => s.products);
@@ -212,6 +213,7 @@ export default function Paywall() {
 // ---------------------------------------------------------------------------
 
 function Offer({ totals }: { totals: ReturnType<typeof premiumTotals> }) {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>Go deeper than the core</Text>
@@ -229,6 +231,7 @@ function Offer({ totals }: { totals: ReturnType<typeof premiumTotals> }) {
 }
 
 function Grandfathered() {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>You already have all of it</Text>
@@ -241,6 +244,7 @@ function Grandfathered() {
 }
 
 function Subscribed() {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>Your subscription is active</Text>
@@ -253,6 +257,7 @@ function Subscribed() {
 }
 
 function PromoHeld({ days }: { days: number }) {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>
@@ -267,6 +272,7 @@ function PromoHeld({ days }: { days: number }) {
 }
 
 function Unavailable() {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>Nothing is for sale here yet</Text>

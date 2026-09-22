@@ -1,9 +1,8 @@
 import React, { forwardRef, type ComponentType } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { TabTriggerSlotProps } from 'expo-router/ui';
 import type { LucideProps } from 'lucide-react-native';
-import { color } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * A single tab item: an 18px glyph plus a 10px label, ink when active and
@@ -23,6 +22,7 @@ export const TabButton = forwardRef<
   View,
   TabTriggerSlotProps & { label: string; icon: ComponentType<LucideProps> }
 >(({ label, icon: Icon, isFocused, ...props }, ref) => {
+  const { c: color, type } = useTheme();
   const tint = isFocused ? color.ink : color.tabInactive;
 
   return (
@@ -42,14 +42,20 @@ export const TabButton = forwardRef<
 
 TabButton.displayName = 'TabButton';
 
-export const tabBarStyle = StyleSheet.create({
-  bar: {
+/**
+ * The bar itself carries the screen background, so it cannot be a module-level
+ * `StyleSheet.create` any more — it is a hook now, called by the tabs layout.
+ */
+export function useTabBarStyle(): ViewStyle {
+  const { c: color } = useTheme();
+
+  return {
     flexDirection: 'row',
     borderTopWidth: StyleSheet.hairlineWidth * 2,
-    borderTopColor: 'rgba(22,35,59,.13)',
+    borderTopColor: color.tabRule,
     backgroundColor: color.paper,
-  },
-}).bar;
+  };
+}
 
 const styles = StyleSheet.create({
   item: {

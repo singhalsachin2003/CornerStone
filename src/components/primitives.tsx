@@ -10,8 +10,9 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { color, radius, shadow } from '@/theme/tokens';
-import { eyebrow, type } from '@/theme/type';
+import { radius, shadow } from '@/theme/tokens';
+import { eyebrow } from '@/theme/type';
+import { useTheme } from '@/theme/useTheme';
 
 // ---------------------------------------------------------------------------
 
@@ -27,8 +28,10 @@ export function Eyebrow({
   tracking?: number;
   style?: StyleProp<TextStyle>;
 }) {
+  const { c: color } = useTheme();
+
   return (
-    <Text {...rest} style={[eyebrow(size, tracking), style]}>
+    <Text {...rest} style={[eyebrow(color, size, tracking), style]}>
       {children}
     </Text>
   );
@@ -48,6 +51,8 @@ export function PrimaryButton({
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
+  const { c: color, type } = useTheme();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -80,6 +85,8 @@ export function OutlineButton({
   labelStyle?: StyleProp<TextStyle>;
   accessibilityHint?: string;
 }) {
+  const { c: color, type } = useTheme();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -88,7 +95,7 @@ export function OutlineButton({
       onPress={onPress}
       style={({ pressed }) => [
         styles.outline,
-        { borderColor: pressed ? color.ink : 'rgba(22,35,59,.22)' },
+        { borderColor: pressed ? color.ink : color.outlineRule },
         style,
       ]}
     >
@@ -101,7 +108,7 @@ export function OutlineButton({
 export function BackLink({
   label,
   onPress,
-  tint = color.muted,
+  tint,
   style,
 }: {
   label: string;
@@ -109,6 +116,8 @@ export function BackLink({
   tint?: string;
   style?: StyleProp<ViewStyle>;
 }) {
+  const { c: color, type } = useTheme();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -116,7 +125,7 @@ export function BackLink({
       hitSlop={12}
       style={[{ alignSelf: 'flex-start' }, style]}
     >
-      <Text style={[type.navLink, { color: tint }]}>{label}</Text>
+      <Text style={[type.navLink, { color: tint ?? color.muted }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -137,6 +146,8 @@ export function SelectableCard({
   style?: StyleProp<ViewStyle>;
   radiusValue?: number;
 }) {
+  const { c: color } = useTheme();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -164,6 +175,7 @@ export function SelectableCard({
 export function Toggle({ value, onToggle }: { value: boolean; onToggle: () => void }) {
   const anim = useRef(new Animated.Value(value ? 1 : 0)).current;
   const reducedMotion = useReducedMotion();
+  const { c: color } = useTheme();
 
   useEffect(() => {
     Animated.timing(anim, {
@@ -176,7 +188,7 @@ export function Toggle({ value, onToggle }: { value: boolean; onToggle: () => vo
   const left = anim.interpolate({ inputRange: [0, 1], outputRange: [3, 21] });
   const track = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgba(22,35,59,0.2)', color.sage],
+    outputRange: [color.ring, color.sage],
   });
 
   return (
@@ -243,8 +255,8 @@ export function SegmentedBar({
 export function ProgressTrack({
   pct,
   height = 2,
-  trackColor = color.track,
-  fillColor = color.ink,
+  trackColor,
+  fillColor,
   style,
 }: {
   pct: number;
@@ -253,10 +265,16 @@ export function ProgressTrack({
   fillColor?: string;
   style?: StyleProp<ViewStyle>;
 }) {
+  const { c: color } = useTheme();
+
   return (
-    <View style={[{ height, backgroundColor: trackColor }, style]}>
+    <View style={[{ height, backgroundColor: trackColor ?? color.track }, style]}>
       <View
-        style={{ height, width: `${Math.max(0, Math.min(100, pct))}%`, backgroundColor: fillColor }}
+        style={{
+          height,
+          width: `${Math.max(0, Math.min(100, pct))}%`,
+          backgroundColor: fillColor ?? color.ink,
+        }}
       />
     </View>
   );
@@ -265,14 +283,17 @@ export function ProgressTrack({
 // ---------------------------------------------------------------------------
 
 /** Hairline divider. */
-export function Rule({
-  style,
-  tone = color.ruleSoft,
-}: {
-  style?: StyleProp<ViewStyle>;
-  tone?: string;
-}) {
-  return <View style={[{ height: StyleSheet.hairlineWidth * 2, backgroundColor: tone }, style]} />;
+export function Rule({ style, tone }: { style?: StyleProp<ViewStyle>; tone?: string }) {
+  const { c: color } = useTheme();
+
+  return (
+    <View
+      style={[
+        { height: StyleSheet.hairlineWidth * 2, backgroundColor: tone ?? color.ruleSoft },
+        style,
+      ]}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

@@ -4,8 +4,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, ProgressTrack } from '@/components/primitives';
 import { Ring } from '@/components/Ring';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { EXAMS, cardsFor, topicsFor } from '@/content';
 import {
   GUEST_NAME,
@@ -16,8 +15,10 @@ import {
   weekStrip,
   weightedProgress,
 } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function Home() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const levelKey = useStudyStore((s) => s.level);
@@ -125,12 +126,12 @@ export default function Home() {
               width: 38,
               height: 38,
               borderRadius: 19,
-              backgroundColor: color.ink,
+              backgroundColor: color.emphasis,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.paper }}>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.onEmphasis }}>
               {initials}
             </Text>
           </Pressable>
@@ -141,7 +142,7 @@ export default function Home() {
           style={{
             marginTop: 18,
             borderWidth: 1,
-            borderColor: 'rgba(22,35,59,.12)',
+            borderColor: color.hairline,
             backgroundColor: color.surface,
             borderRadius: radius.card,
             padding: 18,
@@ -173,7 +174,7 @@ export default function Home() {
                   DAY STREAK
                 </Eyebrow>
               </View>
-              <View style={{ width: 1, backgroundColor: 'rgba(22,35,59,.12)' }} />
+              <View style={{ width: 1, backgroundColor: color.hairline }} />
               <View>
                 <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.ink }}>
                   {due}
@@ -198,7 +199,7 @@ export default function Home() {
                   backgroundColor: d.studied
                     ? color.brass
                     : d.isToday
-                      ? 'rgba(154,107,47,.35)'
+                      ? color.brassRuleSoft
                       : 'transparent',
                   borderWidth: d.isFuture ? 1 : 0,
                   borderColor: color.ruleStrong,
@@ -221,7 +222,7 @@ export default function Home() {
               accessibilityRole="button"
               onPress={() => router.push({ pathname: '/snapshot', params: { topic: resume.key } })}
               style={({ pressed }) => ({
-                backgroundColor: pressed ? color.inkHover : color.ink,
+                backgroundColor: pressed ? color.emphasisHover : color.emphasis,
                 borderRadius: radius.card,
                 padding: 18,
               })}
@@ -233,23 +234,23 @@ export default function Home() {
                   alignItems: 'baseline',
                 }}
               >
-                <Eyebrow size={9.5} tracking={0.12} style={{ color: color.onInkFaint }}>
+                <Eyebrow size={9.5} tracking={0.12} style={{ color: color.onEmphasisFaint }}>
                   {resumePct > 0 ? 'IN PROGRESS' : 'START HERE'}
                 </Eyebrow>
                 <Text
                   style={{
                     fontFamily: font.sansSemi,
                     fontSize: 11,
-                    color: 'rgba(247,244,238,.75)',
+                    color: color.onEmphasisMuted,
                   }}
                 >
                   {resumePct}%
                 </Text>
               </View>
-              <Text style={[type.serif20, { color: color.onInk, marginTop: 8 }]}>
+              <Text style={[type.serif20, { color: color.onEmphasis, marginTop: 8 }]}>
                 {resume.name}
               </Text>
-              <Text style={[type.secondary, { color: color.onInkMuted, marginTop: 6 }]}>
+              <Text style={[type.secondary, { color: color.onEmphasisMuted, marginTop: 6 }]}>
                 {cardsFor(resume.key).length} snapshot cards ·{' '}
                 {(cardProgress[resume.key] ?? 0) > 0
                   ? 'quiz unlocked'
@@ -258,7 +259,7 @@ export default function Home() {
               <ProgressTrack
                 pct={resumePct}
                 height={3}
-                trackColor={color.onInkTrack}
+                trackColor={color.onEmphasisTrack}
                 fillColor={color.brassOnDark}
                 style={{ marginTop: 14 }}
               />
@@ -290,7 +291,7 @@ export default function Home() {
             style={({ pressed }) => ({
               flex: 1,
               borderWidth: 1,
-              borderColor: pressed ? color.brass : 'rgba(154,107,47,.4)',
+              borderColor: pressed ? color.brass : color.brassRule,
               backgroundColor: color.brassTintBg,
               borderRadius: radius.card,
               padding: 14,

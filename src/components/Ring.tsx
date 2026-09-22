@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { color } from '@/theme/tokens';
+import { useTheme } from '@/theme/useTheme';
 
 interface Props {
   size: number;
@@ -24,12 +24,13 @@ export function Ring({
   size,
   innerSize,
   pct,
-  trackColor = color.track,
+  trackColor,
   fillColor,
-  innerColor = color.surface,
+  innerColor,
   children,
   style,
 }: Props) {
+  const { c: color } = useTheme();
   const stroke = (size - innerSize) / 2;
   const r = (size - stroke) / 2;
   const circumference = 2 * Math.PI * r;
@@ -45,7 +46,7 @@ export function Ring({
           cx={size / 2}
           cy={size / 2}
           r={r}
-          stroke={trackColor}
+          stroke={trackColor ?? color.track}
           strokeWidth={stroke}
           fill="none"
         />
@@ -68,7 +69,7 @@ export function Ring({
           width: innerSize,
           height: innerSize,
           borderRadius: innerSize / 2,
-          backgroundColor: innerColor,
+          backgroundColor: innerColor ?? color.surface,
           alignItems: 'center',
           justifyContent: 'center',
         }}

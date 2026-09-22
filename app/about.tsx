@@ -4,9 +4,9 @@ import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Rule } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { ALL_TOPICS, cardsFor, questionsFor } from '@/content';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * About / Legal.
@@ -17,6 +17,7 @@ import { ALL_TOPICS, cardsFor, questionsFor } from '@/content';
  * never take this app's figures as authoritative over the official outline.
  */
 export default function About() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
 
   const cards = ALL_TOPICS.reduce((n, t) => n + cardsFor(t.key).length, 0);
@@ -109,22 +110,25 @@ export default function About() {
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const { c: color } = useTheme();
   return (
     <View style={{ marginTop: 26 }}>
       <Eyebrow size={10} tracking={0.14} style={{ marginBottom: 10 }}>
         {title}
       </Eyebrow>
-      <Rule tone="rgba(22,35,59,.12)" />
+      <Rule tone={color.hairline} />
       <View style={{ gap: 12, marginTop: 12 }}>{children}</View>
     </View>
   );
 }
 
 function Body({ children }: { children: React.ReactNode }) {
+  const { c: color, type } = useTheme();
   return <Text style={[type.body, { color: color.inkBody }]}>{children}</Text>;
 }
 
 function Callout({ children }: { children: React.ReactNode }) {
+  const { c: color, type } = useTheme();
   return (
     <View
       style={{
@@ -141,6 +145,7 @@ function Callout({ children }: { children: React.ReactNode }) {
 }
 
 function LinkRow({ label, url }: { label: string; url: string }) {
+  const { c: color, type } = useTheme();
   return (
     <Text
       accessibilityRole="link"

@@ -4,10 +4,10 @@ import { Lock } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Rule } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { Segment, segmentsFor, topicByKey } from '@/content';
 import { useAccess } from '@/access';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * The segments inside one topic area.
@@ -18,6 +18,7 @@ import { useAccess } from '@/access';
  * conceals what is behind it is asking to be bought on trust.
  */
 export default function Segments() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const { topic: topicKey } = useLocalSearchParams<{ topic: string }>();
   const access = useAccess();

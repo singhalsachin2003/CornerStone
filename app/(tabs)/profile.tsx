@@ -4,13 +4,13 @@ import { ExternalLink, LineChart } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, Toggle } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { EXAMS, PATHWAYS, formatExamDate, topicsFor } from '@/content';
 import {
   GUEST_NAME,
   bookmarkCount,
   Settings,
+  ThemePreference,
   TopicVariant,
   currentStreak,
   useStudyStore,
@@ -28,6 +28,7 @@ import {
   scheduleDailyReminder,
   syncDailyReminder,
 } from '@/notifications';
+import { useTheme } from '@/theme/useTheme';
 
 const SETTING_ROWS: { key: keyof Settings; name: string; note: string }[] = [
   {
@@ -49,7 +50,14 @@ const VARIANTS: { key: TopicVariant; label: string }[] = [
   { key: 'c', label: 'Index' },
 ];
 
+const THEMES: { key: ThemePreference; label: string }[] = [
+  { key: 'system', label: 'System' },
+  { key: 'light', label: 'Light' },
+  { key: 'dark', label: 'Dark' },
+];
+
 export default function Profile() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const levelKey = useStudyStore((s) => s.level);
@@ -62,6 +70,8 @@ export default function Profile() {
   const toggleSetting = useStudyStore((s) => s.toggleSetting);
   const variant = useStudyStore((s) => s.variant);
   const setVariant = useStudyStore((s) => s.setVariant);
+  const themePreference = useStudyStore((s) => s.themePreference);
+  const setThemePreference = useStudyStore((s) => s.setThemePreference);
   const access = useAccess();
   const syncEmail = useSyncStore((s) => s.email);
   const studyDays = useStudyStore((s) => s.studyDays);
@@ -156,12 +166,12 @@ export default function Profile() {
               width: 56,
               height: 56,
               borderRadius: 28,
-              backgroundColor: color.ink,
+              backgroundColor: color.emphasis,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.paper }}>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 18, color: color.onEmphasis }}>
               {initials}
             </Text>
           </View>
@@ -275,7 +285,7 @@ export default function Profile() {
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           STUDY
         </Eyebrow>
-        <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)' }}>
+        <View style={{ borderTopWidth: 1, borderTopColor: color.hairline }}>
           {SETTING_ROWS.map((row) => (
             <View
               key={row.key}
@@ -306,50 +316,24 @@ export default function Profile() {
           ))}
         </View>
 
-        {/* APPEARANCE — the three topic treatments from the handoff */}
+        {/* APPEARANCE — the theme, then the three topic treatments from the handoff */}
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           APPEARANCE
         </Eyebrow>
-        <View
-          style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)', paddingVertical: 15 }}
-        >
-          <Text style={type.rowLabel}>Topic list style</Text>
-          <Text style={[type.meta, { marginTop: 3 }]}>
-            Index also switches snapshot cards to the dark treatment.
-          </Text>
-          <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
-            {VARIANTS.map((v) => {
-              const active = variant === v.key;
-              return (
-                <Pressable
-                  key={v.key}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected: active }}
-                  onPress={() => setVariant(v.key)}
-                  style={{
-                    flex: 1,
-                    paddingVertical: 10,
-                    borderWidth: 1,
-                    borderRadius: radius.button,
-                    borderColor: active ? color.ink : color.ruleStrong,
-                    backgroundColor: active ? color.ink : 'transparent',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: font.sansSemi,
-                      fontSize: 12.5,
-                      color: active ? color.paper : color.ink,
-                    }}
-                  >
-                    {v.label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
+        <RadioRow
+          label="Theme"
+          note="System follows your phone's light or dark setting."
+          options={THEMES}
+          selected={themePreference}
+          onSelect={setThemePreference}
+        />
+        <RadioRow
+          label="Topic list style"
+          note="Index also switches snapshot cards to the dark treatment."
+          options={VARIANTS}
+          selected={variant}
+          onSelect={setVariant}
+        />
 
         {/* YOUR STUDIES — renamed from ACCOUNT. The sign-in card above took that
             heading when backup was added, and two sections called ACCOUNT on one
@@ -358,7 +342,7 @@ export default function Profile() {
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 8 }}>
           YOUR STUDIES
         </Eyebrow>
-        <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)' }}>
+        <View style={{ borderTopWidth: 1, borderTopColor: color.hairline }}>
           <DisclosureRow
             label="Switch exam or level"
             value={`${otherExam ? `${exam.name} · ${otherExam} also started` : `${exam.name} ${level?.name}`} →`}
@@ -400,6 +384,7 @@ export default function Profile() {
  * would cost more than the install it might win.
  */
 function MoreFromUs() {
+  const { c: color, type } = useTheme();
   return (
     <Pressable
       accessibilityRole="link"
@@ -410,7 +395,7 @@ function MoreFromUs() {
         alignItems: 'center',
         gap: 13,
         borderWidth: 1,
-        borderColor: 'rgba(22,35,59,.12)',
+        borderColor: color.hairline,
         backgroundColor: color.surface,
         borderRadius: radius.card,
         padding: 15,
@@ -443,27 +428,81 @@ function MoreFromUs() {
   );
 }
 
-function StatTile({
-  value,
+/** The three-button radio used by both Appearance settings. */
+function RadioRow<K extends string>({
   label,
-  tint = color.ink,
+  note,
+  options,
+  selected,
+  onSelect,
 }: {
-  value: string;
   label: string;
-  tint?: string;
+  note: string;
+  options: { key: K; label: string }[];
+  selected: K;
+  onSelect: (key: K) => void;
 }) {
+  const { c: color, type } = useTheme();
+
+  return (
+    <View style={{ borderTopWidth: 1, borderTopColor: color.hairline, paddingVertical: 15 }}>
+      <Text style={type.rowLabel}>{label}</Text>
+      <Text style={[type.meta, { marginTop: 3 }]}>{note}</Text>
+      <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
+        {options.map((o) => {
+          const active = selected === o.key;
+          return (
+            <Pressable
+              key={o.key}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={`${label}: ${o.label}`}
+              onPress={() => onSelect(o.key)}
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderRadius: radius.button,
+                borderColor: active ? color.ink : color.ruleStrong,
+                backgroundColor: active ? color.ink : 'transparent',
+                alignItems: 'center',
+                minHeight: 44,
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: font.sansSemi,
+                  fontSize: 12.5,
+                  color: active ? color.onInk : color.ink,
+                }}
+              >
+                {o.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function StatTile({ value, label, tint }: { value: string; label: string; tint?: string }) {
+  const { c: color } = useTheme();
   return (
     <View
       style={{
         flex: 1,
         borderWidth: 1,
-        borderColor: 'rgba(22,35,59,.12)',
+        borderColor: color.hairline,
         backgroundColor: color.surface,
         borderRadius: radius.row,
         padding: 13,
       }}
     >
-      <Text style={{ fontFamily: font.serifSemi, fontSize: 19, color: tint }}>{value}</Text>
+      <Text style={{ fontFamily: font.serifSemi, fontSize: 19, color: tint ?? color.ink }}>
+        {value}
+      </Text>
       <Eyebrow size={9} tracking={0.04} style={{ marginTop: 5 }}>
         {label}
       </Eyebrow>
@@ -480,6 +519,7 @@ function DisclosureRow({
   value: string;
   onPress?: () => void;
 }) {
+  const { c: color } = useTheme();
   return (
     <Pressable
       accessibilityRole={onPress ? 'button' : 'text'}

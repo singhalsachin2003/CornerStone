@@ -3,9 +3,9 @@ import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, PrimaryButton } from '@/components/primitives';
-import { color, font, gutter } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter } from '@/theme/tokens';
 import { useStudyStore } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 const POINTS = [
   'Snapshots are swipeable cards — front concept, back detail.',
@@ -14,6 +14,7 @@ const POINTS = [
 ];
 
 export default function Onboarding() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const completeOnboarding = useStudyStore((s) => s.completeOnboarding);
 

@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import * as SystemUI from 'expo-system-ui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
@@ -18,11 +19,11 @@ import {
   SourceSerif4_600SemiBold,
   SourceSerif4_700Bold,
 } from '@expo-google-fonts/source-serif-4';
-import { color } from '@/theme/tokens';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useAccessStore } from '@/store/useAccessStore';
 import { useSyncStore } from '@/store/useSyncStore';
 import { isPreExistingInstall } from '@/access';
+import { useTheme } from '@/theme/useTheme';
 
 // expo-router renders this for any uncaught error in the route tree.
 export { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -30,6 +31,7 @@ export { ErrorBoundary } from '@/components/ErrorBoundary';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
+  const { c: color, scheme } = useTheme();
   const [fontsLoaded] = useFonts({
     Archivo_400Regular,
     Archivo_500Medium,
@@ -47,6 +49,13 @@ export default function RootLayout() {
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
+
+  // The window background sits *behind* the React tree — it is what shows during
+  // a push animation and while the JS thread is busy. Left cream, it flashes on
+  // every navigation in dark mode.
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(color.paper).catch(() => {});
+  }, [color.paper]);
 
   // Grandfathering is decided here, once, the moment both stores are readable and
   // before the first screen paints. Anyone whose install already shows use — they
@@ -85,7 +94,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: color.paper }}>
       <SafeAreaProvider>
-        <StatusBar style="dark" />
+        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
         <Stack
           screenOptions={{
             headerShown: false,

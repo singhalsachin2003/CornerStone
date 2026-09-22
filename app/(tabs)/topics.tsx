@@ -5,16 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, ProgressTrack } from '@/components/primitives';
 import { Search, X } from 'lucide-react-native';
 import { Ring } from '@/components/Ring';
-import {
-  color,
-  font,
-  gutter,
-  masteryColor,
-  masteryTextColor,
-  masteryWord,
-  radius,
-} from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, masteryColor, masteryTextColor, masteryWord, radius } from '@/theme/tokens';
 import {
   EXAMS,
   TopicArea,
@@ -25,6 +16,7 @@ import {
 } from '@/content';
 import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
 import { useAccess } from '@/access';
+import { useTheme } from '@/theme/useTheme';
 
 const VARIANT_TAG: Record<TopicVariant, string> = {
   a: 'LEDGER',
@@ -33,6 +25,7 @@ const VARIANT_TAG: Record<TopicVariant, string> = {
 };
 
 export default function Topics() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const levelKey = useStudyStore((s) => s.level);
@@ -203,6 +196,7 @@ function countsFor(topicKey: string, premium: boolean) {
 // --- A · Ledger --------------------------------------------------------------
 
 function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View style={{ borderTopWidth: 1, borderTopColor: color.rule }}>
       {topics.map((t, i) => {
@@ -246,7 +240,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
                   fontWeight: '600',
                   fontSize: 11.5,
                   lineHeight: 16,
-                  color: masteryTextColor(pct),
+                  color: masteryTextColor(pct, color),
                 }}
               >
                 {pct}%
@@ -255,7 +249,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
             <ProgressTrack
               pct={pct}
               height={2}
-              fillColor={masteryColor(pct)}
+              fillColor={masteryColor(pct, color)}
               style={{ marginTop: 11 }}
             />
           </Pressable>
@@ -268,6 +262,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
 // --- B · Ring tiles (default) ------------------------------------------------
 
 function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View
       style={{
@@ -292,7 +287,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
               flexGrow: 1,
               flexBasis: '46%',
               borderWidth: 1,
-              borderColor: pressed ? color.ink : 'rgba(22,35,59,.13)',
+              borderColor: pressed ? color.ink : color.tabRule,
               backgroundColor: color.surface,
               borderRadius: radius.card,
               padding: 14,
@@ -306,7 +301,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
                 alignItems: 'flex-start',
               }}
             >
-              <Ring size={40} innerSize={31} pct={pct} fillColor={masteryColor(pct)}>
+              <Ring size={40} innerSize={31} pct={pct} fillColor={masteryColor(pct, color)}>
                 <Text
                   style={{
                     fontFamily: font.mono,
@@ -337,6 +332,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
 // --- C · Index ---------------------------------------------------------------
 
 function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View style={{ paddingHorizontal: gutter.screen, paddingTop: 4 }}>
       {topics.map((t, i) => {
@@ -354,7 +350,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
               alignItems: 'flex-start',
               paddingVertical: 18,
               borderBottomWidth: 1,
-              borderBottomColor: 'rgba(22,35,59,.12)',
+              borderBottomColor: color.hairline,
               opacity: pressed ? 0.72 : 1,
             })}
           >
@@ -364,7 +360,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
                 fontSize: 40,
                 lineHeight: 34,
                 width: 52,
-                color: pct > 0 ? color.brass : 'rgba(22,35,59,.22)',
+                color: pct > 0 ? color.brass : color.faintFg,
               }}
             >
               {String(i + 1).padStart(2, '0')}
@@ -383,7 +379,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
                     style={{
                       width: 12,
                       height: 5,
-                      backgroundColor: k < filled ? color.ink : 'rgba(22,35,59,.14)',
+                      backgroundColor: k < filled ? color.ink : color.trackStrong,
                     }}
                   />
                 ))}

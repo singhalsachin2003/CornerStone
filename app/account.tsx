@@ -11,8 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, OutlineButton, PrimaryButton, Rule } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { isSyncConfigured } from '@/sync/client';
 import {
   deleteAccount,
@@ -23,6 +22,7 @@ import {
   signUp,
 } from '@/sync/auth';
 import { useSyncStore } from '@/store/useSyncStore';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * Signing in, and backing progress up.
@@ -34,6 +34,7 @@ import { useSyncStore } from '@/store/useSyncStore';
  * than promising a backup and delivering one.
  */
 export default function Account() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const configured = isSyncConfigured();
 
@@ -291,6 +292,7 @@ function describeLastSync(at: number | null): string {
 }
 
 function NotConfigured() {
+  const { type } = useTheme();
   return (
     <>
       <Text style={[type.sectionTitle, { marginTop: 12 }]}>Accounts are not in this build</Text>
@@ -311,6 +313,7 @@ function ModeTab({
   active: boolean;
   onPress: () => void;
 }) {
+  const { c: color, type } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
@@ -331,6 +334,7 @@ function ModeTab({
 }
 
 function Field({ label, ...rest }: React.ComponentProps<typeof TextInput> & { label: string }) {
+  const { c: color } = useTheme();
   return (
     <View style={{ marginTop: 16 }}>
       <Eyebrow size={9} tracking={0.12}>

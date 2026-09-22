@@ -13,17 +13,19 @@ import Animated, {
 } from 'react-native-reanimated';
 import { BackLink, Eyebrow, SegmentedBar } from '@/components/primitives';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { color, font, gutter, radius, shadow } from '@/theme/tokens';
-import { monoBlock, type } from '@/theme/type';
+import { ColorTokens, font, gutter, radius, shadow } from '@/theme/tokens';
+import { monoBlockFor } from '@/theme/type';
 import { accessibleCardsFor, accessibleQuestionEntries, segmentByKey, topicByKey } from '@/content';
 import { useAccess } from '@/access';
 import { TopicVariant, isBookmarked, useStudyStore } from '@/store/useStudyStore';
 import { buildSegmentSession, buildTopicSession, useSessionStore } from '@/store/useSessionStore';
+import { useTheme } from '@/theme/useTheme';
 
 /** Release beyond ±70px commits the card, per the interaction spec. */
 const COMMIT = 70;
 
 export default function Snapshot() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const { topic: topicKey, segment: segmentSlug } = useLocalSearchParams<{
     topic: string;
@@ -68,7 +70,7 @@ export default function Snapshot() {
   const dragX = useSharedValue(0);
   const reducedMotion = useReducedMotion();
 
-  const t = tokensFor(variant);
+  const t = tokensFor(variant, color);
   const card = cards[idx];
   const total = cards.length;
   const isLast = idx + 1 >= total;
@@ -287,7 +289,9 @@ export default function Snapshot() {
                       <Eyebrow size={8.5} tracking={0.14} style={{ color: t.muted }}>
                         FORMULA
                       </Eyebrow>
-                      <Text style={[monoBlock, { color: t.fg, marginTop: 8 }]}>{card.formula}</Text>
+                      <Text style={[monoBlockFor(color), { color: t.fg, marginTop: 8 }]}>
+                        {card.formula}
+                      </Text>
                     </View>
                   )}
 
@@ -360,7 +364,7 @@ export default function Snapshot() {
               alignItems: 'center',
               justifyContent: 'center',
               opacity: idx === 0 ? 0.4 : 1,
-              backgroundColor: pressed ? 'rgba(22,35,59,.06)' : 'transparent',
+              backgroundColor: pressed ? color.pressWash : 'transparent',
             })}
           >
             <Text style={{ fontFamily: font.sans, fontSize: 17, color: t.fg }}>←</Text>
@@ -391,7 +395,7 @@ export default function Snapshot() {
 }
 
 /** Per-variant snapshot styling, straight from the handoff's variant table. */
-function tokensFor(v: TopicVariant) {
+function tokensFor(v: TopicVariant, color: ColorTokens) {
   const dark = v === 'c';
   return {
     screenBg: dark ? color.darkScreenBg : v === 'a' ? color.paper : color.paperAlt,
@@ -400,19 +404,19 @@ function tokensFor(v: TopicVariant) {
     muted: dark ? color.darkMuted : color.muted,
     cardBg: dark ? color.darkCardBg : color.surface,
     cardBd: dark ? color.darkRule : color.rule,
-    stackBg1: dark ? color.darkStack1 : '#fbf8f2',
-    stackBg2: dark ? color.darkStack2 : '#f7f3ea',
-    stackBd: dark ? 'rgba(244,241,234,.1)' : 'rgba(22,35,59,.09)',
+    stackBg1: dark ? color.darkStack1 : color.cardStack1,
+    stackBg2: dark ? color.darkStack2 : color.cardStack2,
+    stackBd: dark ? 'rgba(244,241,234,.1)' : color.cardStackRule,
     radius: v === 'a' ? radius.snapA : v === 'b' ? radius.snapB : radius.snapC,
     pad: v === 'a' ? 20 : 24,
     kicker: dark ? color.brassOnDark : color.brass,
     bigNum: dark ? 52 : 30,
-    bigNumFg: dark ? 'rgba(244,241,234,.22)' : 'rgba(22,35,59,.16)',
+    bigNumFg: dark ? 'rgba(244,241,234,.22)' : color.cardBigNum,
     titleSize: dark ? 27 : 24,
-    formulaBd: dark ? color.darkRule : 'rgba(22,35,59,.12)',
-    formulaBg: dark ? 'rgba(244,241,234,.05)' : '#f5f1e7',
+    formulaBd: dark ? color.darkRule : color.hairline,
+    formulaBg: dark ? 'rgba(244,241,234,.05)' : color.formulaBg,
     ctaBg: dark ? color.brassOnDark : color.ink,
-    ctaFg: dark ? color.darkScreenBg : color.paper,
+    ctaFg: dark ? color.darkScreenBg : color.onInk,
     dotOn: dark ? color.brassOnDark : color.ink,
     dotOff: dark ? 'rgba(247,244,238,.22)' : color.rule,
   };
