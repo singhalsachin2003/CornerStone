@@ -66,3 +66,7 @@ store/feature-graphic@2x.png
 
 # Written by the build poll; a transient URL, not a fact worth tracking.
 .aab-url.txt
+
+# Where downloads from a chat session land. The posters that matter live in
+# marketing/social-v2/; this is the unpacked copy they arrived in.
+Claude outputs/
