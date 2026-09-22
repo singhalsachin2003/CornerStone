@@ -5,15 +5,16 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, OutlineButton, PrimaryButton } from '@/components/primitives';
 import { Ring } from '@/components/Ring';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { EXAMS, topicByKey } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useSessionStore } from '@/store/useSessionStore';
 import { resultShareMessage, shareText } from '@/share';
 import { maybeAskForReview } from '@/storeReview';
+import { useTheme } from '@/theme/useTheme';
 
 export default function Results() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const recordSession = useStudyStore((s) => s.recordSession);
   const setLevel = useStudyStore((s) => s.setLevel);
@@ -100,7 +101,7 @@ export default function Results() {
             gap: 14,
             alignItems: 'center',
             borderWidth: 1,
-            borderColor: 'rgba(22,35,59,.12)',
+            borderColor: color.hairline,
             backgroundColor: color.surface,
             borderRadius: radius.card,
             padding: 18,
@@ -135,7 +136,7 @@ export default function Results() {
         <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 10 }}>
           QUESTION BREAKDOWN
         </Eyebrow>
-        <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(22,35,59,.12)' }}>
+        <View style={{ borderTopWidth: 1, borderTopColor: color.hairline }}>
           {questions.map((q, i) => {
             const a = answers[i];
             const bg = a ? (a.ok ? color.sage : color.rust) : color.rule;
@@ -209,7 +210,7 @@ export default function Results() {
             style={{
               marginTop: 18,
               borderWidth: 1,
-              borderColor: 'rgba(154,107,47,.38)',
+              borderColor: color.brassRule,
               backgroundColor: color.brassTintBg,
               borderRadius: radius.row,
               paddingVertical: 15,
@@ -290,6 +291,7 @@ function PlacementRecommendation({
   examKey: 'CFA' | 'FRM';
   onAccept: (levelKey: any) => void;
 }) {
+  const { c: color, type } = useTheme();
   const exam = EXAMS[examKey];
   // Below 50% start at the first level; above 80% the candidate can start higher.
   const idx = pct >= 80 ? Math.min(1, exam.levels.length - 1) : 0;
@@ -325,18 +327,21 @@ function PlacementRecommendation({
 function StatRow({
   label,
   value,
-  valueColor = color.ink,
+  valueColor,
 }: {
   label: string;
   value: string;
   valueColor?: string;
 }) {
+  const { c: color } = useTheme();
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <Text style={{ fontFamily: font.sans, fontSize: 12.5, color: color.bodyOnPaper }}>
         {label}
       </Text>
-      <Text style={{ fontFamily: font.sansSemi, fontSize: 12.5, color: valueColor }}>{value}</Text>
+      <Text style={{ fontFamily: font.sansSemi, fontSize: 12.5, color: valueColor ?? color.ink }}>
+        {value}
+      </Text>
     </View>
   );
 }

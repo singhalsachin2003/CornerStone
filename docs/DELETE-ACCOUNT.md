@@ -6,18 +6,24 @@ An account in Cornerstone is optional. It exists only to back your study progres
 a reinstall or a new phone does not start you over. If you have never created one, there is
 nothing to delete — nothing about your studying has ever left your device.
 
-## How to request deletion
+## How to delete it, in the app
 
-Email **singhalsachin2003@gmail.com** from the address your account uses, with the subject
-**Delete my account**.
+Open Cornerstone and go to **Profile → Account → Delete account**, then confirm. The account
+and everything backed up under it are removed immediately, and the app returns to its
+signed-out state with your progress still on the device.
 
-That is the whole process. You will get a reply confirming the deletion. If you email from a
-different address, you will be asked to confirm ownership of the account address first —
-otherwise anyone could delete anyone's data by knowing their email address.
+This is the whole process and it needs no email.
 
-There is no deletion button inside the app. Signing out, which the app does offer, does
-**not** delete anything: it leaves the data on your device exactly as it is and leaves the
-backup in place.
+## Or by email
+
+If you no longer have the app installed, email **singhalsachin2003@gmail.com** from the
+address your account uses, with the subject **Delete my account**. You will get a reply
+confirming the deletion. If you email from a different address, you will be asked to confirm
+ownership of the account address first — otherwise anyone could delete anyone's data by
+knowing their email address.
+
+**Signing out is not deleting.** The app offers both, and signing out leaves the data on your
+device exactly as it is and leaves the backup in place.
 
 ## What is deleted
 

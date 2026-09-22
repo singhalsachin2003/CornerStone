@@ -2,8 +2,8 @@ import React from 'react';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Layers, Repeat, User } from 'lucide-react-native';
-import { TabButton, tabBarStyle } from '@/components/TabBar';
-import { color } from '@/theme/tokens';
+import { TabButton, useTabBarStyle } from '@/components/TabBar';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * Tab bar appears on Home, Topics, Review and Profile only. Snapshot, quiz and
@@ -11,6 +11,8 @@ import { color } from '@/theme/tokens';
  */
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const { c: color } = useTheme();
+  const tabBarStyle = useTabBarStyle();
 
   return (
     <Tabs style={{ flex: 1, backgroundColor: color.paper }}>

@@ -6,7 +6,7 @@
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "backgroundColor": "#f7f4ee",
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -75,7 +75,10 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 160,
           "resizeMode": "contain",
-          "backgroundColor": "#f7f4ee"
+          "backgroundColor": "#f7f4ee",
+          "dark": {
+            "backgroundColor": "#131c2e"
+          }
         }
       ],
       [

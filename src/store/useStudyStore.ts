@@ -31,6 +31,8 @@ export { bookmarkCount, isBookmarked } from './syncMeta';
 
 export type TopicVariant = 'a' | 'b' | 'c';
 
+export type ThemePreference = 'system' | 'light' | 'dark';
+
 export interface Settings {
   spacedRepetition: boolean;
   dailyReminder: boolean;
@@ -59,6 +61,12 @@ interface StudyState {
   levelByExam: Partial<Record<ExamKey, LevelKey>>;
   pathway: PathwayKey;
   variant: TopicVariant;
+  /**
+   * Light, dark, or whatever the phone is set to. Persisted on the device and
+   * deliberately *not* synced: a phone in dark mode and a tablet in light is
+   * the normal case, and the profile row has no column for it.
+   */
+  themePreference: ThemePreference;
 
   /** Percentage mastery per topic key, 0–100. */
   mastery: Record<string, number>;
@@ -96,6 +104,7 @@ interface StudyState {
   setExamLevel: (exam: ExamKey, level: LevelKey) => void;
   setPathway: (p: PathwayKey) => void;
   setVariant: (v: TopicVariant) => void;
+  setThemePreference: (p: ThemePreference) => void;
   setName: (name: string) => void;
   toggleSetting: (key: keyof Settings) => void;
   markCardProgress: (topicKey: string, cardIdx: number) => void;
@@ -152,6 +161,7 @@ export const useStudyStore = create<StudyState>()(
       levelByExam: {},
       pathway: 'portfolio',
       variant: 'b',
+      themePreference: 'system',
 
       mastery: {},
       masteryUpdatedAt: {},
@@ -196,6 +206,7 @@ export const useStudyStore = create<StudyState>()(
         set((s) => ({ pathway, syncMeta: { ...s.syncMeta, profile: Date.now() } })),
       setVariant: (variant) =>
         set((s) => ({ variant, syncMeta: { ...s.syncMeta, profile: Date.now() } })),
+      setThemePreference: (themePreference) => set({ themePreference }),
       setName: (name) =>
         set((s) => ({
           name,

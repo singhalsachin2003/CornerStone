@@ -3,12 +3,14 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, PrimaryButton, SegmentedBar } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { monoGiven, type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
+import { monoGivenFor } from '@/theme/type';
 import { isBookmarked, useStudyStore } from '@/store/useStudyStore';
 import { useSessionStore } from '@/store/useSessionStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function Quiz() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const timedQuizzes = useStudyStore((s) => s.settings.timedQuizzes);
   const bookmarked = useStudyStore((s) => s.bookmarkedQuestions);
@@ -133,7 +135,7 @@ export default function Quiz() {
                 paddingVertical: 2,
               }}
             >
-              <Text style={monoGiven}>{q.given}</Text>
+              <Text style={monoGivenFor(color)}>{q.given}</Text>
             </View>
           )}
 
@@ -211,6 +213,7 @@ function Option({
   isAnswer: boolean;
   onPress: () => void;
 }) {
+  const { c: color, type } = useTheme();
   const showCorrect = answered && isAnswer;
   const showWrong = answered && isPick && !isAnswer;
 
@@ -245,7 +248,7 @@ function Option({
           height: 22,
           borderRadius: 11,
           borderWidth: 1,
-          borderColor: showCorrect ? color.sage : showWrong ? color.rust : 'rgba(22,35,59,.2)',
+          borderColor: showCorrect ? color.sage : showWrong ? color.rust : color.ring,
           backgroundColor: markBg,
           alignItems: 'center',
           justifyContent: 'center',

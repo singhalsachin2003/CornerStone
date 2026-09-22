@@ -3,15 +3,16 @@ import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, PrimaryButton, Rule } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { questionsFor, topicByKey } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { useAccess } from '@/access';
 import { BASE_INTERVALS, dayKey, dueItems, intervalForStep } from '@/store/review';
 import { buildReviewSession, useSessionStore } from '@/store/useSessionStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function Review() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const queue = useStudyStore((s) => s.reviewQueue);
   const spacedRepetition = useStudyStore((s) => s.settings.spacedRepetition);
@@ -76,7 +77,7 @@ export default function Review() {
               style={{
                 marginTop: 20,
                 borderWidth: 1,
-                borderColor: 'rgba(22,35,59,.12)',
+                borderColor: color.hairline,
                 backgroundColor: color.surface,
                 borderRadius: radius.card,
                 padding: 18,
@@ -91,9 +92,7 @@ export default function Review() {
                     DUE TODAY
                   </Eyebrow>
                 </View>
-                <View
-                  style={{ width: 1, alignSelf: 'stretch', backgroundColor: 'rgba(22,35,59,.12)' }}
-                />
+                <View style={{ width: 1, alignSelf: 'stretch', backgroundColor: color.hairline }} />
                 <View>
                   <Text style={{ fontFamily: font.serifSemi, fontSize: 26, color: color.ink }}>
                     {upcoming.length}
@@ -136,12 +135,13 @@ function Section({
   items: { id: string; topicKey: string; qIdx: number; step: number; dueOn: string }[];
   today: string;
 }) {
+  const { c: color, type } = useTheme();
   return (
     <>
       <Eyebrow size={10} tracking={0.14} style={{ marginTop: 24, marginBottom: 10 }}>
         {title}
       </Eyebrow>
-      <Rule tone="rgba(22,35,59,.12)" />
+      <Rule tone={color.hairline} />
       {items.map((item) => {
         const topic = topicByKey(item.topicKey);
         const q = questionsFor(item.topicKey)[item.qIdx];
@@ -186,6 +186,7 @@ function Section({
 }
 
 function EmptyState() {
+  const { c: color, type } = useTheme();
   return (
     <View
       style={{

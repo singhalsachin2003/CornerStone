@@ -3,12 +3,14 @@ import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, PrimaryButton, SelectableCard } from '@/components/primitives';
-import { color, font, gutter } from '@/theme/tokens';
-import { eyebrow, type } from '@/theme/type';
+import { font, gutter } from '@/theme/tokens';
+import { eyebrow } from '@/theme/type';
 import { EXAMS, EXAM_KEYS, ExamKey, examTotals } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function ExamPicker() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const exam = useStudyStore((s) => s.exam);
   const level = useStudyStore((s) => s.level);
@@ -94,6 +96,7 @@ function ExamCard({
   startedLevel?: string;
   onSelect: () => void;
 }) {
+  const { c: color, type } = useTheme();
   const e = EXAMS[examKey];
   const totals = examTotals(examKey);
   const levelName = startedLevel ? e.levels.find((l) => l.key === startedLevel)?.name : undefined;
@@ -108,7 +111,7 @@ function ExamCard({
         >
           {e.name}
         </Text>
-        <Text style={[eyebrow(10, 0.1), { color: color.brass }]}>{e.levelWord}</Text>
+        <Text style={[eyebrow(color, 10, 0.1), { color: color.brass }]}>{e.levelWord}</Text>
       </View>
       <Text style={[type.body, { marginTop: 8 }]}>{e.description}</Text>
       <Text

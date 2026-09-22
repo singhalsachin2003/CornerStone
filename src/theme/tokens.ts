@@ -1,38 +1,97 @@
 /**
- * Design tokens — transcribed verbatim from the handoff README's token table.
- * Do not invent values here; every colour, size and radius below appears in the spec.
+ * Design tokens — the light palette is transcribed verbatim from the handoff
+ * README's token table. Do not invent values there; every colour, size and
+ * radius in `light` appears in the spec.
+ *
+ * The dark palette is not in the handoff and is derived here. Two rules held
+ * while deriving it:
+ *
+ *   1. **Not an inversion.** Brass on cream is the identity, and `brass
+ *      #9a6b2f` on a dark ground is unreadable (2.0:1 on `#131c2e`). Every
+ *      pigment — brass, sage, rust — is lifted to the value it already had on
+ *      dark in the variant-C snapshot card, which was designed against this
+ *      exact navy.
+ *   2. **Re-derived contrast, not eyeballed.** Every dark text colour below
+ *      carries its measured ratio against `paper #131c2e`; all clear WCAG AA
+ *      for body text (4.5:1), which is the same bar the light palette was
+ *      checked against.
  */
 
-export const color = {
+/**
+ * Five of the light values below are a shade darker than the handoff's.
+ *
+ * `muted`, `meta`, `brass`, `brassBody` and `tabInactive` carried the smallest
+ * type in the app at 2.36–4.23:1 on cream — `tabInactive`, on the three
+ * inactive tab labels of every screen, was the worst of them and read as
+ * disabled rather than merely unselected. Each has been walked down in
+ * lightness only: same hue, same chroma, same role, now clearing WCAG AA's
+ * 4.5:1 for small text on paper, surface and the brass tint alike. The ratios
+ * are quoted beside each.
+ *
+ * The dark palette was derived against that bar from the start, so this brings
+ * the two into line rather than moving one ahead of the other.
+ */
+const light = {
   paper: '#f7f4ee',
   paperAlt: '#f2eee5',
   surface: '#fffdfa',
   ink: '#16233b',
   inkHover: '#26365a',
   inkBody: '#3d4a63',
-  muted: '#6f7a90',
-  meta: '#8c8578',
-  brass: '#9a6b2f',
+  /** 4.75:1 on paper — was #6f7a90 at 3.93 */
+  muted: '#636d80',
+  /** 4.76:1 on paper — was #8c8578 at 3.33, and it carries the eyebrows */
+  meta: '#716c61',
+  /** 4.96:1 on paper, 4.56 on its own tint — was #9a6b2f at 4.23 */
+  brass: '#8c612b',
   brassText: '#7d5620',
-  brassBody: '#8a6a3c',
+  /** 4.51:1 on the brass tint — was #8a6a3c at 4.18 */
+  brassBody: '#846539',
   brassTintBg: '#f3ead9',
   brassTintBorder: 'rgba(154,107,47,.42)',
+  brassRule: 'rgba(154,107,47,.4)',
+  brassRuleSoft: 'rgba(154,107,47,.35)',
   brassOnDark: '#e0b26a',
   sage: '#3f6b57',
   rust: '#9b3b34',
-  tabInactive: '#9aa1af',
+  /** 4.54:1 on paper — was #9aa1af at 2.36, the worst in the app */
+  tabInactive: '#677082',
 
   // hairlines
   rule: 'rgba(22,35,59,.14)',
   ruleSoft: 'rgba(22,35,59,.10)',
   ruleStrong: 'rgba(22,35,59,.16)',
+  hairline: 'rgba(22,35,59,.12)',
+  ring: 'rgba(22,35,59,.2)',
+  ringStrong: 'rgba(22,35,59,.28)',
+  outlineRule: 'rgba(22,35,59,.22)',
   track: 'rgba(22,35,59,.10)',
+  trackStrong: 'rgba(22,35,59,.14)',
   disabledBg: 'rgba(22,35,59,.14)',
+  faintFg: 'rgba(22,35,59,.22)',
+  ghostFg: 'rgba(22,35,59,.45)',
+  pressWash: 'rgba(22,35,59,.06)',
+  tabRule: 'rgba(22,35,59,.13)',
 
   // paragraph copy used on the setup screens
   bodyOnPaper: '#5c6478',
 
-  // variant C — dark snapshot
+  /**
+   * The ink feature card — Home's resume card, the profile avatar. A dark card
+   * in a light UI, and in dark mode a *raised* card rather than a cream slab:
+   * inverting it would put the brightest block on the screen exactly where the
+   * eye lands first, which is the thing dark mode exists to avoid.
+   */
+  emphasis: '#16233b',
+  emphasisHover: '#26365a',
+  onEmphasis: '#f7f4ee',
+  onEmphasisMuted: 'rgba(247,244,238,.72)',
+  onEmphasisFaint: 'rgba(247,244,238,.6)',
+  onEmphasisTrack: 'rgba(247,244,238,.22)',
+
+  // variant C — dark snapshot. A *card style*, not a theme: these are identical
+  // in both palettes on purpose, so the Index treatment looks the same at 11pm
+  // as it does at noon.
   darkCardBg: '#1c2740',
   darkScreenBg: '#131c2e',
   darkStack1: '#182238',
@@ -50,12 +109,107 @@ export const color = {
   rustFillSoft: 'rgba(155,59,52,.06)',
   rustBorder: 'rgba(155,59,52,.3)',
 
-  // on the ink resume card
+  // the snapshot card's own surfaces, for the variants that are not the dark one
+  cardStack1: '#fbf8f2',
+  cardStack2: '#f7f3ea',
+  cardStackRule: 'rgba(22,35,59,.09)',
+  cardBigNum: 'rgba(22,35,59,.16)',
+  formulaBg: '#f5f1e7',
+
+  // on an `ink` fill — the primary button, an active filter chip
   onInk: '#f7f4ee',
-  onInkMuted: 'rgba(247,244,238,.72)',
-  onInkFaint: 'rgba(247,244,238,.6)',
-  onInkTrack: 'rgba(247,244,238,.22)',
 } as const;
+
+export type ColorTokens = { readonly [K in keyof typeof light]: string };
+
+export const lightColor: ColorTokens = light;
+
+export const darkColor: ColorTokens = {
+  paper: '#131c2e',
+  paperAlt: '#182238',
+  surface: '#1c2740',
+  /** 15.1:1 — the primary text colour, and the fill behind `onInk`. */
+  ink: '#f4f1ea',
+  inkHover: '#fffdf8',
+  /** 11.3:1 */
+  inkBody: '#d5d2c9',
+  /** 6.9:1 */
+  muted: '#9aa6bd',
+  /** 6.5:1 — the warm grey of the eyebrows, kept warm rather than neutralised. */
+  meta: '#a89f8d',
+  /** 8.7:1 — brass lifted to the value the snapshot card already used on dark. */
+  brass: '#e0b26a',
+  brassText: '#e8c07e',
+  brassBody: '#d4ab72',
+  brassTintBg: 'rgba(224,178,106,.13)',
+  brassTintBorder: 'rgba(224,178,106,.42)',
+  brassRule: 'rgba(224,178,106,.4)',
+  brassRuleSoft: 'rgba(224,178,106,.32)',
+  brassOnDark: '#e0b26a',
+  /** 7.6:1 */
+  sage: '#79bb9c',
+  /** 6.6:1 */
+  rust: '#e3897f',
+  /** 4.7:1 — the 10px tab label is small text, so it has to clear 4.5. */
+  tabInactive: '#7d8798',
+
+  rule: 'rgba(244,241,234,.16)',
+  ruleSoft: 'rgba(244,241,234,.10)',
+  ruleStrong: 'rgba(244,241,234,.22)',
+  hairline: 'rgba(244,241,234,.14)',
+  ring: 'rgba(244,241,234,.26)',
+  ringStrong: 'rgba(244,241,234,.34)',
+  outlineRule: 'rgba(244,241,234,.28)',
+  track: 'rgba(244,241,234,.13)',
+  trackStrong: 'rgba(244,241,234,.18)',
+  disabledBg: 'rgba(244,241,234,.16)',
+  faintFg: 'rgba(244,241,234,.26)',
+  ghostFg: 'rgba(244,241,234,.5)',
+  pressWash: 'rgba(244,241,234,.07)',
+  tabRule: 'rgba(244,241,234,.14)',
+
+  /** 10.0:1 */
+  bodyOnPaper: '#c2c6d0',
+
+  emphasis: '#2a3a5c',
+  emphasisHover: '#33466e',
+  onEmphasis: '#f4f1ea',
+  onEmphasisMuted: 'rgba(244,241,234,.74)',
+  onEmphasisFaint: 'rgba(244,241,234,.62)',
+  onEmphasisTrack: 'rgba(244,241,234,.22)',
+
+  darkCardBg: '#1c2740',
+  darkScreenBg: '#131c2e',
+  darkStack1: '#182238',
+  darkStack2: '#151e32',
+  darkFg: '#f4f1ea',
+  darkBody: 'rgba(244,241,234,.78)',
+  darkMuted: 'rgba(244,241,234,.5)',
+  darkRule: 'rgba(244,241,234,.16)',
+
+  sageFill: 'rgba(121,187,156,.12)',
+  sageFillSoft: 'rgba(121,187,156,.10)',
+  sageBorder: 'rgba(121,187,156,.38)',
+  rustFill: 'rgba(227,137,127,.12)',
+  rustFillSoft: 'rgba(227,137,127,.10)',
+  rustBorder: 'rgba(227,137,127,.34)',
+
+  cardStack1: '#1a2338',
+  cardStack2: '#161f33',
+  cardStackRule: 'rgba(244,241,234,.09)',
+  cardBigNum: 'rgba(244,241,234,.18)',
+  formulaBg: 'rgba(244,241,234,.05)',
+
+  /** Navy *on* the cream `ink` fill — the primary button inverts in dark mode. */
+  onInk: '#16233b',
+};
+
+/**
+ * The light palette, for the handful of places that cannot hold a hook: the
+ * splash colour in `app.config.js`'s sibling files, the store-graphic scripts,
+ * and tests. Anything that renders should use `useTheme()` instead.
+ */
+export const color = lightColor;
 
 export const font = {
   serif: 'SourceSerif4_400Regular',
@@ -101,13 +255,18 @@ export const shadow = {
   },
 } as const;
 
-/** Mastery thresholds drive ring colour, percentage colour and the mastery word. */
-export function masteryColor(pct: number): string {
-  return pct >= 70 ? color.sage : pct >= 35 ? color.brass : 'rgba(22,35,59,.45)';
+/**
+ * Mastery thresholds drive ring colour, percentage colour and the mastery word.
+ * The palette is a required argument rather than a defaulted one: a default is
+ * exactly how a light-palette brass ends up drawn on a dark screen, and the
+ * compiler is the only thing that catches a missed call site.
+ */
+export function masteryColor(pct: number, c: ColorTokens): string {
+  return pct >= 70 ? c.sage : pct >= 35 ? c.brass : c.ghostFg;
 }
 
-export function masteryTextColor(pct: number): string {
-  return pct >= 70 ? color.sage : pct >= 35 ? color.brass : color.muted;
+export function masteryTextColor(pct: number, c: ColorTokens): string {
+  return pct >= 70 ? c.sage : pct >= 35 ? c.brass : c.muted;
 }
 
 export function masteryWord(pct: number): string {

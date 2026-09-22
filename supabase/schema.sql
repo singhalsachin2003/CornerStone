@@ -228,3 +228,42 @@ begin
   end loop;
 end
 $$;
+
+-- ---------------------------------------------------------------------------
+-- Account deletion
+--
+-- Google Play requires an *in-app* path to delete an account and its data for
+-- any app that lets people create one. The published page at
+-- /CornerStone/DELETE-ACCOUNT.html is the other half of that rule; email alone
+-- satisfies neither half on its own.
+--
+-- Every table above carries `references auth.users (id) on delete cascade`, so
+-- removing the auth row removes the lot. That is deliberately the only
+-- statement in the function: listing the tables here would mean quietly missing
+-- whichever one is added next, and a cascade cannot miss one.
+--
+-- `security definer` is required because `auth.users` is not writable by the
+-- `authenticated` role. The function is written so that privilege cannot be
+-- turned against anyone: it takes no arguments, reads its caller from
+-- `auth.uid()`, and can therefore only ever delete that caller. `set
+-- search_path` is what stops a caller shadowing `auth.users` with their own.
+create or replace function public.delete_account()
+returns void
+language plpgsql
+security definer
+set search_path = public, auth, pg_temp
+as $$
+declare
+  uid uuid := auth.uid();
+begin
+  if uid is null then
+    raise exception 'delete_account requires an authenticated caller'
+      using errcode = '28000';
+  end if;
+
+  delete from auth.users where id = uid;
+end;
+$$;
+
+revoke all on function public.delete_account() from public, anon;
+grant execute on function public.delete_account() to authenticated;

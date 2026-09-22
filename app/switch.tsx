@@ -3,10 +3,10 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, ProgressTrack } from '@/components/primitives';
-import { color, font, gutter, masteryColor, masteryTextColor, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, masteryColor, masteryTextColor, radius } from '@/theme/tokens';
 import { EXAMS, EXAM_KEYS, ExamKey, Level, PATHWAYS, topicsFor } from '@/content';
 import { useStudyStore, weightedProgress } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * One switcher for exam *and* level. Candidates sitting both programmes — or moving
@@ -14,6 +14,7 @@ import { useStudyStore, weightedProgress } from '@/store/useStudyStore';
  * level of every exam is one tap from here. Presented as a modal from the Home title.
  */
 export default function Switcher() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const exam = useStudyStore((s) => s.exam);
   const level = useStudyStore((s) => s.level);
@@ -110,6 +111,7 @@ function LevelRow({
   pathwayNote?: string;
   onPress: () => void;
 }) {
+  const { c: color, type } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
@@ -132,7 +134,7 @@ function LevelRow({
             height: 32,
             borderRadius: 16,
             borderWidth: 1,
-            borderColor: current ? color.ink : 'rgba(22,35,59,.2)',
+            borderColor: current ? color.ink : color.ring,
             backgroundColor: current ? color.ink : 'transparent',
             alignItems: 'center',
             justifyContent: 'center',
@@ -143,7 +145,7 @@ function LevelRow({
               fontFamily: font.mono,
               fontWeight: '600',
               fontSize: 11.5,
-              color: current ? color.paper : color.muted,
+              color: current ? color.onInk : color.muted,
             }}
           >
             {level.short}
@@ -162,14 +164,19 @@ function LevelRow({
             fontFamily: font.mono,
             fontWeight: '600',
             fontSize: 11.5,
-            color: masteryTextColor(pct),
+            color: masteryTextColor(pct, color),
           }}
         >
           {pct}%
         </Text>
       </View>
 
-      <ProgressTrack pct={pct} height={2} fillColor={masteryColor(pct)} style={{ marginTop: 11 }} />
+      <ProgressTrack
+        pct={pct}
+        height={2}
+        fillColor={masteryColor(pct, color)}
+        style={{ marginTop: 11 }}
+      />
     </Pressable>
   );
 }

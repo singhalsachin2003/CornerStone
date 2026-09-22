@@ -2,8 +2,8 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, PrimaryButton } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * Root error boundary.
@@ -46,54 +46,63 @@ export class ErrorBoundary extends React.Component<Props, State> {
     const error = this.props.error ?? this.state.error;
     if (!error) return this.props.children;
 
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
-        <View
-          style={{ flex: 1, paddingHorizontal: gutter.setup, paddingTop: 26, paddingBottom: 24 }}
-        >
-          <Eyebrow size={10} tracking={0.16} style={{ color: color.rust }}>
-            SOMETHING BROKE
-          </Eyebrow>
-
-          <View style={{ flex: 1, justifyContent: 'center', gap: 16, paddingBottom: 40 }}>
-            <Text style={type.hero}>That wasn't supposed to happen.</Text>
-            <Text style={[type.lede, { maxWidth: 320 }]}>
-              Your progress is saved on this device and is not affected. Try again — it usually
-              comes straight back.
-            </Text>
-
-            <ScrollView
-              style={{
-                maxHeight: 160,
-                borderWidth: 1,
-                borderColor: color.rule,
-                backgroundColor: color.surface,
-                borderRadius: radius.row,
-              }}
-              contentContainerStyle={{ padding: 14 }}
-            >
-              <Eyebrow size={8.5} tracking={0.14}>
-                DETAILS
-              </Eyebrow>
-              <Text
-                style={{
-                  fontFamily: font.mono,
-                  fontSize: 11.5,
-                  lineHeight: 18,
-                  color: color.inkBody,
-                  marginTop: 8,
-                }}
-              >
-                {error.message || String(error)}
-              </Text>
-            </ScrollView>
-          </View>
-
-          {/* Only one action, because only one thing actually works. A "Report" button
-              would be a lie until a crash reporter is wired up. */}
-          <PrimaryButton label="Try again" onPress={this.reset} />
-        </View>
-      </SafeAreaView>
-    );
+    return <ErrorScreen error={error} onRetry={this.reset} />;
   }
+}
+
+/**
+ * The fallback is its own component because `ErrorBoundary` has to be a class —
+ * `getDerivedStateFromError` has no hook equivalent — and a class cannot read
+ * the theme.
+ */
+function ErrorScreen({ error, onRetry }: { error: Error; onRetry: () => void }) {
+  const { c: color, type } = useTheme();
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top', 'bottom']}>
+      <View style={{ flex: 1, paddingHorizontal: gutter.setup, paddingTop: 26, paddingBottom: 24 }}>
+        <Eyebrow size={10} tracking={0.16} style={{ color: color.rust }}>
+          SOMETHING BROKE
+        </Eyebrow>
+
+        <View style={{ flex: 1, justifyContent: 'center', gap: 16, paddingBottom: 40 }}>
+          <Text style={type.hero}>That wasn't supposed to happen.</Text>
+          <Text style={[type.lede, { maxWidth: 320 }]}>
+            Your progress is saved on this device and is not affected. Try again — it usually comes
+            straight back.
+          </Text>
+
+          <ScrollView
+            style={{
+              maxHeight: 160,
+              borderWidth: 1,
+              borderColor: color.rule,
+              backgroundColor: color.surface,
+              borderRadius: radius.row,
+            }}
+            contentContainerStyle={{ padding: 14 }}
+          >
+            <Eyebrow size={8.5} tracking={0.14}>
+              DETAILS
+            </Eyebrow>
+            <Text
+              style={{
+                fontFamily: font.mono,
+                fontSize: 11.5,
+                lineHeight: 18,
+                color: color.inkBody,
+                marginTop: 8,
+              }}
+            >
+              {error.message || String(error)}
+            </Text>
+          </ScrollView>
+        </View>
+
+        {/* Only one action, because only one thing actually works. A "Report" button
+              would be a lie until a crash reporter is wired up. */}
+        <PrimaryButton label="Try again" onPress={onRetry} />
+      </View>
+    </SafeAreaView>
+  );
 }

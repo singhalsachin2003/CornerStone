@@ -3,13 +3,14 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, PrimaryButton } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { EXAMS, PATHWAYS, PathwayKey, topicsFor } from '@/content';
 import { useStudyStore } from '@/store/useStudyStore';
 import { buildPlacementSession, useSessionStore } from '@/store/useSessionStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function LevelPicker() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const level = useStudyStore((s) => s.level);
@@ -74,7 +75,7 @@ export default function LevelPicker() {
                     height: 34,
                     borderRadius: 17,
                     borderWidth: 1,
-                    borderColor: active ? color.ink : 'rgba(22,35,59,.2)',
+                    borderColor: active ? color.ink : color.ring,
                     backgroundColor: active ? color.ink : 'transparent',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -85,7 +86,7 @@ export default function LevelPicker() {
                       fontFamily: font.mono,
                       fontWeight: '600',
                       fontSize: 12,
-                      color: active ? color.paper : color.muted,
+                      color: active ? color.onInk : color.muted,
                     }}
                   >
                     {l.short}
@@ -178,6 +179,7 @@ function PathwayRow({
   active: boolean;
   onPress: () => void;
 }) {
+  const { c: color, type } = useTheme();
   return (
     <Pressable
       accessibilityRole="radio"
@@ -199,7 +201,7 @@ function PathwayRow({
             height: 14,
             borderRadius: 7,
             borderWidth: 1,
-            borderColor: active ? color.ink : 'rgba(22,35,59,.28)',
+            borderColor: active ? color.ink : color.ringStrong,
             alignItems: 'center',
             justifyContent: 'center',
           }}

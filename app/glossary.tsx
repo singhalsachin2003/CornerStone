@@ -4,8 +4,8 @@ import { Search, X } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow } from '@/components/primitives';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { monoBlock, type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
+import { monoBlockFor } from '@/theme/type';
 import {
   GLOSSARY,
   GlossaryExam,
@@ -17,6 +17,7 @@ import {
   sortTerms,
 } from '@/content/glossary';
 import { useStudyStore } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 /**
  * The glossary.
@@ -34,6 +35,7 @@ import { useStudyStore } from '@/store/useStudyStore';
  * trade for content that is two sentences long.
  */
 export default function Glossary() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const { term: initialTerm } = useLocalSearchParams<{ term?: string }>();
   const exam = useStudyStore((s) => s.exam);
@@ -203,6 +205,7 @@ export default function Glossary() {
 }
 
 function Row({ term, open, onPress }: { term: GlossaryTerm; open: boolean; onPress: () => void }) {
+  const { c: color, type } = useTheme();
   const exams = examsFor(term);
   return (
     <Pressable
@@ -252,7 +255,7 @@ function Row({ term, open, onPress }: { term: GlossaryTerm; open: boolean; onPre
           <Eyebrow size={8.5} tracking={0.14} style={{ color: color.muted }}>
             FORMULA
           </Eyebrow>
-          <Text style={[monoBlock, { marginTop: 8 }]}>{term.formula}</Text>
+          <Text style={[monoBlockFor(color), { marginTop: 8 }]}>{term.formula}</Text>
         </View>
       )}
 

@@ -4,10 +4,10 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Eyebrow, ProgressTrack } from '@/components/primitives';
 import { Ring } from '@/components/Ring';
-import { color, font, gutter, radius } from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, radius } from '@/theme/tokens';
 import { EXAMS, cardsFor, topicsFor } from '@/content';
 import {
+  GUEST_NAME,
   currentStreak,
   daysToExam,
   dueCount,
@@ -15,8 +15,10 @@ import {
   weekStrip,
   weightedProgress,
 } from '@/store/useStudyStore';
+import { useTheme } from '@/theme/useTheme';
 
 export default function Home() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const levelKey = useStudyStore((s) => s.level);
@@ -32,6 +34,26 @@ export default function Home() {
     () => (examKey && levelKey ? topicsFor(examKey, levelKey, pathway) : []),
     [examKey, levelKey, pathway],
   );
+
+  /**
+   * The three topic areas worth an hour next: least known first, but only
+   * counted where the exam pays for it. A 15–20% area at 30% mastery is a
+   * better use of an evening than a 5–8% area at 10%, and sorting on mastery
+   * alone would say the opposite.
+   *
+   * This fills what was the bottom half of an empty screen. A dashboard whose
+   * lower 40% is blank reads as unfinished, and this is the question a
+   * candidate opening the app actually has.
+   */
+  const weakest = useMemo(() => {
+    if (topics.length === 0) return [];
+    return [...topics]
+      .filter((t) => (mastery[t.key] ?? 0) < 70)
+      .map((t) => ({ topic: t, gap: (100 - (mastery[t.key] ?? 0)) * weightOf(t) }))
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 3)
+      .map((entry) => entry.topic);
+  }, [topics, mastery]);
 
   if (!examKey || !levelKey) return null;
 
@@ -55,7 +77,10 @@ export default function Home() {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const firstName = name.split(/\s+/)[0];
+  // "Good afternoon, Guest" is the first line on the first screen, and Guest is
+  // the one word in the app that reads like a database default. Somebody who
+  // has simply not set a name gets the greeting on its own.
+  const firstName = name === GUEST_NAME ? null : name.split(/\s+/)[0];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.paper }} edges={['top']}>
@@ -80,7 +105,7 @@ export default function Home() {
             <Text
               style={{ fontFamily: font.sans, fontSize: 13, lineHeight: 16, color: color.muted }}
             >
-              {greeting}, {firstName}
+              {firstName === null ? greeting : `${greeting}, ${firstName}`}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5 }}>
               <Text style={type.homeTitle}>
@@ -101,12 +126,12 @@ export default function Home() {
               width: 38,
               height: 38,
               borderRadius: 19,
-              backgroundColor: color.ink,
+              backgroundColor: color.emphasis,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.paper }}>
+            <Text style={{ fontFamily: font.sansSemi, fontSize: 13, color: color.onEmphasis }}>
               {initials}
             </Text>
           </Pressable>
@@ -117,7 +142,7 @@ export default function Home() {
           style={{
             marginTop: 18,
             borderWidth: 1,
-            borderColor: 'rgba(22,35,59,.12)',
+            borderColor: color.hairline,
             backgroundColor: color.surface,
             borderRadius: radius.card,
             padding: 18,
@@ -149,7 +174,7 @@ export default function Home() {
                   DAY STREAK
                 </Eyebrow>
               </View>
-              <View style={{ width: 1, backgroundColor: 'rgba(22,35,59,.12)' }} />
+              <View style={{ width: 1, backgroundColor: color.hairline }} />
               <View>
                 <Text style={{ fontFamily: font.serifSemi, fontSize: 17, color: color.ink }}>
                   {due}
@@ -174,7 +199,7 @@ export default function Home() {
                   backgroundColor: d.studied
                     ? color.brass
                     : d.isToday
-                      ? 'rgba(154,107,47,.35)'
+                      ? color.brassRuleSoft
                       : 'transparent',
                   borderWidth: d.isFuture ? 1 : 0,
                   borderColor: color.ruleStrong,
@@ -197,7 +222,7 @@ export default function Home() {
               accessibilityRole="button"
               onPress={() => router.push({ pathname: '/snapshot', params: { topic: resume.key } })}
               style={({ pressed }) => ({
-                backgroundColor: pressed ? color.inkHover : color.ink,
+                backgroundColor: pressed ? color.emphasisHover : color.emphasis,
                 borderRadius: radius.card,
                 padding: 18,
               })}
@@ -209,23 +234,23 @@ export default function Home() {
                   alignItems: 'baseline',
                 }}
               >
-                <Eyebrow size={9.5} tracking={0.12} style={{ color: color.onInkFaint }}>
+                <Eyebrow size={9.5} tracking={0.12} style={{ color: color.onEmphasisFaint }}>
                   {resumePct > 0 ? 'IN PROGRESS' : 'START HERE'}
                 </Eyebrow>
                 <Text
                   style={{
                     fontFamily: font.sansSemi,
                     fontSize: 11,
-                    color: 'rgba(247,244,238,.75)',
+                    color: color.onEmphasisMuted,
                   }}
                 >
                   {resumePct}%
                 </Text>
               </View>
-              <Text style={[type.serif20, { color: color.onInk, marginTop: 8 }]}>
+              <Text style={[type.serif20, { color: color.onEmphasis, marginTop: 8 }]}>
                 {resume.name}
               </Text>
-              <Text style={[type.secondary, { color: color.onInkMuted, marginTop: 6 }]}>
+              <Text style={[type.secondary, { color: color.onEmphasisMuted, marginTop: 6 }]}>
                 {cardsFor(resume.key).length} snapshot cards ·{' '}
                 {(cardProgress[resume.key] ?? 0) > 0
                   ? 'quiz unlocked'
@@ -234,7 +259,7 @@ export default function Home() {
               <ProgressTrack
                 pct={resumePct}
                 height={3}
-                trackColor={color.onInkTrack}
+                trackColor={color.onEmphasisTrack}
                 fillColor={color.brassOnDark}
                 style={{ marginTop: 14 }}
               />
@@ -266,7 +291,7 @@ export default function Home() {
             style={({ pressed }) => ({
               flex: 1,
               borderWidth: 1,
-              borderColor: pressed ? color.brass : 'rgba(154,107,47,.4)',
+              borderColor: pressed ? color.brass : color.brassRule,
               backgroundColor: color.brassTintBg,
               borderRadius: radius.card,
               padding: 14,
@@ -278,9 +303,64 @@ export default function Home() {
             </Text>
           </Pressable>
         </View>
+
+        {weakest.length > 0 && (
+          <>
+            <Eyebrow size={9.5} tracking={0.14} style={{ marginTop: 26, marginBottom: 10 }}>
+              WORTH AN HOUR NEXT
+            </Eyebrow>
+            {weakest.map((topic) => (
+              <Pressable
+                key={topic.key}
+                accessibilityRole="button"
+                accessibilityLabel={`${topic.name}. ${mastery[topic.key] ?? 0} percent. ${topic.weight} of the exam.`}
+                onPress={() => router.push({ pathname: '/snapshot', params: { topic: topic.key } })}
+                style={({ pressed }) => ({
+                  borderTopWidth: 1,
+                  borderTopColor: color.ruleSoft,
+                  paddingVertical: 13,
+                  opacity: pressed ? 0.6 : 1,
+                })}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    gap: 12,
+                  }}
+                >
+                  <Text style={[type.rowLabel, { flex: 1 }]} numberOfLines={1}>
+                    {topic.name}
+                  </Text>
+                  <Text style={type.tileMeta}>
+                    {mastery[topic.key] ?? 0}% · {topic.weight}
+                  </Text>
+                </View>
+                <ProgressTrack pct={mastery[topic.key] ?? 0} height={3} style={{ marginTop: 9 }} />
+              </Pressable>
+            ))}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+/**
+ * A topic's exam weight as a number the sort can use.
+ *
+ * `weight` is a published *band* — "15–20%" — because that is what the exam
+ * bodies actually publish, so this takes the midpoint, which is the same thing
+ * `weightedProgress` does with it. Anything unparseable counts as an average
+ * topic rather than as zero: an unrecognised band should not silently drop an
+ * area out of the list.
+ */
+function weightOf(topic: { weight: string }): number {
+  const numbers = topic.weight.match(/\d+(?:\.\d+)?/g);
+  if (numbers === null || numbers.length === 0) return 10;
+  const values = numbers.map(Number);
+  return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
 /**

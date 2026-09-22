@@ -1,19 +1,11 @@
-import React, { useMemo } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useDeferredValue, useMemo, useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackLink, Eyebrow, ProgressTrack } from '@/components/primitives';
+import { Search, X } from 'lucide-react-native';
 import { Ring } from '@/components/Ring';
-import {
-  color,
-  font,
-  gutter,
-  masteryColor,
-  masteryTextColor,
-  masteryWord,
-  radius,
-} from '@/theme/tokens';
-import { type } from '@/theme/type';
+import { font, gutter, masteryColor, masteryTextColor, masteryWord, radius } from '@/theme/tokens';
 import {
   EXAMS,
   TopicArea,
@@ -24,6 +16,7 @@ import {
 } from '@/content';
 import { TopicVariant, useStudyStore } from '@/store/useStudyStore';
 import { useAccess } from '@/access';
+import { useTheme } from '@/theme/useTheme';
 
 const VARIANT_TAG: Record<TopicVariant, string> = {
   a: 'LEDGER',
@@ -32,6 +25,7 @@ const VARIANT_TAG: Record<TopicVariant, string> = {
 };
 
 export default function Topics() {
+  const { c: color, type } = useTheme();
   const router = useRouter();
   const examKey = useStudyStore((s) => s.exam);
   const levelKey = useStudyStore((s) => s.level);
@@ -44,6 +38,33 @@ export default function Topics() {
     () => (examKey && levelKey ? topicsFor(examKey, levelKey, pathway) : []),
     [examKey, levelKey, pathway],
   );
+
+  const [query, setQuery] = useState('');
+  // Deferred for the same reason the glossary defers: typing re-filters on every
+  // keystroke, and the list is the expensive half of this screen.
+  const deferredQuery = useDeferredValue(query);
+
+  /**
+   * Thirty-eight areas across five levels, and until now the only way to reach
+   * one was to know which area it lived in. That is a fine assumption for a
+   * candidate three months in and a bad one for somebody who has just been told
+   * to revise Value at Risk.
+   *
+   * Matching runs over the area name and its segment names, because the segment
+   * is where the searchable words actually are — "Value at Risk" is a segment of
+   * "Valuation and Risk Models", and searching only area names would find
+   * nothing for it.
+   */
+  const visible = useMemo(() => {
+    const needle = deferredQuery.trim().toLowerCase();
+    if (needle === '') return topics;
+    return topics.filter((t) => {
+      if (t.name.toLowerCase().includes(needle)) return true;
+      return premiumSegmentsFor(t.key).some((segment) =>
+        segment.name.toLowerCase().includes(needle),
+      );
+    });
+  }, [topics, deferredQuery]);
 
   if (!examKey || !levelKey) return null;
   const exam = EXAMS[examKey];
@@ -66,20 +87,89 @@ export default function Topics() {
         <Text style={type.secondary}>
           {exam.name} {level?.name} · {topics.length} areas, weighted as in the real exam
         </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            marginTop: 14,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor: color.rule,
+            borderRadius: radius.row,
+            backgroundColor: color.surface,
+          }}
+        >
+          <Search size={15} color={color.muted} strokeWidth={2} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search a topic or segment"
+            placeholderTextColor={color.meta}
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
+            accessibilityLabel="Search topics"
+            style={{
+              flex: 1,
+              fontFamily: font.sans,
+              fontSize: 14,
+              color: color.ink,
+              // Android centres poorly without this and the text sits high.
+              paddingVertical: 0,
+            }}
+          />
+          {query.length > 0 && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Clear search"
+              hitSlop={10}
+              onPress={() => setQuery('')}
+            >
+              <X size={15} color={color.muted} strokeWidth={2} />
+            </Pressable>
+          )}
+        </View>
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {variant === 'a' && (
-          <LedgerList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
-        )}
-        {variant === 'b' && (
-          <TileGrid topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
-        )}
-        {variant === 'c' && (
-          <IndexList topics={topics} mastery={mastery} onOpen={open} premium={access.premium} />
+        {visible.length === 0 ? (
+          <Text
+            style={[
+              type.secondary,
+              { paddingHorizontal: gutter.screen, paddingTop: 24, textAlign: 'center' },
+            ]}
+          >
+            Nothing matches “{query.trim()}”. The glossary may have it — it covers both programmes
+            and is always free.
+          </Text>
+        ) : (
+          <>
+            {variant === 'a' && (
+              <LedgerList
+                topics={visible}
+                mastery={mastery}
+                onOpen={open}
+                premium={access.premium}
+              />
+            )}
+            {variant === 'b' && (
+              <TileGrid topics={visible} mastery={mastery} onOpen={open} premium={access.premium} />
+            )}
+            {variant === 'c' && (
+              <IndexList
+                topics={visible}
+                mastery={mastery}
+                onOpen={open}
+                premium={access.premium}
+              />
+            )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -106,6 +196,7 @@ function countsFor(topicKey: string, premium: boolean) {
 // --- A · Ledger --------------------------------------------------------------
 
 function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View style={{ borderTopWidth: 1, borderTopColor: color.rule }}>
       {topics.map((t, i) => {
@@ -149,7 +240,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
                   fontWeight: '600',
                   fontSize: 11.5,
                   lineHeight: 16,
-                  color: masteryTextColor(pct),
+                  color: masteryTextColor(pct, color),
                 }}
               >
                 {pct}%
@@ -158,7 +249,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
             <ProgressTrack
               pct={pct}
               height={2}
-              fillColor={masteryColor(pct)}
+              fillColor={masteryColor(pct, color)}
               style={{ marginTop: 11 }}
             />
           </Pressable>
@@ -171,6 +262,7 @@ function LedgerList({ topics, mastery, onOpen, premium }: ListProps) {
 // --- B · Ring tiles (default) ------------------------------------------------
 
 function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View
       style={{
@@ -195,7 +287,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
               flexGrow: 1,
               flexBasis: '46%',
               borderWidth: 1,
-              borderColor: pressed ? color.ink : 'rgba(22,35,59,.13)',
+              borderColor: pressed ? color.ink : color.tabRule,
               backgroundColor: color.surface,
               borderRadius: radius.card,
               padding: 14,
@@ -209,7 +301,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
                 alignItems: 'flex-start',
               }}
             >
-              <Ring size={40} innerSize={31} pct={pct} fillColor={masteryColor(pct)}>
+              <Ring size={40} innerSize={31} pct={pct} fillColor={masteryColor(pct, color)}>
                 <Text
                   style={{
                     fontFamily: font.mono,
@@ -240,6 +332,7 @@ function TileGrid({ topics, mastery, onOpen, premium }: ListProps) {
 // --- C · Index ---------------------------------------------------------------
 
 function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
+  const { c: color, type } = useTheme();
   return (
     <View style={{ paddingHorizontal: gutter.screen, paddingTop: 4 }}>
       {topics.map((t, i) => {
@@ -257,7 +350,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
               alignItems: 'flex-start',
               paddingVertical: 18,
               borderBottomWidth: 1,
-              borderBottomColor: 'rgba(22,35,59,.12)',
+              borderBottomColor: color.hairline,
               opacity: pressed ? 0.72 : 1,
             })}
           >
@@ -267,7 +360,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
                 fontSize: 40,
                 lineHeight: 34,
                 width: 52,
-                color: pct > 0 ? color.brass : 'rgba(22,35,59,.22)',
+                color: pct > 0 ? color.brass : color.faintFg,
               }}
             >
               {String(i + 1).padStart(2, '0')}
@@ -286,7 +379,7 @@ function IndexList({ topics, mastery, onOpen, premium }: ListProps) {
                     style={{
                       width: 12,
                       height: 5,
-                      backgroundColor: k < filled ? color.ink : 'rgba(22,35,59,.14)',
+                      backgroundColor: k < filled ? color.ink : color.trackStrong,
                     }}
                   />
                 ))}

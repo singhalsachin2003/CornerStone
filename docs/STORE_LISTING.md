@@ -139,24 +139,29 @@ Association of Risk Professionals.
 | --- | --- | --- |
 | App icon | 512×512 PNG, 32-bit | ✅ `assets/icon.png` (1024², downscale on upload) |
 | Feature graphic | 1024×500 PNG/JPG, no alpha | ✅ `store/feature-graphic.png` — verified 24-bit RGB, no alpha |
-| Phone screenshots | 2–8, min 320px, 16:9 or 9:16 | ✅ `store/screenshots/` — 7 at 1080×1920 |
+| Phone screenshots | 2–8, min 320px, 16:9 or 9:16 | ✅ `store/screenshots/` — 8 at 1080×1920 |
 | 7"/10" tablet screenshots | optional, improves ranking | Not created — reuse phone shots or skip |
 
 Regenerate the feature graphic after a brand change with `npm run store:graphic`
 (then `sips -z 500 1024 store/feature-graphic@2x.png --out store/feature-graphic.png`).
 
-`04-home-dashboard` is regenerated, not hand-staged — it is the only shot needing a populated
-store (a streak, a part-finished syllabus, a review queue), and hand-staging is why it still
-showed the old placeholder profile name after that default changed:
+**Every shot is regenerated, none is hand-staged.** Hand-staging is why four of them spent a
+release advertising the placeholder square-and-circle tab glyphs that `02c4bcc` had already
+replaced with Lucide icons — nothing connected a UI change to the pictures in the listing:
 
 ```bash
 npx expo export --platform web --output-dir .expo-web
 npm run store:screenshot
 ```
 
-The seeded state lives at the top of `scripts/capture-home-screenshot.mjs` — the date is pinned
-so the countdown, streak and week strip stay consistent with each other and rerunning next month
-produces the same image. The other six are still captured by hand.
+The seeded state lives at the top of `scripts/capture-store-screenshots.mjs` — the date is
+pinned so the countdown, streak and week strip stay consistent with each other and rerunning
+next month produces the same images. The two screens that need a tap — the revealed exam angle
+and quiz feedback — are driven by clicking coordinates, because React Native Web renders a
+`Pressable` as a div with no role and Playwright's element clicks do not reliably fire its press
+handler.
+
+Re-run it after any change to a screen that appears in the set, and after a palette change.
 
 Screenshots are ordered to lead with the product's actual idea rather than the dashboard —
 upload them in this order:
@@ -168,6 +173,11 @@ upload them in this order:
 5. `05-topics-weights` — the topic grid showing published exam weights
 6. `06-review-queue` — spaced repetition
 7. `07-exam-switcher` — both programmes side by side
+8. `08-home-dark` — the same dashboard in dark mode
+
+The eighth is new and optional: Play allows eight phone shots, and dark mode is a differentiator
+worth showing to somebody who studies on a commute or in the evening. Upload it last so the
+seven that carried the listing keep their positions.
 
 ## Content rating questionnaire
 
