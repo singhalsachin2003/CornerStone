@@ -5,6 +5,15 @@ code review and a UX review of both apps. Twelve findings are already fixed and
 committed; what follows is everything still outstanding, in the order it should
 be done.
 
+> **Updated 22 September 2026.** Four items are now done in Cornerstone — dark
+> mode (2b), the store screenshots (3), the marketing housekeeping and the
+> crawler-facing part of the SEO bullet — plus a rules-of-hooks error that was
+> reddening `npm run lint` on the branch. Each is marked below. **Nothing in OTC
+> Learn has been touched**, so item 2a is untouched and item 5 is untouched.
+> Everything still open needs either the Play Console, a Supabase credential, or
+> a decision only you can make; those are gathered under "What needs you" at the
+> bottom.
+
 Two repos are involved:
 
 | App | Repo | Package | Branch to work on |
@@ -12,7 +21,8 @@ Two repos are involved:
 | OTC Learn | `~/otc-learning-app` | `com.otclearn.app` | `feat/ux-and-compliance` |
 | Cornerstone | `~/CornerStone` | `io.cornerstone.study` | `feat/ux-and-compliance` |
 
-Both branches exist locally, are **unpushed**, and `main` is untouched in both.
+`main` is untouched in both. Cornerstone's branch is pushed and has an open PR
+as of 22 September 2026; OTC Learn's is still local and unpushed.
 
 ---
 
@@ -35,10 +45,10 @@ cd ~/CornerStone      && git checkout feat/ux-and-compliance
   Home, Guest greeting removed, reduce-motion, offline error copy
 
 **Verify gates.** OTC Learn: `npm run verify` passes (71 suites, 1,142 tests).
-Cornerstone: `npx tsc --noEmit` clean and `npx jest` passes (16 suites, 217
-tests) — its `npm run lint` and `npm run check:content` could not be run in the
-previous session for environment reasons; **run the full `npm run verify` on
-Cornerstone locally before pushing** and fix anything it surfaces.
+Cornerstone: the full `npm run verify` now passes (16 suites, 217 tests) — it
+could not be run in the previous session for environment reasons, and when it
+finally ran it surfaced one real error: a `useMemo` on Home declared *after* an
+early return, so a render that bailed out ran one fewer hook. Fixed in `62923fb`.
 
 **Do not** start the shared-package refactor that extracts review scheduling,
 mastery, shuffle, promo and access into a workspace shared by both apps. It was
@@ -47,7 +57,11 @@ benefit. Leave the duplication alone until you are next in that code anyway.
 
 ---
 
-## 1. Deploy the `delete_account` SQL — blocking, do this first
+## 1. Deploy the `delete_account` SQL — blocking, still open
+
+**Needs you.** There is no `.env` in either repo, the Supabase CLI is not
+installed, and the function has to be applied with a credential that cannot live
+in the tree. Nothing here can be done from a session.
 
 **Why it is first:** the Delete account button now exists in both apps and calls
 `rpc('delete_account')`. That function is written into each repo's
@@ -74,9 +88,9 @@ replace` plus `revoke`/`grant` — so running it twice is safe.
 
 ---
 
-## 2. Dark mode — the main piece of remaining work
+## 2. Dark mode — **2b done, 2a open**
 
-Neither app has it. Both hard-set `"userInterfaceStyle": "light"` in `app.json`
+Neither app had it. Both hard-set `"userInterfaceStyle": "light"` in `app.json`
 and neither reads `useColorScheme`. This matters more than it would for most
 apps because the whole pitch is studying on a commute and in the evening, and a
 full-screen `#EAE8E0` / `#f7f4ee` at 11pm is the most common one-star complaint
@@ -115,7 +129,27 @@ thing that makes this tractable — only colour needs threading.
    and adaptive-icon backgrounds a dark counterpart.
 5. Add a Theme row to Profile with the three options.
 
-### 2b. Cornerstone
+### 2b. Cornerstone — DONE (`f0c5e48`)
+
+Shipped as described below, with three deviations worth knowing:
+
+1. **`ink` became "the maximum-contrast colour", not "navy".** It is navy on
+   cream and cream on navy, with `onInk` as its opposite, so the primary button
+   inverts without touching a call site. What could not follow that rule is the
+   ink feature card — Home's resume card and the avatars — because inverting it
+   puts the brightest block on the screen exactly where the eye lands first.
+   Those use a new `emphasis` token: a dark card in light, a raised one in dark.
+2. **`masteryColor`, `masteryTextColor` and `eyebrow` now require the palette**
+   rather than defaulting to the light one. A default is precisely how a
+   light-palette brass ends up on a dark screen, which is what happened to the
+   exam switcher until the contrast walk caught it.
+3. **`npm run check:contrast`** walks all sixteen screens in both themes against
+   the web export and measures what actually rendered, failing on anything below
+   AA that is not on a commented accepted list. It needs a web export, so it is
+   not in `verify`. Run it after touching the palette or any screen's colours.
+
+The original plan, for reference:
+
 
 Scope: 24 files, 341 `color.` references, mostly inline styles — which is easier
 — **but** `src/theme/type.ts` bakes `color.ink` / `color.inkBody` / `color.meta`
@@ -157,30 +191,28 @@ into 28 of its named text styles. That is the part to plan around.
 
 ---
 
-## 3. Re-shoot Cornerstone's store screenshots
+## 3. Re-shoot Cornerstone's store screenshots — DONE (`1bf2ecd`), upload needs you
 
-The live listing still shows the **placeholder square-and-circle tab glyphs**
-that commit `02c4bcc` replaced with Lucide icons. Four of the seven shots show
-the old tab bar, so the store is advertising a UI that no longer exists.
-
-The process is already documented in `docs/STORE_LISTING.md`:
+All eight are regenerated and committed. Six of the seven used to be hand-staged,
+which is *why* four of them spent a release showing the placeholder tab glyphs —
+nothing connected a UI change to the pictures. `npm run store:screenshot` now
+captures the whole set:
 
 ```bash
 cd ~/CornerStone
 npx expo export --platform web --output-dir .expo-web
-npm run store:screenshot        # regenerates 04-home-dashboard only
+npm run store:screenshot
 ```
 
-The other six are captured by hand. Upload in the numbered order the doc
-specifies. If dark mode (item 2) lands first, consider one dark screenshot in
-the set — it is a differentiator worth showing.
+An eighth shot is new — `08-home-dark.png`, the dashboard in dark mode. Play
+allows eight; upload it last so the existing seven keep their positions.
 
-**Acceptance:** all seven shots in `store/screenshots/` show the Lucide tab bar
-and the current Home layout, including the new "worth an hour next" list.
+**What needs you:** uploading them in Play Console, in the numbered order
+`docs/STORE_LISTING.md` gives.
 
 ---
 
-## 4. Play Console — two declarations
+## 4. Play Console — two declarations — **needs you**
 
 Both are console-only; no build required.
 
@@ -196,7 +228,7 @@ Both are console-only; no build required.
 
 ---
 
-## 5. Regional pricing parity for OTC Learn
+## 5. Regional pricing parity for OTC Learn — untouched
 
 Cornerstone is priced deliberately across 173 regions in two bands (anchor
 USD 3.99 / 24.99, override INR 29 / 199 for IN PK BD LK NP NG KE GH EG VN PH ID)
@@ -216,18 +248,35 @@ per user is effectively capped there.
 
 Small, independent, do in any order.
 
-- **Push the branches.** After `npm run verify` passes locally in both, push and
-  open a PR per repo. The branch name is `feat/ux-and-compliance` in both.
+- ~~**Push the branches.**~~ Cornerstone is pushed with a PR open. **Still to do
+  in `~/otc-learning-app`** — same branch name, `feat/ux-and-compliance`.
 - **`docs/get/` is committed but not live.** Two redirect pages were added so
   `…/OTC_Learn/get/` and `…/CornerStone/get/` become short install links for
   social bios. They go live on push.
-- **Delete `marketing/_superseded-v1/`** in both repos — a leftover duplicate of
-  the older poster set. The current set is `marketing/social-v2/`, which is
-  untracked; commit it or add it to `.gitignore`, whichever you prefer. There is
-  also an untracked `Claude outputs/` folder in `~/CornerStone`.
-- **Google Search Console + Bing Webmaster.** 76 indexable pages are live across
-  the two GitHub Pages sites and neither is verified. Submit sitemaps and add
-  `SoftwareApplication` + `FAQPage` JSON-LD to the product pages.
+- ~~**Delete `marketing/_superseded-v1/`**~~ — done in Cornerstone (`962c81d`).
+  It was byte-identical to the tracked `marketing/social/`. `social-v2/`, the
+  profile avatars and the handle sheet are tracked now; `Claude outputs/` is
+  ignored rather than deleted, since it is where the posters arrived. **Still to
+  do in `~/otc-learning-app`.**
+- **Google Search Console + Bing Webmaster.** The Cornerstone half of this is
+  half-done (`988d405`): `jekyll-sitemap` now generates
+  `https://singhalsachin2003.github.io/CornerStone/sitemap.xml` on every Pages
+  build, and the landing page carries `SoftwareApplication` and `FAQPage` JSON-LD
+  over a visible five-question FAQ. **What needs you:** verifying both properties
+  (it needs account access), submitting that sitemap URL, and doing the same for
+  OTC Learn.
+
+  A `robots.txt` could not be added here. It is only honoured at the *host* root,
+  which is the separate `singhalsachin2003.github.io` repository — the same reason
+  `assetlinks.json` has to be copied there. Add this file at that repo's root:
+
+  ```
+  User-agent: *
+  Allow: /
+
+  Sitemap: https://singhalsachin2003.github.io/CornerStone/sitemap.xml
+  Sitemap: https://singhalsachin2003.github.io/OTC_Learn/sitemap.xml
+  ```
 - **Decide the iOS answer.** Neither app has ever been built for iOS. Every post
   and review reply will ask. Pick "not planned" or "later" and say the same
   thing everywhere.
@@ -257,7 +306,31 @@ These cost time in the previous session.
 
 ---
 
-## 8. Deliberately not doing
+## 8. New — a contrast decision that is yours
+
+`npm run check:contrast` measures three colours in the **light** palette that are
+below WCAG AA for small text, all of them transcribed from the handoff and shipped
+in every version so far:
+
+| Token | Value | Ratio on cream | Where |
+| --- | --- | --- | --- |
+| `tabInactive` | `#9aa1af` | **2.36:1** | the three inactive tab labels, every screen |
+| `meta` | `#8c8578` | 3.33:1 | monospace eyebrows |
+| `muted` | `#6f7a90` | 3.93:1 | row subtitles, meta lines |
+
+The dark palette's counterparts were derived to clear 4.5, so these are a
+light-only inheritance. They are recorded in the script's accepted list rather
+than fixed, because raising them moves type colour on every screen and that is a
+design decision, not a refactor.
+
+`tabInactive` is the one worth taking: 2.36:1 is far enough below the bar that
+the label reads as disabled rather than inactive. `#666e7d` lands at about 4.6:1
+and is the same hue. Say the word and it is a two-line change plus a screenshot
+re-run.
+
+---
+
+## 9. Deliberately not doing
 
 Recorded so nobody re-opens them:
 
