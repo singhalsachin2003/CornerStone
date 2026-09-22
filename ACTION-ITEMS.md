@@ -5,14 +5,18 @@ code review and a UX review of both apps. Twelve findings are already fixed and
 committed; what follows is everything still outstanding, in the order it should
 be done.
 
-> **Updated 22 September 2026.** Four items are now done in Cornerstone — dark
-> mode (2b), the store screenshots (3), the marketing housekeeping and the
-> crawler-facing part of the SEO bullet — plus a rules-of-hooks error that was
-> reddening `npm run lint` on the branch. Each is marked below. **Nothing in OTC
-> Learn has been touched**, so item 2a is untouched and item 5 is untouched.
-> Everything still open needs either the Play Console, a Supabase credential, or
-> a decision only you can make; those are gathered under "What needs you" at the
-> bottom.
+> **Updated 22 September 2026.** Dark mode is done in **both** apps, along with
+> the store screenshots, the marketing housekeeping and the crawler-facing half
+> of the SEO bullet in both repos — plus a rules-of-hooks error that was
+> reddening `npm run lint` on Cornerstone's branch. Each is marked below.
+>
+> Both branches are pushed with a PR open, and `npm run verify` is green in both
+> (Cornerstone 16 suites / 217 tests, OTC Learn 72 / 1,146).
+>
+> What is left is item 1, item 4, item 5 and the verification halves of the
+> Search Console bullet — all of which need the Play Console, a Supabase
+> credential, or a decision only you can make — plus two contrast decisions in
+> section 8 that are new.
 
 Two repos are involved:
 
@@ -21,8 +25,8 @@ Two repos are involved:
 | OTC Learn | `~/otc-learning-app` | `com.otclearn.app` | `feat/ux-and-compliance` |
 | Cornerstone | `~/CornerStone` | `io.cornerstone.study` | `feat/ux-and-compliance` |
 
-`main` is untouched in both. Cornerstone's branch is pushed and has an open PR
-as of 22 September 2026; OTC Learn's is still local and unpushed.
+`main` is untouched in both. Both branches are pushed and carry an open PR as of
+22 September 2026.
 
 ---
 
@@ -44,7 +48,8 @@ cd ~/CornerStone      && git checkout feat/ux-and-compliance
 - `be19a6e` (CS) in-app account deletion, topic search, "worth an hour next" on
   Home, Guest greeting removed, reduce-motion, offline error copy
 
-**Verify gates.** OTC Learn: `npm run verify` passes (71 suites, 1,142 tests).
+**Verify gates.** Both are green. OTC Learn is 72 suites / 1,146 tests, up from
+71 / 1,142 — four new tests for the theme preference.
 Cornerstone: the full `npm run verify` now passes (16 suites, 217 tests) — it
 could not be run in the previous session for environment reasons, and when it
 finally ran it surfaced one real error: a `useMemo` on Home declared *after* an
@@ -88,7 +93,7 @@ replace` plus `revoke`/`grant` — so running it twice is safe.
 
 ---
 
-## 2. Dark mode — **2b done, 2a open**
+## 2. Dark mode — DONE in both
 
 Neither app had it. Both hard-set `"userInterfaceStyle": "light"` in `app.json`
 and neither reads `useColorScheme`. This matters more than it would for most
@@ -102,7 +107,30 @@ to System, in Profile → Appearance.
 Do the two apps as **two separate commits**. OTC Learn is the easier of the two
 and is the better one to do first, because its type scale is already colour-free.
 
-### 2a. OTC Learn
+### 2a. OTC Learn — DONE (`c1131b4`)
+
+Shipped as planned, with the same two deviations Cornerstone needed and one of
+its own:
+
+1. **`colors.dark` does not invert; `primaryFill` does.** `dark` fills the
+   resume card and the profile avatar as well as the primary button, and
+   `text.onDark` sits on the success, error and category fills too — so a single
+   inverting token would have needed white text in one place and near-black in
+   another. A new `primaryFill` / `text.onPrimary` pair carries the "on" states
+   (primary button, selected chip, earned badge), which on a dark ground are
+   pale; `dark` stays a raised warm fill for the cards.
+2. **`masteryFill` now requires the bands** rather than defaulting to the light
+   ones — the contrast walk caught it drawing light-palette bands on a dark
+   screen.
+3. **`useThemedStyles` caches per factory, not per component.** Fifty style
+   sheets × every mounted row is a lot of `StyleSheet.create`; keyed on the
+   factory, each is built at most twice for the life of the process.
+
+`npm run check:contrast` walks seventeen screens in both themes and is green.
+It needs a web export (`npx expo export --platform web --output-dir .expo-web`)
+and is deliberately outside `npm run verify`.
+
+The original plan, for reference:
 
 Scope: 56 files reference `colors.`, all through `StyleSheet.create` at module
 scope. `src/theme/typography.ts` contains **no** colour references, which is the
@@ -228,7 +256,7 @@ Both are console-only; no build required.
 
 ---
 
-## 5. Regional pricing parity for OTC Learn — untouched
+## 5. Regional pricing parity for OTC Learn — **needs you**
 
 Cornerstone is priced deliberately across 173 regions in two bands (anchor
 USD 3.99 / 24.99, override INR 29 / 199 for IN PK BD LK NP NG KE GH EG VN PH ID)
@@ -248,23 +276,31 @@ per user is effectively capped there.
 
 Small, independent, do in any order.
 
-- ~~**Push the branches.**~~ Cornerstone is pushed with a PR open. **Still to do
-  in `~/otc-learning-app`** — same branch name, `feat/ux-and-compliance`.
+- ~~**Push the branches.**~~ Both are pushed, each with a PR open.
 - **`docs/get/` is committed but not live.** Two redirect pages were added so
   `…/OTC_Learn/get/` and `…/CornerStone/get/` become short install links for
   social bios. They go live on push.
-- ~~**Delete `marketing/_superseded-v1/`**~~ — done in Cornerstone (`962c81d`).
-  It was byte-identical to the tracked `marketing/social/`. `social-v2/`, the
-  profile avatars and the handle sheet are tracked now; `Claude outputs/` is
-  ignored rather than deleted, since it is where the posters arrived. **Still to
-  do in `~/otc-learning-app`.**
-- **Google Search Console + Bing Webmaster.** The Cornerstone half of this is
-  half-done (`988d405`): `jekyll-sitemap` now generates
-  `https://singhalsachin2003.github.io/CornerStone/sitemap.xml` on every Pages
-  build, and the landing page carries `SoftwareApplication` and `FAQPage` JSON-LD
-  over a visible five-question FAQ. **What needs you:** verifying both properties
-  (it needs account access), submitting that sitemap URL, and doing the same for
-  OTC Learn.
+- ~~**Delete `marketing/_superseded-v1/`**~~ — done in both (`962c81d`,
+  `f3dd3e6`). In Cornerstone it was byte-identical to the tracked
+  `marketing/social/`; in OTC Learn it was a mix of that and older renderings of
+  posters whose current versions are in `social-v2/`, and those pre-v2
+  renderings went with the folder. `social-v2/`, the profile assets and the
+  handle sheet are tracked in both now; `Claude outputs/` is ignored rather than
+  deleted, since it is where the posters arrived.
+- **Google Search Console + Bing Webmaster.** Done in both repos (`988d405`,
+  `5b4a5c6`): `jekyll-sitemap` now generates a sitemap on every Pages build, and
+  each landing page carries `SoftwareApplication` and `FAQPage` JSON-LD over a
+  visible five-question FAQ. OTC Learn's sitemap covers all seventy-odd product
+  and category pages.
+
+  The per-product pages carry no structured data of their own. `Article` or
+  `DefinedTerm` markup on the sixty-six generated pages would mean changing
+  `scripts/generate-site.js`, and is worth doing only once the properties are
+  verified and there is something to measure it against.
+
+  **What needs you:** verifying both properties and submitting the two sitemap
+  URLs — `…/CornerStone/sitemap.xml` and `…/OTC_Learn/sitemap.xml`. Both need
+  account access.
 
   A `robots.txt` could not be added here. It is only honoured at the *host* root,
   which is the separate `singhalsachin2003.github.io` repository — the same reason
@@ -306,11 +342,16 @@ These cost time in the previous session.
 
 ---
 
-## 8. New — a contrast decision that is yours
+## 8. New — two contrast decisions that are yours
 
-`npm run check:contrast` measures three colours in the **light** palette that are
-below WCAG AA for small text, all of them transcribed from the handoff and shipped
-in every version so far:
+`npm run check:contrast` exists in both repos now, and in both it found the same
+kind of thing: the **light** palette carries values below WCAG AA for small text
+that predate dark mode. Every dark counterpart was derived to clear 4.5, so
+these are a light-only inheritance. They are on each script's accepted list
+rather than fixed, because raising them moves type colour on shipped screens —
+a design decision, not a refactor.
+
+### Cornerstone
 
 | Token | Value | Ratio on cream | Where |
 | --- | --- | --- | --- |
@@ -318,15 +359,27 @@ in every version so far:
 | `meta` | `#8c8578` | 3.33:1 | monospace eyebrows |
 | `muted` | `#6f7a90` | 3.93:1 | row subtitles, meta lines |
 
-The dark palette's counterparts were derived to clear 4.5, so these are a
-light-only inheritance. They are recorded in the script's accepted list rather
-than fixed, because raising them moves type colour on every screen and that is a
-design decision, not a refactor.
+`tabInactive` is the one worth taking: at 2.36:1 the label reads as disabled
+rather than inactive. `#666e7d` is the same hue at about 4.6:1 — a two-line
+change plus a screenshot re-run.
 
-`tabInactive` is the one worth taking: 2.36:1 is far enough below the bar that
-the label reads as disabled rather than inactive. `#666e7d` lands at about 4.6:1
-and is the same hue. Say the word and it is a two-line change plus a screenshot
-re-run.
+### OTC Learn
+
+| Token | Value | Ratio | Where |
+| --- | --- | --- | --- |
+| `chevron` | `#A19E98` | **2.18:1** | the "›" on every row |
+| `categoryColors.*.accent` | e.g. `#2A75BA` | 3.93:1 | eyebrows and badges on category, product and lesson |
+| `text.tertiary` | `#696761` | 4.45:1 | small labels drawn on `track` |
+
+The middle row is the interesting one: `theme/colors.ts` already documents this
+exact mistake — "at `typography.micro` on `colors.background` every one of the
+five hue accents falls short" — and already carries a `.text` variant that
+clears AA. These are simply the call sites that never moved across. Switching
+them is applying the palette's own documented intent, and it is a handful of
+lines; it still changes what ships, so it is your call.
+
+The chevron at 2.18:1 misses even the 3:1 bar that applies to an affordance
+rather than prose. The dark one was set at 5.0:1 on a card.
 
 ---
 
