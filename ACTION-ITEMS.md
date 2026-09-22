@@ -15,8 +15,8 @@ be done.
 >
 > What is left is item 1, item 4, item 5 and the verification halves of the
 > Search Console bullet — all of which need the Play Console, a Supabase
-> credential, or a decision only you can make — plus two contrast decisions in
-> section 8 that are new.
+> credential, or an account only you can sign into. The contrast findings in
+> section 8 were taken rather than filed.
 
 Two repos are involved:
 
@@ -342,46 +342,38 @@ These cost time in the previous session.
 
 ---
 
-## 8. New — two contrast decisions that are yours
+## 8. Light-palette contrast — DONE (`e097c24`, `9b0ccf2`)
 
-`npm run check:contrast` exists in both repos now, and in both it found the same
-kind of thing: the **light** palette carries values below WCAG AA for small text
-that predate dark mode. Every dark counterpart was derived to clear 4.5, so
-these are a light-only inheritance. They are on each script's accepted list
-rather than fixed, because raising them moves type colour on shipped screens —
-a design decision, not a refactor.
+Both apps' light palettes carried values below WCAG AA for small text, inherited
+from the handoffs and shipped in every version. `npm run check:contrast` found
+them; they are fixed rather than filed.
 
-### Cornerstone
+**Cornerstone** — five tokens walked down in lightness only, same hue and
+chroma, all now clearing 4.5:1 on paper, surface and the brass tint:
 
-| Token | Value | Ratio on cream | Where |
+| Token | Was | Now | Was at |
 | --- | --- | --- | --- |
-| `tabInactive` | `#9aa1af` | **2.36:1** | the three inactive tab labels, every screen |
-| `meta` | `#8c8578` | 3.33:1 | monospace eyebrows |
-| `muted` | `#6f7a90` | 3.93:1 | row subtitles, meta lines |
+| `tabInactive` | `#9aa1af` | `#677082` | **2.36:1** — every screen's tab labels |
+| `meta` | `#8c8578` | `#716c61` | 3.33:1 — every monospace eyebrow |
+| `muted` | `#6f7a90` | `#636d80` | 3.93:1 — row subtitles |
+| `brass` | `#9a6b2f` | `#8c612b` | 4.23:1 |
+| `brassBody` | `#8a6a3c` | `#846539` | 4.18:1 on its own tint |
 
-`tabInactive` is the one worth taking: at 2.36:1 the label reads as disabled
-rather than inactive. `#666e7d` is the same hue at about 4.6:1 — a two-line
-change plus a screenshot re-run.
+**OTC Learn** — the category accents drawn as small text now use the `.text`
+variant that `theme/colors.ts` always carried for exactly this, at eleven call
+sites that had never moved across; where a component only ever coloured text
+with it, the prop is renamed `accentText` so the next one cannot get it wrong.
+`text.tertiary` is one step darker, clearing 4.52:1 on `track` as well as on the
+three surfaces the original check covered. The row chevron went from 2.18:1 to
+3.00:1 and stays on the accepted list: it is an affordance rather than prose, so
+3:1 for non-text contrast is the applicable bar, and it should stay lighter than
+body text.
 
-### OTC Learn
+Both walkers are green — every screen, both themes. What is still accepted is
+decorative by intent: Cornerstone's snapshot watermark and Index card, OTC
+Learn's chevron and the week strip's future-day initials.
 
-| Token | Value | Ratio | Where |
-| --- | --- | --- | --- |
-| `chevron` | `#A19E98` | **2.18:1** | the "›" on every row |
-| `categoryColors.*.accent` | e.g. `#2A75BA` | 3.93:1 | eyebrows and badges on category, product and lesson |
-| `text.tertiary` | `#696761` | 4.45:1 | small labels drawn on `track` |
-
-The middle row is the interesting one: `theme/colors.ts` already documents this
-exact mistake — "at `typography.micro` on `colors.background` every one of the
-five hue accents falls short" — and already carries a `.text` variant that
-clears AA. These are simply the call sites that never moved across. Switching
-them is applying the palette's own documented intent, and it is a handful of
-lines; it still changes what ships, so it is your call.
-
-The chevron at 2.18:1 misses even the 3:1 bar that applies to an affordance
-rather than prose. The dark one was set at 5.0:1 on a card.
-
----
+Cornerstone's store screenshots were regenerated, since the palette moved.
 
 ## 9. Deliberately not doing
 
