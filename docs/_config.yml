@@ -1,6 +1,17 @@
 title: Cornerstone
 description: A study app for CFA and FRM candidates. Nothing leaves your device.
 
+# Needed for absolute URLs in the generated sitemap. The site is served from a
+# project path, not the user root, so both halves have to be here.
+url: https://singhalsachin2003.github.io
+baseurl: /CornerStone
+
+# jekyll-sitemap writes /sitemap.xml on every build, which is what Search Console
+# and Bing Webmaster are given. It is on GitHub Pages' supported-plugins list, so
+# it runs on their build without a Gemfile.
+plugins:
+  - jekyll-sitemap
+
 # The public site exists to serve the privacy policy Play Console links to.
 # The release checklist and store-listing draft are working notes, not pages —
 # still readable in the repo, just not published as a website.
