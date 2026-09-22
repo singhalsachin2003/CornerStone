@@ -64,7 +64,7 @@
     "check:syllabus": "tsx scripts/verify-syllabus.ts",
     "test": "jest",
     "store:graphic": "node scripts/make-feature-graphic.mjs",
-    "store:screenshot": "node scripts/capture-home-screenshot.mjs",
+    "store:screenshot": "node scripts/capture-store-screenshots.mjs",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json}\"",
