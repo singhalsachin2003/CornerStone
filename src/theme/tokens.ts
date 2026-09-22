@@ -17,6 +17,20 @@
  *      checked against.
  */
 
+/**
+ * Five of the light values below are a shade darker than the handoff's.
+ *
+ * `muted`, `meta`, `brass`, `brassBody` and `tabInactive` carried the smallest
+ * type in the app at 2.36–4.23:1 on cream — `tabInactive`, on the three
+ * inactive tab labels of every screen, was the worst of them and read as
+ * disabled rather than merely unselected. Each has been walked down in
+ * lightness only: same hue, same chroma, same role, now clearing WCAG AA's
+ * 4.5:1 for small text on paper, surface and the brass tint alike. The ratios
+ * are quoted beside each.
+ *
+ * The dark palette was derived against that bar from the start, so this brings
+ * the two into line rather than moving one ahead of the other.
+ */
 const light = {
   paper: '#f7f4ee',
   paperAlt: '#f2eee5',
@@ -24,11 +38,15 @@ const light = {
   ink: '#16233b',
   inkHover: '#26365a',
   inkBody: '#3d4a63',
-  muted: '#6f7a90',
-  meta: '#8c8578',
-  brass: '#9a6b2f',
+  /** 4.75:1 on paper — was #6f7a90 at 3.93 */
+  muted: '#636d80',
+  /** 4.76:1 on paper — was #8c8578 at 3.33, and it carries the eyebrows */
+  meta: '#716c61',
+  /** 4.96:1 on paper, 4.56 on its own tint — was #9a6b2f at 4.23 */
+  brass: '#8c612b',
   brassText: '#7d5620',
-  brassBody: '#8a6a3c',
+  /** 4.51:1 on the brass tint — was #8a6a3c at 4.18 */
+  brassBody: '#846539',
   brassTintBg: '#f3ead9',
   brassTintBorder: 'rgba(154,107,47,.42)',
   brassRule: 'rgba(154,107,47,.4)',
@@ -36,7 +54,8 @@ const light = {
   brassOnDark: '#e0b26a',
   sage: '#3f6b57',
   rust: '#9b3b34',
-  tabInactive: '#9aa1af',
+  /** 4.54:1 on paper — was #9aa1af at 2.36, the worst in the app */
+  tabInactive: '#677082',
 
   // hairlines
   rule: 'rgba(22,35,59,.14)',

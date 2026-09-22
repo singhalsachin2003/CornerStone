@@ -45,29 +45,16 @@ if (!existsSync(WEB_DIR)) {
 /**
  * Known and accepted, by the colour that produces them.
  *
- *  - `#6f7a90` (muted), `#8c8578` (meta) and `#9a6b2f` (brass) are the light
- *    palette's small-copy colours, transcribed from the handoff and shipped in
- *    every version so far. They land at 3.93, 3.33 and 4.23 against cream. Their
- *    dark counterparts were derived to clear 4.5 — see `src/theme/tokens.ts` —
- *    so this list exists to stop the *light* inheritance from masking a new dark
- *    failure, not to bless it. Raising them changes every screen and is a design
- *    decision, not a refactor.
- *  - `#8a6a3c` (brassBody) on the brass tint reads 4.18 — same inheritance.
- *  - `#9aa1af` (tabInactive) is the worst of them at 2.36 against cream, and is
- *    the one worth changing: its dark counterpart was derived at 4.7. Changing it
- *    moves the tab bar on every screen, so it is filed as a decision in
- *    ACTION-ITEMS rather than taken here.
+ *  - The light palette's small-copy colours — `muted`, `meta`, `brass`,
+ *    `brassBody` and `tabInactive` — used to sit here at 2.36–4.23:1. They were
+ *    darkened in `src/theme/tokens.ts` instead, so nothing of theirs is accepted
+ *    any more; what remains below is only what is decorative by intent.
  *  - The snapshot card's watermark number is decorative: a numeral at 16–22%
  *    behind the card title, in both themes by design.
  *  - The Index variant's card is a dark card in *both* themes — a card style, not
  *    a theme — so its own muted copy reads the same 4.41 in light mode as in dark.
  */
 const EXPECTED = [
-  { color: 'rgb(111, 122, 144)', theme: 'light' },
-  { color: 'rgb(140, 133, 120)', theme: 'light' },
-  { color: 'rgb(154, 107, 47)', theme: 'light' },
-  { color: 'rgb(138, 106, 60)', theme: 'light' },
-  { color: 'rgb(154, 161, 175)', theme: 'light' },
   { color: 'rgba(22, 35, 59, 0.16)', theme: 'light' },
   // the Index card, identical in both themes
   { color: 'rgba(244, 241, 234, 0.22)' },
