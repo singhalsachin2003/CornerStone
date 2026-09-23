@@ -344,9 +344,16 @@ Small, independent, do in any order.
   Sitemap: https://singhalsachin2003.github.io/CornerStone/sitemap.xml
   Sitemap: https://singhalsachin2003.github.io/OTC_Learn/sitemap.xml
   ```
-- **Decide the iOS answer.** Neither app has ever been built for iOS. Every post
-  and review reply will ask. Pick "not planned" or "later" and say the same
-  thing everywhere.
+- ~~**Decide the iOS answer.**~~ **Decided 23 September 2026: no, for now.**
+  Neither app has ever been built for iOS and neither will be for the
+  foreseeable future. The line to use, unchanged, wherever it is asked — a post,
+  a review reply, a DM:
+
+  > Android only for now. No iOS build is planned.
+
+  Say exactly that and nothing softer. "Maybe later" invites the same question
+  every month and reads as a commitment to people who then wait for it.
+  This is settled; it does not need revisiting in this list.
 - **Ask fifteen people for an honest review.** Still the single highest-value
   thirty minutes available — a listing with no ratings suppresses Play ranking
   and conversion at once. Never offer a promo code in the same message; Play
