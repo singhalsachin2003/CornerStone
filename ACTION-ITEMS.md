@@ -320,10 +320,14 @@ Small, independent, do in any order.
   visible five-question FAQ. OTC Learn's sitemap covers all seventy-odd product
   and category pages.
 
-  The per-product pages carry no structured data of their own. `Article` or
-  `DefinedTerm` markup on the sixty-six generated pages would mean changing
-  `scripts/generate-site.js`, and is worth doing only once the properties are
-  verified and there is something to measure it against.
+  **The generated pages carry structured data too, as of `4fc353b`.** All
+  seventy-six: each product page a `TechArticle`, its key terms as a
+  `DefinedTermSet` and a `BreadcrumbList`; each category page a `CollectionPage`
+  whose `ItemList` is the products it names. Written into
+  `scripts/generate-site.js`, so it regenerates with the catalogue rather than
+  going stale beside it, and three tests read the markup back off the pages —
+  the shape of every block, that no paid lesson or worked example appears in any
+  of it, and that every key term described is printed on the page above it.
 
   **What needs you:** verifying both properties and submitting the two sitemap
   URLs — `…/CornerStone/sitemap.xml` and `…/OTC_Learn/sitemap.xml`. Both need
