@@ -323,29 +323,40 @@ Small, independent, do in any order.
   renderings went with the folder. `social-v2/`, the profile assets and the
   handle sheet are tracked in both now; `Claude outputs/` is ignored rather than
   deleted, since it is where the posters arrived.
-- **Google Search Console + Bing Webmaster.** Done in both repos (`988d405`,
-  `5b4a5c6`): `jekyll-sitemap` now generates a sitemap on every Pages build, and
-  each landing page carries `SoftwareApplication` and `FAQPage` JSON-LD over a
-  visible five-question FAQ. OTC Learn's sitemap covers all seventy-odd product
-  and category pages.
+- **Google Search Console — verified, both sitemaps submitted (23 September 2026).**
+  The property is the host root, `https://singhalsachin2003.github.io/`, which
+  covers both apps beneath it. Verified by HTML file: `google5f79577bb49d237b.html`
+  is committed at the root of the `singhalsachin2003.github.io` repo and must
+  **stay there**, because removing it un-verifies the property. Google reported
+  "Ownership verified".
 
-  **The generated pages carry structured data too, as of `4fc353b`.** All
-  seventy-six: each product page a `TechArticle`, its key terms as a
-  `DefinedTermSet` and a `BreadcrumbList`; each category page a `CollectionPage`
-  whose `ItemList` is the products it names. Written into
-  `scripts/generate-site.js`, so it regenerates with the catalogue rather than
-  going stale beside it, and three tests read the markup back off the pages —
-  the shape of every block, that no paid lesson or worked example appears in any
-  of it, and that every key term described is printed on the page above it.
+  Both sitemaps are submitted — `CornerStone/sitemap.xml` (4 URLs) and
+  `OTC_Learn/sitemap.xml` (80). Both still read **"Couldn't fetch"**, which is
+  the state a sitemap sits in until Google's first crawl of it; both serve 200
+  with valid XML and absolute URLs on the right host, checked from outside the
+  Console. Worth glancing at in a few days rather than acting on now.
 
-  **What needs you:** verifying both properties and submitting the two sitemap
-  URLs — `…/CornerStone/sitemap.xml` and `…/OTC_Learn/sitemap.xml`. Both need
-  account access.
+  Each landing page carries `SoftwareApplication` and `FAQPage` JSON-LD over a
+  visible FAQ (`988d405`, `5b4a5c6`), and OTC Learn's seventy-six generated
+  pages carry `TechArticle`, `DefinedTermSet` and `BreadcrumbList` (`4fc353b`).
+  `robots.txt` is live at the host root naming both sitemaps.
 
-  ~~A `robots.txt` could not be added here.~~ **Added to the host-root repo and
-  live** at `https://singhalsachin2003.github.io/robots.txt`, naming both
-  sitemaps. It had to go in `singhalsachin2003.github.io` rather than either app
-  repo — the same reason `assetlinks.json` does — and both sitemaps return 200.
+  **Submitting the sitemap is what caught this:** `docs/revenuecat.md` had been
+  publishing at `/OTC_Learn/revenuecat.html` — a working note carrying the
+  install count, the pricing reasoning and the argument for why the ₹399
+  lifetime tier is the dangerous one. No keys; the SDK key is masked in it. It
+  is excluded now (`ac8e40b`) and 404s, and it left the sitemap before Google
+  ever fetched it. Cornerstone's config already excluded its equivalents and
+  even recorded that PRICING.md was public for a day; OTC Learn's had no
+  `exclude` list at all. **Anything under `docs/` is published unless it is
+  named there.**
+
+  **What needs you: Bing Webmaster.** It is not signed in, and the way in is
+  either a Microsoft account or "sign in with Google" — creating an account and
+  granting OAuth on your behalf is not something I will do. Once you are in, it
+  imports verified properties straight from Search Console, so it is a couple of
+  clicks rather than another verification.
+
 - ~~**Decide the iOS answer.**~~ **Decided 23 September 2026: no, for now.**
   Neither app has ever been built for iOS and neither will be for the
   foreseeable future. The line to use, unchanged, wherever it is asked — a post,
