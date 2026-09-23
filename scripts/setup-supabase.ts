@@ -29,7 +29,15 @@ const API = 'https://api.supabase.com';
 const TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
 const DRY_RUN = process.argv.includes('--dry-run');
 
-/** What the app expects; `.env.example` and `src/sync/client.ts` agree with it. */
+/**
+ * What the app expects; `.env.example` and `src/sync/client.ts` agree with it.
+ *
+ * **Matched case-insensitively below, and that is not fussiness.** The live
+ * project is named `CornerStone`, with a capital S, and this constant is not —
+ * so an exact match found nothing, and finding nothing is the branch that
+ * *creates a project*. A second, empty database would then be provisioned and
+ * its keys printed as the ones to ship, which is a worse outcome than any error.
+ */
 const PROJECT_NAME = 'Cornerstone';
 /**
  * London. OTC Learn went to Tokyo, which its own notes call further away than it
@@ -95,11 +103,20 @@ function generatePassword(): string {
 
 async function findOrCreateProject(): Promise<{ project: Project; password: string | null }> {
   const existing = await api<Project[]>('/v1/projects');
-  const match = existing.find((p) => p.name === PROJECT_NAME);
+  const wanted = PROJECT_NAME.toLowerCase();
+  const match = existing.find((p) => p.name.toLowerCase() === wanted);
   if (match) {
     console.log(`Reusing existing project "${match.name}" (${match.ref ?? match.id}).`);
     return { project: match, password: null };
   }
+
+  // Creating is the expensive branch — it provisions a second database and
+  // prints its keys as the ones to ship — so say what was looked for and what
+  // was there before taking it. The bug this replaces was silent.
+  console.log(
+    `No project named "${PROJECT_NAME}" (case-insensitive). This account has: ` +
+      `${existing.map((p) => `"${p.name}"`).join(', ') || 'none'}.`,
+  );
 
   const orgs = await api<Organization[]>('/v1/organizations');
   if (orgs.length === 0) throw new Error('This account has no organizations.');

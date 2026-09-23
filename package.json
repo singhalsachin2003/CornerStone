@@ -73,6 +73,7 @@
     "check:applinks": "tsx scripts/check-applinks.ts",
     "check:pristine": "tsx scripts/check-node-modules-pristine.ts",
     "setup:supabase": "tsx scripts/setup-supabase.ts",
+    "apply:deletion": "tsx scripts/apply-account-deletion.ts",
     "check:glossary": "tsx scripts/check-glossary.ts",
     "check:play": "tsx scripts/check-play.ts",
     "create:subscription": "tsx scripts/create-subscription.ts",
