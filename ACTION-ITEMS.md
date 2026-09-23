@@ -62,7 +62,7 @@ benefit. Leave the duplication alone until you are next in that code anyway.
 
 ---
 
-## 1. Deploy the `delete_account` SQL — DONE for Cornerstone (`a6531dd`)
+## 1. Deploy the `delete_account` SQL — DONE in both (`a6531dd`, `47029da`)
 
 **Cornerstone: applied 23 September 2026 and verified.** `npm run apply:deletion
 -- --commit` sent the `-- Account deletion` tail of `supabase/schema.sql` to the
@@ -77,13 +77,17 @@ live project. All three acceptance checks pass:
 The remaining acceptance line — deleting a throwaway account from a debug build
 — needs a device, and is the half that was never blocked.
 
-**OTC Learn: the script is ported (`47029da`) and the project was paused.** Free
-plan, suspended after a quiet week, and a paused project answers the management
-API but not SQL — which also means **sign-in and sync have been dead in OTC
-Learn for anyone who tried**. A restore was started on 23 September; run
-`npm run apply:deletion -- --commit` in `~/otc-learning-app` once it reports
-ACTIVE_HEALTHY. The script refuses on any other status rather than failing
-obscurely.
+**OTC Learn: applied the same day, once its project was awake.** It was paused —
+free plan, suspended after a quiet week — and a paused project answers the
+management API but not SQL. That is its own finding: **sign-in and sync had been
+dead in OTC Learn for anyone who tried**, not merely account deletion. Restored,
+then applied and verified the same three ways, including the anonymous call
+refused with `401 / 42501`.
+
+The project will pause again after another quiet week. That is the free plan
+working as designed and the app tolerates it — no account, no sync, everything
+else unaffected — but it is why the script refuses on any status but
+ACTIVE_HEALTHY rather than failing obscurely.
 
 Two things worth keeping from doing this:
 
