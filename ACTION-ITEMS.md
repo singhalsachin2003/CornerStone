@@ -256,21 +256,34 @@ Both are console-only; no build required.
 
 ---
 
-## 5. Regional pricing parity for OTC Learn — **needs you**
+## 5. Regional pricing parity for OTC Learn — DONE (`96cd894`, `2b444c9`)
 
-Cornerstone is priced deliberately across 173 regions in two bands (anchor
-USD 3.99 / 24.99, override INR 29 / 199 for IN PK BD LK NP NG KE GH EG VN PH ID)
-— see `~/CornerStone/docs/PRICING.md`. OTC Learn is still India-only prices with
-Play's automatic conversion, which produces odd price points elsewhere
-(₹29 converts to roughly a third of a dollar).
+Applied to the live product on 23 September 2026. `otc_learn_pro`'s `monthly`
+and `yearly` base plans are ACTIVE in **173 regions**, up from one, read back
+from Play rather than trusted from the write.
 
-The `set:regions` tooling already exists in the Cornerstone repo. Mirror the
-approach onto `otc_learn_pro`, including the lifetime tier — and note the
-warning already recorded in `~/otc-learning-app/docs/revenuecat.md`: at ₹399 the
-lifetime tier is 2.0× the annual, so it will be the common choice and revenue
-per user is effectively capped there.
+| Band         | Monthly  | Yearly    | Regions                             |
+| ------------ | -------- | --------- | ----------------------------------- |
+| **Anchor**   | USD 3.99 | USD 24.99 | everywhere not listed below         |
+| **Override** | INR 29   | INR 199   | IN PK BD LK NP NG KE GH EG VN PH ID |
 
----
+The same bands, override list and safety rules as Cornerstone, from a script
+ported into this repo as `npm run set:regions` (JavaScript, since this repo's
+scripts are, so it needs no new dependency). India is pinned rather than
+converted — conversion rounds ₹29 to ₹30 and Play restricts raising a live
+price — and the script aborts if any already-priced region would change value.
+
+**Until this ran the subscription was unavailable outside India**, so the app
+never offered the upgrade anywhere else.
+
+**The lifetime tier was deliberately not created.** This list asked for it, but
+`docs/revenuecat.md` records the decision against it and the reasoning still
+holds: under a content pipeline a ₹399 one-time unlock sells every future asset
+class forever for under fourteen months of monthly, and **Play never revokes a
+product from somebody who has bought it** — so it is the one pricing move here
+that cannot be undone. It exists in RevenueCat's Test Store only, and no
+one-time product exists in the Play Console. If it should exist, that is a
+decision to take deliberately rather than as part of a regional-pricing job.
 
 ## 6. Housekeeping
 
