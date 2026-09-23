@@ -37,6 +37,29 @@ import { mkdtempSync, readFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+/**
+ * Read from `app.json` rather than written here. A literal went stale the moment
+ * 1.1.0 became 1.2.0, and a stale expectation fails a good build — which teaches
+ * people to ignore the check.
+ */
+const APP_VERSION = (
+  JSON.parse(readFileSync(join(__dirname, '..', 'app.json'), 'utf8')) as {
+    expo: { version: string };
+  }
+).expo.version;
+
+/**
+ * The Hermes engine build, read out of the artifact.
+ *
+ * versionCode 10 and 11 both shipped a Hermes with a memory regression, and
+ * neither `expo-doctor` nor the upgrade command noticed: both read the source
+ * tree, and neither opens the AAB. `…0.14` is the bad one, `…0.16` the first
+ * fix, `…0.17` what vc12 shipped. Asserting "not the known-bad build" rather
+ * than an exact string, so a later Expo upgrade does not fail this for moving
+ * forward.
+ */
+const BAD_HERMES = '250829098.0.14';
+
 /** Anything outside this set means a dependency added a permission. */
 const EXPECTED_PERMISSIONS = [
   'android.permission.INTERNET',
@@ -63,6 +86,9 @@ const EXPECTED_STRINGS = [
   'Search a term or abbreviation', // the glossary screen's search placeholder
   'Back up your progress', // the optional account screen
   'nothing leaves your device', // onboarding's corrected privacy line, new in vc11
+  // Dark mode is what this release is. A string only the Theme row can carry is
+  // how the artifact proves it, rather than the build log claiming it.
+  "System follows your phone's light or dark setting.",
 ];
 
 /**
@@ -110,7 +136,7 @@ function main() {
     const versionName = /android:versionName="([^"]+)"/.exec(manifest)?.[1];
     console.log('Manifest');
     check(!!versionCode, 'versionCode present', versionCode ?? '');
-    check(versionName === '1.1.0', 'versionName is 1.1.0', versionName ?? '(missing)');
+    check(versionName === APP_VERSION, `versionName is ${APP_VERSION}`, versionName ?? '(missing)');
 
     // Trap 3: match the element, never the word "permission" in the name.
     const declared = [...manifest.matchAll(/<uses-permission android:name="([^"]+)"/g)].map(
@@ -130,6 +156,21 @@ function main() {
     // ---- Unpack once; everything below reads the whole artifact ----
     execFileSync('unzip', ['-q', '-o', aab, '-d', work]);
     const assets = join(work, 'base', 'assets');
+
+    // ---- Engine. The regression neither expo-doctor nor the CLI can see ----
+    console.log('\nHermes (read from the artifact, never from the tooling)');
+    const hermesPath = join(work, 'base', 'lib', 'arm64-v8a', 'libhermesvm.so');
+    if (existsSync(hermesPath)) {
+      const engine = readFileSync(hermesPath);
+      const versions = [...engine.toString('latin1').matchAll(/25\d{7}\.\d+\.\d+/g)].map(
+        (m) => m[0],
+      );
+      const found = [...new Set(versions)];
+      check(found.length > 0, 'Hermes build string found', found.join(', ') || 'none');
+      check(!found.includes(BAD_HERMES), `not the ${BAD_HERMES} regression`, found.join(', '));
+    } else {
+      check(false, 'libhermesvm.so present', hermesPath);
+    }
 
     console.log('\nConfig (base/assets/app.config — NOT the JS bundle)');
     const config = JSON.parse(readFileSync(join(assets, 'app.config'), 'utf8'));
