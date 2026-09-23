@@ -235,24 +235,38 @@ npm run store:screenshot
 An eighth shot is new — `08-home-dark.png`, the dashboard in dark mode. Play
 allows eight; upload it last so the existing seven keep their positions.
 
-**What needs you:** uploading them in Play Console, in the numbered order
-`docs/STORE_LISTING.md` gives.
+**Uploaded and submitted for review on 22 September 2026**, in the numbered
+order, replacing all eight of the stale ones. Nothing here needs you.
 
 ---
 
-## 4. Play Console — two declarations — **needs you**
+## 4. Play Console — two declarations — DONE 22 September 2026
 
-Both are console-only; no build required.
-
-1. **Account deletion URL.** Data safety → "Can users request data deletion?"
-   must now point at the published pages, and the in-app path exists as of the
-   commits above:
+1. **Account deletion URL** — already filed correctly in both apps, and checked
+   against the published pages:
    - OTC Learn: `https://singhalsachin2003.github.io/OTC_Learn/account-deletion/`
    - Cornerstone: `https://singhalsachin2003.github.io/CornerStone/DELETE-ACCOUNT.html`
-2. **Cornerstone Data safety** — confirm the corrected answers in
-   `docs/PRIVACY.md` (lines 137–160) are what is actually filed and in review.
-   The release checklist's contradicting rows were fixed in `4aac1ba`, but the
-   *form itself* is the thing that gets enforced.
+
+   Both *pages*, though, still said there was no in-app route. `be19a6e` and
+   `34c4a9e` had added one, so both now lead with Profile → Account → Delete
+   account and keep email as the fallback — Play asks that the page "prominently
+   feature the steps that users should take".
+
+2. **Cornerstone Data safety** — checked against `docs/PRIVACY.md`, and it was
+   **not** what was filed. Every data type was marked *"processed ephemerally"*.
+   Play does not show ephemeral data on a listing, so the public page read **"No
+   data collected"** for an app that stores an email address in Supabase and
+   sells a subscription, while the Console's step 2 still said "Yes, collects"
+   and every per-type row read "Completed". The only screen that reveals it is
+   step 5's Store Listing preview.
+
+   Corrected on all four types — Name, Email address, Purchase history, Other
+   user-generated content — and submitted for review together with the
+   screenshots. The preview now lists exactly what `docs/PRIVACY.md` specifies.
+   **OTC Learn was checked the same way and is correct.**
+
+   Ephemeral means "in memory, for the life of the request". Anything written to
+   a database is not ephemeral, and this is the trap to check first next time.
 
 ---
 
@@ -289,10 +303,10 @@ decision to take deliberately rather than as part of a regional-pricing job.
 
 Small, independent, do in any order.
 
-- ~~**Push the branches.**~~ Both are pushed, each with a PR open.
-- **`docs/get/` is committed but not live.** Two redirect pages were added so
-  `…/OTC_Learn/get/` and `…/CornerStone/get/` become short install links for
-  social bios. They go live on push.
+- ~~**Push the branches.**~~ Both merged to `main` on 22 September 2026 —
+  Cornerstone PR #3, OTC Learn PR #1, squashed, both verify gates green.
+- ~~**`docs/get/` is committed but not live.**~~ Live with the merge:
+  `…/OTC_Learn/get/` and `…/CornerStone/get/` are the short install links.
 - ~~**Delete `marketing/_superseded-v1/`**~~ — done in both (`962c81d`,
   `f3dd3e6`). In Cornerstone it was byte-identical to the tracked
   `marketing/social/`; in OTC Learn it was a mix of that and older renderings of
