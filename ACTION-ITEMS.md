@@ -62,34 +62,39 @@ benefit. Leave the duplication alone until you are next in that code anyway.
 
 ---
 
-## 1. Deploy the `delete_account` SQL — blocking, still open
+## 1. Deploy the `delete_account` SQL — DONE for Cornerstone (`a6531dd`)
 
-**Needs you.** There is no `.env` in either repo, the Supabase CLI is not
-installed, and the function has to be applied with a credential that cannot live
-in the tree. Nothing here can be done from a session.
+**Cornerstone: applied 23 September 2026 and verified.** `npm run apply:deletion
+-- --commit` sent the `-- Account deletion` tail of `supabase/schema.sql` to the
+live project. All three acceptance checks pass:
 
-**Why it is first:** the Delete account button now exists in both apps and calls
-`rpc('delete_account')`. That function is written into each repo's
-`supabase/schema.sql` but **has not been applied to either live project**. Until
-it is, the button fails with a Postgres error for every user. Shipping the UI
-without the function is worse than not shipping the UI.
+- `select proname, prosecdef from pg_proc where proname = 'delete_account'`
+  returns one row with `prosecdef = true`.
+- `authenticated` holds EXECUTE; `anon` and `public` do not.
+- An anonymous call over the publishable key is refused —
+  `401 / 42501 permission denied for function delete_account`.
 
-Files: `~/otc-learning-app/supabase/schema.sql` and
-`~/CornerStone/supabase/schema.sql` — the function is appended at the end of
-each, under an `-- Account deletion` heading.
+The remaining acceptance line — deleting a throwaway account from a debug build
+— needs a device, and is the half that was never blocked.
 
-Apply the tail of each file to the matching Supabase project (SQL editor, or
-`supabase db push` if the CLI is linked). The block is idempotent — `create or
-replace` plus `revoke`/`grant` — so running it twice is safe.
+**OTC Learn: the script is ported (`47029da`) and the project was paused.** Free
+plan, suspended after a quiet week, and a paused project answers the management
+API but not SQL — which also means **sign-in and sync have been dead in OTC
+Learn for anyone who tried**. A restore was started on 23 September; run
+`npm run apply:deletion -- --commit` in `~/otc-learning-app` once it reports
+ACTIVE_HEALTHY. The script refuses on any other status rather than failing
+obscurely.
 
-**Acceptance:**
+Two things worth keeping from doing this:
 
-- `select proname, prosecdef from pg_proc where proname = 'delete_account';`
-  returns one row with `prosecdef = true` in both projects.
-- Signed in as a throwaway account in a debug build, Profile → Account → Delete
-  account → confirm removes the row from `auth.users` and returns the app to the
-  signed-out state with local progress intact.
-- Signed out, calling the RPC is refused.
+- **`setup:supabase` would have created a duplicate project.** It matched
+  `p.name === 'Cornerstone'` against a project named `CornerStone`, and "no
+  match" is the branch that provisions a new database and prints its keys as the
+  ones to ship. Fixed to match case-insensitively.
+- **The grant check asserts absence, not equality.** `postgres` and
+  `service_role` hold EXECUTE through ownership and Supabase's defaults;
+  revoking from `public, anon` does not touch them. What must never appear is
+  `anon`.
 
 ---
 
@@ -333,17 +338,10 @@ Small, independent, do in any order.
   URLs — `…/CornerStone/sitemap.xml` and `…/OTC_Learn/sitemap.xml`. Both need
   account access.
 
-  A `robots.txt` could not be added here. It is only honoured at the *host* root,
-  which is the separate `singhalsachin2003.github.io` repository — the same reason
-  `assetlinks.json` has to be copied there. Add this file at that repo's root:
-
-  ```
-  User-agent: *
-  Allow: /
-
-  Sitemap: https://singhalsachin2003.github.io/CornerStone/sitemap.xml
-  Sitemap: https://singhalsachin2003.github.io/OTC_Learn/sitemap.xml
-  ```
+  ~~A `robots.txt` could not be added here.~~ **Added to the host-root repo and
+  live** at `https://singhalsachin2003.github.io/robots.txt`, naming both
+  sitemaps. It had to go in `singhalsachin2003.github.io` rather than either app
+  repo — the same reason `assetlinks.json` does — and both sitemaps return 200.
 - ~~**Decide the iOS answer.**~~ **Decided 23 September 2026: no, for now.**
   Neither app has ever been built for iOS and neither will be for the
   foreseeable future. The line to use, unchanged, wherever it is asked — a post,
