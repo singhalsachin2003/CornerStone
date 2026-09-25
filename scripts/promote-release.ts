@@ -180,7 +180,8 @@ async function main() {
 
     console.log(
       '\n  Console-only, and NOT checked by this script — confirm both are done:\n' +
-        '    Data Safety     declares email + purchase history (currently "No data collected")\n' +
+        '    Data Safety     declares what the app collects — check the live page,\n' +
+        '                    not the Console: play.google.com/store/apps/datasafety?id=<pkg>\n' +
         '    Sign-in details says Yes, with the PLAYREVIEW route\n' +
         '  A build collecting data its listing denies collecting is what Play suspends for.',
     );
