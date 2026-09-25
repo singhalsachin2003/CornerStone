@@ -18,6 +18,23 @@ be done.
 > credential, or an account only you can sign into. The contrast findings in
 > section 8 were taken rather than filed.
 
+> **Shipped 25 September 2026.** Both apps are live in production: Cornerstone
+> **1.2.0 (vc13)**, OTC Learn **1.3.0 (vc10)**, both at 100% rollout, both read
+> back from the Play API. Dark mode is the release in each.
+>
+> Three things the release itself turned up, each written up where it belongs:
+> OTC Learn was about to ship the Hermes memory regression Cornerstone fixed in
+> vc12 (`check:aab` now exists in both repos and reads the engine out of the
+> artifact); the Play service account had six permissions on OTC Learn against
+> Cornerstone's ten, so `eas submit` failed with an error naming neither the app
+> nor the permission; and three separate stale literals failed or misreported a
+> good release — a pinned `versionName`, a release-notes marker containing
+> "v1.1", and a printed claim about what the store listing said.
+>
+> **Neither app has been run on a real Android device.** Dark mode was verified
+> against the web export and the artifact only. That was flagged before
+> promoting and shipping at full rollout was the call made.
+
 Two repos are involved:
 
 | App | Repo | Package | Branch to work on |
