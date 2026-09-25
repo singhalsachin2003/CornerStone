@@ -48,9 +48,15 @@ const PLACEHOLDER = 'First release of this awesome app.';
  */
 function releaseNotes(): string {
   const doc = readFileSync(join(process.cwd(), 'docs', 'STORE_LISTING.md'), 'utf8');
-  const marker = doc.indexOf('The v1.1 text, at');
+  // Version-free on purpose: the marker used to read "The v1.1 text, at", which
+  // stopped matching the moment the release was not v1.1 — a stale literal
+  // failing a good release, the same shape of bug as a pinned versionName.
+  const marker = doc.indexOf('The current text, at');
   if (marker < 0)
-    throw new Error('Could not find the release notes marker in docs/STORE_LISTING.md');
+    throw new Error(
+      'Could not find "The current text, at" in docs/STORE_LISTING.md — the release ' +
+        'notes are read from the fenced block directly below that sentence.',
+    );
   const open = doc.indexOf('```', marker);
   const close = doc.indexOf('```', open + 3);
   if (open < 0 || close < 0) throw new Error('Could not find the fenced release notes block');

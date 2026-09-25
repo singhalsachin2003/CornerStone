@@ -13,9 +13,10 @@ Paste this verbatim into Play Console → Main store listing → App name:
 ```
 Cornerstone: Exam Study
 ```
+
 (23 of 30 characters)
 
-**Do not put CFA or FRM in the title.** A trademark in an app *name* reads as a claim to the
+**Do not put CFA or FRM in the title.** A trademark in an app _name_ reads as a claim to the
 mark and is the most common trigger for a takedown request from CFA Institute or GARP. Both
 enforce actively.
 
@@ -43,6 +44,7 @@ Unlike the package name, the store title **can** be changed later in Play Consol
 ```
 Snapshot cards and quizzes for CFA® and FRM® candidates. Fifteen honest minutes
 ```
+
 (79 characters)
 
 The ® symbols matter more here than anywhere else in the listing: the short description and
@@ -135,12 +137,12 @@ Association of Risk Professionals.
 
 ## Assets
 
-| Asset | Spec | Status |
-| --- | --- | --- |
-| App icon | 512×512 PNG, 32-bit | ✅ `assets/icon.png` (1024², downscale on upload) |
-| Feature graphic | 1024×500 PNG/JPG, no alpha | ✅ `store/feature-graphic.png` — verified 24-bit RGB, no alpha |
-| Phone screenshots | 2–8, min 320px, 16:9 or 9:16 | ✅ `store/screenshots/` — 8 at 1080×1920 |
-| 7"/10" tablet screenshots | optional, improves ranking | Not created — reuse phone shots or skip |
+| Asset                     | Spec                         | Status                                                         |
+| ------------------------- | ---------------------------- | -------------------------------------------------------------- |
+| App icon                  | 512×512 PNG, 32-bit          | ✅ `assets/icon.png` (1024², downscale on upload)              |
+| Feature graphic           | 1024×500 PNG/JPG, no alpha   | ✅ `store/feature-graphic.png` — verified 24-bit RGB, no alpha |
+| Phone screenshots         | 2–8, min 320px, 16:9 or 9:16 | ✅ `store/screenshots/` — 8 at 1080×1920                       |
+| 7"/10" tablet screenshots | optional, improves ranking   | Not created — reuse phone shots or skip                        |
 
 Regenerate the feature graphic after a brand change with `npm run store:graphic`
 (then `sips -z 500 1024 store/feature-graphic@2x.png --out store/feature-graphic.png`).
@@ -182,6 +184,7 @@ seven that carried the listing keep their positions.
 ## Content rating questionnaire
 
 Answer honestly; this app should land at **Everyone / PEGI 3**.
+
 - No violence, sexuality, profanity, controlled substances, gambling
 - No user-generated content, no user interaction, no location sharing
 - **Purchases: yes** — from version 1.1 there is a subscription. This answer changed;
@@ -221,7 +224,29 @@ awesome app."** That string is live on the store listing today, read by anyone w
 What's new. It was never written; it is what `eas submit` puts there when nothing is
 supplied. Replacing it is free and needs no binary.
 
-Play caps this field at **500 characters**. The v1.1 text, at 404:
+Play caps this field at **500 characters**, and `npm run promote` reads the block
+below — so the text here is the text that ships, and the count here is the count that
+is enforced. **The marker it searches for is the sentence directly above the fence**;
+keep it version-free, because a "v1.1" in it made the script break on the first release
+that was not v1.1.
+
+The current text, at 447:
+
+```
+Dark mode. Profile → Appearance offers System, Light or Dark; System follows your phone, so it dims in the evening on its own.
+
+Also new:
+• Delete your account, and everything backed up under it, from Profile → Account
+• Search topics and segments by name
+• Home suggests the three areas worth an hour next, weighted by exam weight
+• Smaller text reads more clearly throughout, in both themes
+• Animations honour your phone's reduce-motion setting
+```
+
+### Superseded: the v1.1 text, at 404
+
+Kept because the reasoning under it still applies to any release that touches the
+subscription.
 
 ```
 Cornerstone Plus: the study segments written since launch, across all 38 topic areas.
