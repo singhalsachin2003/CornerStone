@@ -351,7 +351,9 @@ Small, independent, do in any order.
   `OTC_Learn/sitemap.xml` (80). Both still read **"Couldn't fetch"**, which is
   the state a sitemap sits in until Google's first crawl of it; both serve 200
   with valid XML and absolute URLs on the right host, checked from outside the
-  Console. Worth glancing at in a few days rather than acting on now.
+  Console. Bing then crawled the identical files successfully on 26 September
+  (see the Bing entry below), which settles it: the files are fine and this is
+  Google's queue. Wait it out.
 
   Each landing page carries `SoftwareApplication` and `FAQPage` JSON-LD over a
   visible FAQ (`988d405`, `5b4a5c6`), and OTC Learn's seventy-six generated
@@ -368,11 +370,28 @@ Small, independent, do in any order.
   `exclude` list at all. **Anything under `docs/` is published unless it is
   named there.**
 
-  **What needs you: Bing Webmaster.** It is not signed in, and the way in is
-  either a Microsoft account or "sign in with Google" — creating an account and
-  granting OAuth on your behalf is not something I will do. Once you are in, it
-  imports verified properties straight from Search Console, so it is a couple of
-  clicks rather than another verification.
+  ~~**What needs you: Bing Webmaster.**~~ **Done 26 September 2026.** Signed in
+  with Google, which let Bing import the verified property straight from Search
+  Console — no second verification, as expected. The host root property covers
+  both apps.
+
+  Bing had already auto-discovered both sitemaps from the root `robots.txt` and
+  **crawled both successfully the same day**: `OTC_Learn/sitemap.xml` 80 URLs,
+  `CornerStone/sitemap.xml` 4 URLs, zero errors, zero warnings. All 84 URLs were
+  then pushed through URL Submission (quota is 100/day) to skip waiting on
+  Bing's own crawl schedule.
+
+  **That is the answer to Google's "Couldn't fetch", and it is worth writing
+  down.** Two independent crawlers were given the same files, the same
+  `robots.txt` and the same host; one fetched everything on its first attempt.
+  So the sitemaps, the absolute URLs and the GitHub Pages serving are all
+  correct, and Google's state is queue latency on a new property rather than a
+  defect. Do not go looking for a bug in the files — there isn't one. Bing also
+  feeds DuckDuckGo, Ecosia and ChatGPT's web search, so for OTC Learn's
+  seventy-six generated pages this is not a consolation prize.
+
+  Recommendations and Search Performance were both empty — Bing states reports
+  take up to 48 hours on a new property. Worth a look after that, not before.
 
 - ~~**Decide the iOS answer.**~~ **Decided 23 September 2026: no, for now.**
   Neither app has ever been built for iOS and neither will be for the
