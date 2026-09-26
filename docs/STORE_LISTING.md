@@ -321,7 +321,12 @@ running app from `npm run store:screenshot` and the feature graphic comes from
 not an overlay — a new screenshot set or a reworded paragraph in the default leaves this listing
 on the old text silently. Re-run the duplicate, or edit both.
 
-**Submitted for review 2026-09-26.** One change went to Google: "English (United Kingdom) –
-en-GB — add language". The rollout percentage is not part of that submission — Play applies it
-to the listing directly, which is why the queue dropped from two changes to one after it was
-set to 100%. Reviews usually land within seven days.
+**Submitted for review 2026-09-26, and live the same day.** One change went to Google:
+"English (United Kingdom) – en-GB — add language". The rollout percentage is not part of that
+submission — Play applies it to the listing directly, which is why the queue dropped from two
+changes to one after it was set to 100%. Play quotes up to seven days for review; this cleared
+in under an hour, so do not plan around the seven-day figure in either direction.
+
+Status now reads **Live**, 18 search keywords, 100%, no end date. Conversion data will appear
+under Grow users → Store performance; there is no default-listing comparison to read at 100%,
+so judge it against the default listing's own 33.3% rather than against a split.

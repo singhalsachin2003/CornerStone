@@ -35,6 +35,22 @@ be done.
 > against the web export and the artifact only. That was flagged before
 > promoting and shipping at full rollout was the call made.
 
+> **Checked 26 September 2026.** Android developer verification is **satisfied** —
+> a Play notification warns that apps not registered by **30 September 2026** are
+> removed from Play globally, and it is easy to read that as a live threat. It is
+> not: both packages show **Registered** with three signing keys each
+> (`com.otclearn.app` 29 Jul, `io.cornerstone.study` 8 Aug), and the Identity tab
+> is already populated from the developer account. Nothing to do before the
+> deadline. The console link in that notification points at `u/0`, which bounces
+> to a sign-in wall — the page is at
+> `play.google.com/console/u/1/developers/<dev-id>/android-developer-verification`.
+>
+> Also live as of today: Cornerstone's **CFA and FRM search keywords** custom
+> store listing, 18 keywords at 100%, approved in under an hour rather than the
+> seven days Play quotes. Both production releases (Cornerstone 1.2.0 vc13, OTC
+> Learn 1.3.0 vc10) completed review on 25 September and are at full roll-out in
+> 177 of 177 countries — neither is waiting on anything.
+
 Two repos are involved:
 
 | App | Repo | Package | Branch to work on |
