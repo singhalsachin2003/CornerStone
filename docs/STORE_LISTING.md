@@ -263,3 +263,57 @@ Leading with what stays free is deliberate. The one thing an existing user wants
 when a study app they already paid attention to adds a subscription is whether the thing
 they were using is about to be taken away. It is not, and saying so first is worth more
 than the feature list underneath.
+
+---
+
+## Custom store listing — CFA and FRM search keywords
+
+Created 2026-09-26 under Grow users → Store presence → Store listings. Reference name
+**`CFA and FRM search keywords`** — Play does not let that name be changed afterwards, which
+is why it is not the `Copy of Default store listing` the duplicate flow proposes.
+
+It exists because of the title rule above. The app name cannot carry the marks, so a candidate
+searching "cfa level 2" lands on "Cornerstone: Exam Study" with nothing confirming they are in
+the right place. A search-keyword listing cannot change the title either — but it can change the
+two lines underneath it, which is where the confirmation has to happen.
+
+**Targeting** — 18 keywords, no country filter:
+
+```
+cfa, cfa prep, cfa exam, cfa level 1, cfa level 2, cfa level 3, cfa study,
+cfa practice questions, cfa question bank, cfa mock exam, chartered financial analyst,
+frm, frm exam, frm prep, frm part 1, frm part 2, financial risk manager, frm question bank
+```
+
+**Rollout 50%**, no end date. Play recommends 50% for a first trial, and the percentage
+**cannot be decreased once published** — only raised. Leave it until Store performance has
+enough data to compare this listing's conversion against the default.
+
+**What differs from the default listing.** Everything else — title, icon, feature graphic, all
+eight screenshots — is duplicated from the default and must stay in step with it. Only two
+strings are different, both leading with the term the candidate searched for:
+
+Short description (75 chars):
+
+```
+CFA® Levels I–III and FRM® Parts I–II: cards, quizzes and spaced repetition
+```
+
+Full description: identical to the default, with one line prepended before
+"Fifteen honest minutes…":
+
+```
+CFA® Level I, Level II and Level III. FRM® Part I and Part II. All of it, offline, in one app.
+```
+
+The trademark position is unchanged and deliberate: marks out of the title, marks in the body,
+disclaimer at the bottom. The disclaimer paragraph carries over intact — check it is still there
+after any edit, because it is the thing that makes the rest nominative fair use.
+
+**AI asset declaration: "Don't label assets."** The screenshots are deterministic renders of the
+running app from `npm run store:screenshot` and the feature graphic comes from
+`npm run store:graphic`; neither is generative output. Re-answer this honestly if that changes.
+
+**When the default listing changes, this one does not follow.** A custom listing is a full copy,
+not an overlay — a new screenshot set or a reworded paragraph in the default leaves this listing
+on the old text silently. Re-run the duplicate, or edit both.
