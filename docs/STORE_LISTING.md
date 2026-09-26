@@ -285,9 +285,12 @@ cfa practice questions, cfa question bank, cfa mock exam, chartered financial an
 frm, frm exam, frm prep, frm part 1, frm part 2, financial risk manager, frm question bank
 ```
 
-**Rollout 50%**, no end date. Play recommends 50% for a first trial, and the percentage
-**cannot be decreased once published** — only raised. Leave it until Store performance has
-enough data to compare this listing's conversion against the default.
+**Rollout 100%**, no end date. Play proposes 50% for a first trial and the percentage
+**cannot be decreased once published** — only raised — so 100% is a one-way door, taken
+deliberately on 2026-09-26. It costs the head-to-head comparison against the default listing
+for these keywords, and buys the thing that comparison would have been for: A/B experiments
+require 100%, so `Set up experiment` on the listing is now live. Test copy there, not by
+splitting traffic between two listings.
 
 **What differs from the default listing.** Everything else — title, icon, feature graphic, all
 eight screenshots — is duplicated from the default and must stay in step with it. Only two
@@ -317,3 +320,8 @@ running app from `npm run store:screenshot` and the feature graphic comes from
 **When the default listing changes, this one does not follow.** A custom listing is a full copy,
 not an overlay — a new screenshot set or a reworded paragraph in the default leaves this listing
 on the old text silently. Re-run the duplicate, or edit both.
+
+**Submitted for review 2026-09-26.** One change went to Google: "English (United Kingdom) –
+en-GB — add language". The rollout percentage is not part of that submission — Play applies it
+to the listing directly, which is why the queue dropped from two changes to one after it was
+set to 100%. Reviews usually land within seven days.
