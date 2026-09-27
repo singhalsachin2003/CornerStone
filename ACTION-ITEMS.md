@@ -490,3 +490,76 @@ Recorded so nobody re-opens them:
   `src/screens/Lesson/components/LessonStep.tsx`. Leave it.
 - **Cornerstone's question-bank depth.** Five per topic area is thin and the
   README says so. That is a content problem, not an engineering one.
+
+---
+
+## Console audit, 27 September 2026
+
+Neither app's Console declarations had been checked against the shipped code
+since the subscription landed. This is what that turned up. **Nothing here is
+fixed yet** — each item is a declaration with policy weight, and the ones that
+are wrong are wrong in the direction Play suspends for.
+
+### 1. DEX code optimisation — both apps, deadline Feb 2027
+
+Monitor and improve → Take action, on **both** apps, identically:
+
+> **DEX code optimisation is below our threshold.** Obfuscation (2%).
+> Percentages under 25% in any category of your app may impact your visibility
+> and publishing capabilities on Google Play.
+
+Cause is almost certainly that R8/ProGuard minification is off in the release
+build, which is the Expo default. `android.enableProguardInReleaseBuilds` and
+`enableShrinkResourcesInReleaseBuilds` in the Expo build properties plugin are
+the levers. Turning them on changes what ships, so it needs a real device test
+and an `npm run check:aab` pass before it goes near production — R8 stripping
+something React Native reflects into is the classic failure.
+
+Feb 2027 is far away; the point of recording it is that nobody rediscovers it
+in January.
+
+### 2. Data safety — the two apps disagree, and they run the same SDKs
+
+Both ship `react-native-purchases` and both use Supabase auth. Their
+declarations do not match:
+
+| | Cornerstone | OTC Learn |
+| --- | --- | --- |
+| Personal info | Name, Email address | Email address |
+| Financial info | Purchase history | Purchase history |
+| App activity | Other user-generated content | Other actions |
+| **Device or other IDs** | **not declared** | **declared** |
+| **Partial data deletion** | **unanswered** | answered — "Manage app data" URL |
+
+Name differs legitimately: Cornerstone has `profiles.display_name`, OTC Learn
+has no name field. The other two rows are a genuine inconsistency — at least one
+app is wrong, and Cornerstone is the one declaring less.
+
+**`User IDs` is unchecked on both**, which deserves a deliberate answer rather
+than the default. Every table in `supabase/schema.sql` is keyed on
+`user_id uuid references auth.users (id)` — profiles, settings, topic_progress,
+stats, review_queue, bookmarks. That UUID is an account identifier stored off
+the device. Play's definition of User IDs is "identifiers that relate to an
+identifiable person… an account ID, account number or account name."
+
+`scripts/promote-release.ts` already states the stakes: *"A build that collects
+data its listing denies collecting is the under-declaring direction, and that is
+what Play suspends apps for."* This is that direction.
+
+### 3. Content rating questionnaire predates the subscription — Cornerstone
+
+IARC questionnaire submitted **9 August 2026, 10:19**, never resubmitted. The
+subscription shipped in v1.1 in September. This file's own checklist says:
+*"**Purchases: yes** — from version 1.1 there is a subscription. This answer
+changed; the rating itself does not."* That change was never made, and Play's
+page says to submit a new questionnaire when a change would affect previous
+responses. The ratings themselves (Everyone / PEGI 3) are unaffected.
+
+### What is clean
+
+Policy status reports **no policy issues** on both apps. Both Data safety
+previews correctly show data being collected — the "No data collected" trap from
+September is properly fixed, and the delete-account URL, encryption-in-transit
+and privacy-policy rows are all present and correct on both. Android developer
+verification is satisfied for both packages. Play Integrity API is not
+integrated on either, which is optional and carries no deadline.
