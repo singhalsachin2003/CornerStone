@@ -53,27 +53,31 @@ be done.
 
 Two repos are involved:
 
-| App | Repo | Package | Branch to work on |
+| App | Repo | Package | Branch |
 | --- | --- | --- | --- |
-| OTC Learn | `~/otc-learning-app` | `com.otclearn.app` | `feat/ux-and-compliance` |
-| Cornerstone | `~/CornerStone` | `io.cornerstone.study` | `feat/ux-and-compliance` |
+| OTC Learn | `~/otc-learning-app` | `com.otclearn.app` | `main` |
+| Cornerstone | `~/CornerStone` | `io.cornerstone.study` | `main` |
 
-`main` is untouched in both. Both branches are pushed and carry an open PR as of
-22 September 2026.
+**Work on `main` in both.** The `feat/ux-and-compliance` branches this file was
+originally written against were merged on 22 September 2026 — Cornerstone PR #3,
+OTC Learn PR #1, both squashed — and everything they carried shipped to
+production in Cornerstone 1.2.0 and OTC Learn 1.3.0 on 25 September. The
+branches still exist locally and on `origin`; they are history, not a place to
+start from.
 
 ---
 
 ## 0. Read before touching anything
 
-**Check out the right branch first.** Everything below builds on work already
-committed there. Do not start from `main`.
+**Both repos sit on `main` and everything below builds on what is already
+committed there.** Nothing needs checking out.
 
 ```bash
-cd ~/otc-learning-app && git checkout feat/ux-and-compliance
-cd ~/CornerStone      && git checkout feat/ux-and-compliance
+cd ~/otc-learning-app && git status -sb   # expect: ## main...origin/main
+cd ~/CornerStone      && git status -sb
 ```
 
-**What is already committed on those branches** — do not redo any of it:
+**What the merged branches carried** — do not redo any of it:
 
 - `34c4a9e` (OTC) in-app account deletion, human error messages, promo grant
   clamped at redemption, notes sync keeping both sides of a conflict
@@ -554,6 +558,29 @@ subscription shipped in v1.1 in September. This file's own checklist says:
 changed; the rating itself does not."* That change was never made, and Play's
 page says to submit a new questionnaire when a change would affect previous
 responses. The ratings themselves (Everyone / PEGI 3) are unaffected.
+
+### 4. Both apps still serve v1.0 from a testing track — Cornerstone's is *open*
+
+Read off the Console's release overview and each track's own page, 27 September 2026.
+
+| App | Track | Serving | Status |
+| --- | --- | --- | --- |
+| Cornerstone | Production / Internal | 13 (1.2.0) | full roll-out, 177/177 |
+| Cornerstone | **Open testing** | **5 (1.0.0)** | **Active — unlimited testers, 177 countries**, since 4 Sept |
+| Cornerstone | Closed · Alpha | 5 (1.0.0) | full roll-out, since 11 Aug |
+| OTC Learn | Production / Internal | 10 (1.3.0) | full roll-out, 177/177 |
+| OTC Learn | Open testing | 4 (1.1.0) | **paused** — nothing serves from it |
+| OTC Learn | Closed · Alpha | 3 (1.0.0) | full roll-out, since 30 July |
+
+Cornerstone's open testing track is the one that matters: active, joinable by anyone
+with the opt-in link, and serving a build with no account, no in-app account deletion
+and the privacy copy that was corrected in `53792fa`. The deletion requirement is
+satisfied in production and **not** on that track, which is the same policy exposure
+item 1 of the handoff closed, reopened through a door nobody was looking at.
+
+Each is two clicks on the track's own page — **Promote release** to the current
+versionCode, or **Pause track**. Promote where the track earns its keep, pause where it
+does not; OTC Learn's paused open track is the pattern.
 
 ### What is clean
 

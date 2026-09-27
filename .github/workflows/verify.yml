@@ -1,5 +1,7 @@
-# One gate, the same one `npm run verify` runs locally. If these diverge, the local
-# command is the one people actually run, so CI mirrors it rather than restating it.
+# Two jobs, and only the first is *the* gate: `verify` is the same command people run
+# locally, mirrored rather than restated, so the two cannot drift. The second,
+# `contrast`, is the check deliberately kept out of `verify` because it is far too
+# slow for the pre-commit hook — the comment above that job has the reasoning.
 name: verify
 
 on:
@@ -25,3 +27,30 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify
+
+  # The second gate, and the reason the comment at the top says "one gate" only of
+  # `verify`. This walk needs a web export and a browser — minutes, not seconds —
+  # so `check:contrast` is deliberately outside `npm run verify`, which has to stay
+  # fast enough that the pre-commit hook can run it. Outside the hook it was run by
+  # hand or not at all; here it runs on every push, in parallel with `verify`, so a
+  # palette change that puts text under WCAG AA in either theme reddens the PR.
+  contrast:
+    name: contrast
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # 22 for the same reason as above.
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx expo export --platform web --output-dir .expo-web
+      # A pinned Chromium rather than the runner image's Chrome: the browser
+      # computes the colours this gate asserts on, so it should not change
+      # underneath the gate when GitHub refreshes the image.
+      - run: npx playwright-core install --with-deps chromium
+      - run: |
+          CHROME_PATH="$(node -e "const { chromium } = require('playwright-core'); console.log(chromium.executablePath())")" \
+            npm run check:contrast

@@ -225,7 +225,15 @@ const MEASURE = `(() => {
 })()`;
 
 const { chromium } = await import('playwright-core');
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+// `channel: 'chrome'` picks up the Chrome already installed on the machine, which
+// is what this desk has. `CHROME_PATH` overrides it for anywhere that does not —
+// CI installs a pinned Playwright Chromium and points this at it, so the browser
+// the gate runs against does not change under it when a runner image updates.
+const browser = await chromium.launch(
+  process.env.CHROME_PATH
+    ? { executablePath: process.env.CHROME_PATH, headless: true }
+    : { channel: 'chrome', headless: true },
+);
 if (SHOT_DIR) mkdirSync(SHOT_DIR, { recursive: true });
 let unexpected = 0;
 let accepted = 0;

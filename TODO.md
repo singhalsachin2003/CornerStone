@@ -11,38 +11,11 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **18 September 2026** · production **versionCode 12** · 5 open, **1 of them
-does not belong here** (item 0 — a live Play policy exposure, filed at the top so it is not
-lost, but it breaks this file's own "nothing blocking" rule and should be treated as urgent).
+Last reviewed: **27 September 2026** · production **versionCode 13** (1.2.0) · 5 open, none
+blocking. Item 0 — the in-app account deletion Play requires — is closed and moved to
+**Recently closed**; with it gone this file keeps its own "nothing blocking" rule again.
 
 ---
-
-## 0. NOT NON-BLOCKING — no in-app account deletion, and the app is live
-
-**This breaks the inclusion rule at the top of this file and is recorded here anyway so it is
-not lost. Treat it as urgent, not as backlog.**
-
-Both Cornerstone and OTC Learn let users create accounts and neither offers an in-app way to
-delete one. `app/account.tsx` has Sign in, Create account and Sign out — verified 18 Sept
-2026 — and deletion is handed to an email address on
-[the delete-account page](https://singhalsachin2003.github.io/CornerStone/DELETE-ACCOUNT.html)
-published the same day.
-
-**Play requires both halves.** Developers must provide an in-app path to delete the account
-and its data, **and** a web link resource — the web page is explicitly not a substitute.
-Exposure is update rejection or listing removal, and it lands on both apps at once.
-([Play policy](https://support.google.com/googleplay/android-developer/answer/13327111))
-
-Worse, the Data Safety declaration filed on 18 September answers **Yes** to "can users
-request deletion", describing the route that does not satisfy the requirement.
-
-**The fix is small because the schema already supports it.** RLS is per-user on every table,
-so a Supabase RPC that deletes the caller's rows and their auth record is a short function; the
-UI is a Delete account row behind a typed confirmation. **Keep the web page** — it is the other
-half of the requirement, not a thing to replace.
-
-**Timing matters:** a policy strike on a listing that has just started being promoted is the
-worst possible moment, so do this before driving install traffic.
 
 ## 1. Three React Compiler lint findings, demoted to warnings
 
@@ -71,15 +44,32 @@ In the order worth fixing:
 
 Promote each back to `'error'` as its call sites are dealt with.
 
-## 2. `beta` and `alpha` are stranded on versionCode 5
+## 2. The testing tracks still serve versionCode 5, and open testing is *active*
 
-Both tracks still serve **v1.0** — no subscription, no glossary, no account, and the privacy
-copy that was corrected in `53792fa`. Anyone opted into them is running a build from before
-any of this existed, and they still carry Expo's `"First release of this awesome app."`
+Re-checked in the Console on **27 September 2026**. Nothing has moved since 18 September, and
+one detail reads worse than it did then.
 
-Either promote **versionCode 12** to both, or close the tracks if nobody uses them. Harmless
-today only because nobody is known to be on them — which is itself worth confirming rather
-than assuming.
+| Track | Serving | Status | Since |
+| --- | --- | --- | --- |
+| Production | **13** (1.2.0) | full roll-out, 177/177 | 25 Sept 2026 |
+| Internal testing | 13 (1.2.0) | full roll-out | 25 Sept 2026 |
+| Open testing | **5** (1.0.0) | **Active — available to unlimited testers**, 177 countries | 4 Sept 2026 |
+| Closed testing · Alpha | **5** (1.0.0) | full roll-out | 11 Aug 2026 |
+
+**Open testing is not dormant.** It is active and joinable by anyone holding the opt-in link,
+and it serves v1.0 — no subscription, no glossary, no account, **no in-app account deletion**,
+and the privacy copy corrected in `53792fa`, under Expo's `"First release of this awesome
+app."` release note. Item 0 of this file is closed *in production*; a device that joins open
+testing today still installs a build that does not satisfy the deletion requirement.
+
+The fix is two clicks on the Open testing page: **Promote release** → versionCode 13, or
+**Pause track**. Promoting is the better of the two — a testing track one version behind
+production is useful, three versions behind is a liability. Closed testing · Alpha wants the
+same.
+
+**OTC Learn shows what the fix looks like, and needs half of it.** Its open testing track is
+already **paused** (last release 4 / 1.1.0, superseded), so nothing serves from it; its
+`Closed testing · Alpha` is still on **3 (1.0.0)** from 30 July and has had no attention.
 
 ## 3. The RevenueCat offering is named `Monthly` but holds both plans
 
@@ -111,33 +101,16 @@ ignore the line, which is worse than printing nothing.
 Either drop the line once products exist, or have it say plainly that it cannot see
 RevenueCat and name the curl above.
 
-## 5. Cross-repo findings — raised against OTC Learn, NOT verified from this repo
+## 5. Cross-repo duplication — ~1,000 lines of identical domain logic
 
-From a review on 18 September 2026 covering both apps. **OTC Learn is not checked out on this
-machine, so nothing below was verified here** — the Cornerstone half of each claim was, and is
-noted. Verify against OTC Learn before acting.
+`EASE = 2.3`, `MAX_INTERVAL = 120`, intervals `[1, 4, 10]` and `LEARNING_RATE = 0.35` are
+written out twice, in both repos, under different filenames — and they have already diverged:
+Cornerstone's `redeem` refuses when no premium content exists and OTC Learn's `redeemPromoCode`
+does not, and the two outcome vocabularies differ (`campaign-ended` vs `expired`).
 
-- **`mergeNotes` is last-write-wins and silently drops one side.** A note is the only thing
-  the user authors, and the only merge in that file that loses something unrecoverable —
-  every other rule is safe by construction (counters take the max, sets union). Write offline
-  on two phones, sync, and one version is gone with no record it existed. Suggested fix:
-  when both sides changed since the last watermark, concatenate under a separator rather than
-  dropping the loser. **Cornerstone is not affected — it has no notes**; `src/sync/` merges
-  mastery, review queue, bookmarks, study days and settings only. Confirmed by grep.
-- **OTC Learn has no runtime clamp on promo grant days.** Its test asserts `days <= 365` on
-  the table, which catches a typo in CI — but the promo table ships by `eas update`, and an
-  OTA push does not pass CI. A `days: 600` typo pushed over the air cannot be taken back once
-  a device has made the grant. **Cornerstone already clamps at runtime**: `MAX_GRANT_DAYS =
-365` and `Math.min(code.days, MAX_GRANT_DAYS)` in `src/access/promoCode.ts:17,73` —
-  verified. The fix in OTC Learn is the same one `Math.min`.
-- **~1,000 lines of identical domain logic exist in both repos and have already diverged.**
-  `EASE = 2.3`, `MAX_INTERVAL = 120`, intervals `[1, 4, 10]`, `LEARNING_RATE = 0.35` are
-  written out twice under different filenames. Cornerstone's `redeem` clamps the grant and
-  refuses when no premium content exists; OTC Learn's `redeemPromoCode` does neither, and the
-  outcome vocabularies differ (`campaign-ended` vs `expired`). **Recommendation was explicitly
-  not to extract a shared package as a project in itself** — instead, the next time review
-  scheduling or the access rules are touched, do it in a shared workspace package rather than
-  twice.
+**Extracting a shared package is explicitly not the recommendation** — high blast radius, no
+user-visible benefit. Instead, the next time review scheduling or the access rules are touched,
+do that change in a shared workspace package rather than twice.
 
 ---
 
@@ -169,6 +142,15 @@ thresholds need volume. For now **any issue appearing is the signal**, not the r
 
 ## Recently closed
 
+- **No in-app account deletion, with the app live** — item 0 of this file, and the only live
+  Play policy exposure it ever carried. Shipped in `0019c90`: a **Delete account** row in
+  `app/account.tsx` behind a typed confirmation, calling a `delete_account` Supabase RPC that
+  removes the caller's `auth.users` row and cascades every table through the existing foreign
+  keys. The function went to the live project on 23 September (`a6531dd`, verified in
+  `0088cf4`) and the UI reached production in **1.2.0 / versionCode 13** on 25 September. The
+  [delete-account page](https://singhalsachin2003.github.io/CornerStone/DELETE-ACCOUNT.html)
+  stays — Play wants both halves, and the web link is the other one.
+
 - **Hermes V1 memory regression** — shipped in versionCode 10 and 11, fixed in **12**
   (`expo` 57.0.24 / `react-native` 0.86.3, Hermes `250829098.0.17`). The technique that
   actually proved it — reading `libhermesvm.so` out of the AAB rather than trusting
@@ -179,6 +161,13 @@ thresholds need volume. For now **any issue appearing is the signal**, not the r
   `tsc`. Now structurally prevented: `.githooks/pre-commit` runs the full `npm run verify`
   (~11s), wired up by a `prepare` script so a fresh clone is covered.
 - **Two Supabase test accounts** deleted; the project holds zero accounts.
+- **The other two cross-repo findings**, both raised against OTC Learn on 18 September and
+  both **verified fixed in `otc-learning-app` on `main`, 27 September 2026**. `mergeNotes` no
+  longer drops a side: `src/utils/sync.ts:312` defines `NOTE_CONFLICT_MARKER` and line 414
+  concatenates both versions under it. The promo grant is clamped at redemption, not only in
+  the table test: `src/utils/promoCode.ts:83,151`, `Math.min(match.days, MAX_GRANT_DAYS)` with
+  `MAX_GRANT_DAYS = 365` — which matters because the promo table ships by `eas update` and an
+  OTA push does not pass CI. Cornerstone was never affected by either.
 
 ## Decided, not pending
 
