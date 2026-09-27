@@ -329,11 +329,20 @@ splitting traffic between two listings.
 eight screenshots — is duplicated from the default and must stay in step with it. Only two
 strings are different, both leading with the term the candidate searched for:
 
-Short description (75 chars):
+Short description (78 chars):
 
 ```
-CFA® Levels I–III and FRM® Parts I–II: cards, quizzes and spaced repetition
+CFA® Levels I to III and FRM® Parts I to II: cards, quizzes, spaced repetition
 ```
+
+**No en dashes, and that is not a style preference.** The first version read
+`Levels I–III … Parts I–II`, which is correct typography and which Play's own
+editor flags: *"Your app may not be promoted on Google Play because your short
+description does not meet the following guidelines — Should use em dashes
+instead of double hyphens or en dashes."* Being dropped from Play's promotional
+surfaces is a real cost for a cosmetic character. An em dash reads wrong inside
+a range, so the ranges were spelled out instead. Keep `–` and `--` out of the
+short description; the full description was not flagged.
 
 Full description: identical to the default, with one line prepended before
 "Fifteen honest minutes…":
@@ -353,6 +362,18 @@ running app from `npm run store:screenshot` and the feature graphic comes from
 **When the default listing changes, this one does not follow.** A custom listing is a full copy,
 not an overlay — a new screenshot set or a reworded paragraph in the default leaves this listing
 on the old text silently. Re-run the duplicate, or edit both.
+
+**Corrected 2026-09-27.** The listing was created by duplicating the default,
+which at the time was itself missing two sections — so this listing inherited
+the gap and shipped a description that never mentioned the subscription. Its
+full description is now the corrected default text plus the lead line, 3,458 of
+4,000 characters, and carries both A GLOSSARY THAT IS ALWAYS FREE and FREE, AND
+WHAT IS NOT.
+
+Submitting it **cancelled and restarted the default listing's review**, which
+Play warns about and which is the right trade: the two listings should go live
+together, not a week apart. All three changes — the default's full description
+and this listing's two fields — are in one review.
 
 **Submitted for review 2026-09-26, and live the same day.** One change went to Google:
 "English (United Kingdom) – en-GB — add language". The rollout percentage is not part of that
