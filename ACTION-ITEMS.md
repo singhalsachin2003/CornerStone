@@ -590,3 +590,66 @@ September is properly fixed, and the delete-account URL, encryption-in-transit
 and privacy-policy rows are all present and correct on both. Android developer
 verification is satisfied for both packages. Play Integrity API is not
 integrated on either, which is optional and carries no deadline.
+
+---
+
+## Data safety corrected, 27 September 2026
+
+Both apps now declare the same thing, because they collect the same things. The
+audit above had them disagreeing while running identical SDKs.
+
+### What both now declare
+
+| | Value |
+| --- | --- |
+| Personal info | **Name, Email address, User IDs** |
+| Financial info | Purchase history |
+| App activity | Cornerstone: other user-generated content · OTC Learn: other actions |
+| Device or other IDs | Device or other IDs |
+| Shared with third parties | None |
+
+### What changed, and the evidence for each
+
+**`User IDs` added to both.** Every table in each repo's `supabase/schema.sql` is
+keyed on `user_id uuid references auth.users (id)` — profiles, settings,
+progress, stats, review queue, bookmarks. That UUID is an account identifier
+stored off the device, which is Play's definition of a User ID. RevenueCat adds
+a second one: both apps call `configure({ apiKey })` with no `appUserID`, so the
+SDK mints an anonymous app user ID of its own.
+
+**`Name` added to OTC Learn.** It was declaring only an email address while
+`supabase/schema.sql` has `display_name` and `src/utils/sync.ts` syncs it. The
+ProfileScreen test — "offers to take a name and stores it" — describes the
+feature that was going undeclared. Cornerstone had this right already via
+`profiles.display_name` and `src/sync/rows.ts`.
+
+**`Device or other IDs` added to Cornerstone.** OTC Learn already declared it and
+had passed review with it; Cornerstone did not, despite shipping the same
+`react-native-purchases`. Neither app calls `collectDeviceIdentifiers()` and
+neither does ad attribution, so the identifier in question is RevenueCat's
+anonymous app-instance ID.
+
+### How the new entries were answered
+
+Each new type was given the same answers as that app's existing, already-reviewed
+`Email address` entry — collected, **not** shared, not processed ephemerally,
+purpose **App functionality** — rather than answers invented for it. The one
+deliberate difference is Cornerstone's Device or other IDs, marked **required**
+rather than optional: the purchases SDK initialises on launch, so unlike the
+account there is nothing for a user to decline.
+
+### Why this direction
+
+`scripts/promote-release.ts` puts it plainly: *"A build that collects data its
+listing denies collecting is the under-declaring direction, and that is what
+Play suspends apps for."* Every change here adds a declaration. None removes one.
+
+### Still open
+
+The question *"do you provide a way for users to request that some or all of
+their data be deleted, without requiring them to delete their account?"* is
+**unanswered on Cornerstone** and answered on OTC Learn. Both apps have
+`resetProgress`, so the honest answer is yes for both — but the field wants a URL
+and Cornerstone's `DELETE-ACCOUNT.html` documents only full account deletion.
+Add a section to that page describing the in-app reset, then answer it. It is an
+optional question, which is why it did not block this submission.
