@@ -135,6 +135,39 @@ Association of Risk Professionals.
 
 ---
 
+## Keeping the listing and this file in step
+
+`npm run sync:listing` diffs the three text blocks above against what Play is
+actually serving; `npm run sync:listing -- --commit` sends the doc's version for
+review. Run the dry form whenever this file is edited.
+
+It exists because on 27 September 2026 the live full description was **2,282
+characters against this file's 3,362**, missing two whole sections: the
+always-free glossary, and FREE, AND WHAT IS NOT. The app had been selling
+`cornerstone_premium` since v1.1 while its own listing never used the words
+"subscription", "free" or "glossary" — a grep for them returned a single hit,
+and that was "plus" inside "5 core topics plus your chosen pathway". Anyone
+reading the listing would have expected full access.
+
+Nothing compared the two, so nothing noticed. The same drift had already hit OTC
+Learn's custom listing, stuck on an August snapshot saying twenty products when
+there were thirty-six. Two apps, one cause: the copy lives in a repo and the
+listing lives in a console.
+
+**The numbers in the draft were checked against the app before publishing**, and
+all of them hold: `ALL_TOPICS` is 38 (CFA L1 10, L2 10, L3 8 — five core plus
+three pathways — FRM P1 4, P2 6), and `npm run check:glossary` reports 260 terms.
+The free/paid claims match `src/access/rules.ts`, where grandfathering is
+documented as permanent and outranks everything. Re-check them the same way
+before changing any count here.
+
+**The API cannot touch custom store listings.** After committing, open
+Grow users → Store presence → Store listings and edit each one by hand in the
+same sitting — a custom listing is a copy, not an overlay, and keeps its old
+text silently.
+
+---
+
 ## Assets
 
 | Asset                     | Spec                         | Status                                                         |
