@@ -21,6 +21,7 @@ import {
   signOut,
   signUp,
 } from '@/sync/auth';
+import { useStudyStore } from '@/store/useStudyStore';
 import { useSyncStore } from '@/store/useSyncStore';
 import { useTheme } from '@/theme/useTheme';
 
@@ -45,6 +46,7 @@ export default function Account() {
   const refreshSession = useSyncStore((s) => s.refreshSession);
   const sync = useSyncStore((s) => s.sync);
   const clearAfterSignOut = useSyncStore((s) => s.clearAfterSignOut);
+  const resetProgress = useStudyStore((s) => s.resetProgress);
 
   const [mode, setMode] = useState<'in' | 'up'>('in');
   const [emailInput, setEmailInput] = useState('');
@@ -109,6 +111,38 @@ export default function Account() {
    * gets cancelled. Neither is true, and being wrong about the second costs
    * them money.
    */
+  /**
+   * Erase the studying, keep the account.
+   *
+   * Separate from Delete account on purpose: Play's Data safety questionnaire
+   * asks whether users can delete *some* of their data without deleting their
+   * account, and until this existed the honest answer for this app was no. It
+   * is also the milder of the two things a candidate might actually want — a
+   * fresh run at a syllabus they have already been through.
+   *
+   * `resetProgress` deliberately does not touch `useAccessStore`, so a reset
+   * cannot cost somebody a subscription or a promotional grant they cannot
+   * earn again. That is a structural guarantee, not a line here to maintain.
+   */
+  const onResetProgress = useCallback(() => {
+    Alert.alert(
+      'Reset your progress?',
+      'Mastery, card progress, bookmarks, your review queue, your streak and your question counts are erased from this device. This cannot be undone.\n\nYour account stays, and so does your subscription. If you are signed in, the backup is overwritten the next time this device syncs.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset progress',
+          style: 'destructive',
+          onPress: () => {
+            resetProgress();
+            setNotice('Your progress has been reset.');
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  }, [resetProgress]);
+
   const onDelete = useCallback(() => {
     Alert.alert(
       'Delete your account?',
@@ -271,6 +305,25 @@ export default function Account() {
         {!!notice && (
           <Text style={[type.body, { marginTop: 16, color: color.inkBody }]}>{notice}</Text>
         )}
+
+        {/* Outside every `configured` branch on purpose. Progress lives on the
+            device whether or not there is an account behind it, so somebody who
+            never signed in still needs a way to clear it — and they are the
+            likeliest person to want one. */}
+        <Rule style={{ marginTop: 26, marginBottom: 18 }} />
+        <Eyebrow size={9.5} tracking={0.14}>
+          RESET PROGRESS
+        </Eyebrow>
+        <Text style={[type.body, { marginTop: 10, color: color.inkBody }]}>
+          Clears mastery, bookmarks, your review queue and your streak from this device, and starts
+          the syllabus over. Your account and your subscription are untouched.
+        </Text>
+        <OutlineButton
+          label="Reset progress"
+          onPress={onResetProgress}
+          style={{ marginTop: 14, borderColor: color.rust }}
+          labelStyle={{ color: color.rust }}
+        />
 
         {configured && (
           <Text style={[type.meta, { marginTop: 26 }]}>

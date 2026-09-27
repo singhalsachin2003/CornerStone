@@ -25,6 +25,25 @@ knowing their email address.
 **Signing out is not deleting.** The app offers both, and signing out leaves the data on your
 device exactly as it is and leaves the backup in place.
 
+## Delete your progress without deleting your account
+
+If you only want a clean run at the syllabus, you do not have to delete anything permanent.
+
+In the app, go to **Profile → Account → Reset progress**, then confirm. That erases, from this
+device:
+
+- topic mastery and card progress
+- bookmarked cards and questions
+- your review queue
+- your study day history and streak
+- your question and accuracy counts
+
+**Your account is not touched, and neither is your subscription.** If you are signed in, the
+backup is overwritten the next time this device syncs, so the reset reaches the copy held on
+our side as well. There is no confirmation email and nothing to wait for.
+
+It cannot be undone, which is why it asks twice.
+
 ## What is deleted
 
 Everything held on our side, which is the account and the study data backed up under it:
@@ -46,8 +65,9 @@ days**, after which nothing remains.
 ## What is not deleted, and why
 
 **Anything stored on your phone.** The app keeps your progress locally whether or not you
-have an account, and we cannot reach it. Deleting the app's storage from Android's system
-settings, or uninstalling the app, removes that copy. Deleting your account does not.
+have an account, and deleting your account does not remove that copy. You can clear it
+yourself with **Profile → Account → Reset progress** (above), or by deleting the app's storage
+from Android's system settings, or by uninstalling the app.
 
 **Your subscription.** Cornerstone Plus is billed by Google Play, not by us, and deleting
 your account does **not** cancel it. Cancel it in the Play Store app under Payments and
