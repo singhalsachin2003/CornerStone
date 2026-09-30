@@ -242,7 +242,7 @@ def otc_slide(fn, kicker, headline, body, i, n, catkey="ir", dark=False, cta=Non
     if last and cta:
         footer(img, d, "otc", OTC_URL, cta, "Search “OTC Learn” on Google Play", W, H, 88, dark)
     else:
-        footer(img, d, "otc", OTC_URL, "Free. Offline. No account.",
+        footer(img, d, "otc", OTC_URL, "36 products free. Offline. No account.",
                "OTC Learn on Google Play", W, H, 88, dark)
     save(img, fn)
 
