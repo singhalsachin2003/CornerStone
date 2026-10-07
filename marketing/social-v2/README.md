@@ -15,5 +15,12 @@ python3 gen2.py           # writes out2/
 Edit the content block at the bottom of `gen2.py` to change copy or add posters.
 
 `cs-frm-countdown.png` is the only poster with a shelf life — the day count is
-baked into the image. Change the `"58"` in the `cs_countdown(...)` call and
-re-run before each use.
+baked into the image. It is computed from the date you render on, so re-run on
+the day you post:
+
+```bash
+COUNTDOWN_ON=2026-10-08 python3 gen2.py
+```
+
+The target is the opening of GARP's FRM Part I window (14 November 2026); Part II
+opens 21 November.

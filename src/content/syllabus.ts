@@ -803,7 +803,7 @@ export const EXAMS: Record<ExamKey, Exam> = {
     description:
       'Financial Risk Manager® — market, credit, operational and liquidity risk measurement.',
     levelWord: '2 PARTS',
-    date: '2026-11-15',
+    date: '2026-11-14',
     levels: [
       {
         key: 'P1',

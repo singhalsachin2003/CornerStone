@@ -192,7 +192,7 @@ there. Adding a topic area without adding content will fail `npm run check:conte
 `src/store/review.ts`. The product copy promises "tomorrow, then in four days, then in ten", so
 the first three intervals are fixed at 1 / 4 / 10 days; beyond that the interval grows by an
 SM-2 style ease factor of 2.3, capped at 120 days. A wrong answer resets an item to the start and
-increments its lapse count; three clean passes retire it from the queue.
+increments its lapse count; six clean passes retire it from the queue.
 
 ## Design decisions worth knowing
 

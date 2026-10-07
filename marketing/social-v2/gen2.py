@@ -418,7 +418,7 @@ def cs_snapshot(fn, topic, eyebrow, title, body, formula=None):
         y += 8
     d.text((px, y), "Tap the card for the exam angle", font=F(CS.sans, 25, "SemiBold"), fill=CS.muted)
 
-    footer(img, d, "cs", CS_URL, "Fifteen honest minutes.", "Cornerstone · free on Google Play", W, H)
+    footer(img, d, "cs", CS_URL, "Fifteen honest minutes.", "Cornerstone · free to install on Google Play", W, H)
     save(img, fn)
 
 
@@ -577,7 +577,7 @@ def cs_countdown(fn, exam, date_line, days, body):
     y = block(d, date_line, F(CS.sans, 38, "Medium"), M, y, W - 2 * M, 54, "#f4f1ea") + 12
     block(d, body, F(CS.sans, 32, "Regular"), M, y, W - 2 * M - 40, 48, "#c3c8d2")
 
-    footer(img, d, "cs", CS_URL, "Five questions a day.", "Cornerstone · free on Google Play",
+    footer(img, d, "cs", CS_URL, "Five questions a day.", "Cornerstone · free to install on Google Play",
            W, H, M, dark=True)
     save(img, fn)
 
@@ -735,17 +735,22 @@ if __name__ == "__main__":
              "The core idea, the formula that does the work, and the angle the examiners actually test — then prove it.",
              3, 6)
     cs_slide("cs-study-4.png", "The queue", "Anything you miss comes back tomorrow.",
-             "Then in four days, then in ten, then less often as it sticks. Three clean passes and it retires.",
+             "Then in four days, then in ten, then less often as it sticks. Six clean passes and it retires.",
              4, 6)
     cs_slide("cs-study-5.png", "Weighted", "Your progress bar respects the exam weights.",
              "A 15–20% topic counts for more than a 5–8% one, so the number on the home screen means something.",
              5, 6)
-    cs_slide("cs-study-6.png", None, "38 topic areas, free. 260 glossary terms, free.",
-             "CFA Levels I–III and FRM Parts I and II, side by side. Everything the app shipped with stays free, permanently.",
-             6, 6, dark=True, cta="Free on Google Play")
+    cs_slide("cs-study-6.png", None, "38 topic areas. 260 glossary terms, always free.",
+             "CFA Levels I–III and FRM Parts I and II, side by side. Free core in every topic; extra segments are an optional subscription.",
+             6, 6, dark=True, cta="Free to install on Google Play")
 
-    cs_countdown("cs-frm-countdown.png", "FRM Part I & Part II", "15 November 2026",
-                 "58", "Eight weeks. Five questions a day is 280 questions between now and the paper.")
+    # Day count is computed, not typed: set COUNTDOWN_ON=YYYY-MM-DD to render for the day you post.
+    # Target is the opening of GARP's November 2026 FRM Part I window (14-20 Nov; Part II 21-25 Nov).
+    from datetime import date
+    _on = date.fromisoformat(os.environ.get("COUNTDOWN_ON", date.today().isoformat()))
+    _days = (date(2026, 11, 14) - _on).days
+    cs_countdown("cs-frm-countdown.png", "FRM Part I", "Exam window opens 14 November 2026",
+                 str(_days), f"Part II follows from 21 November. Five questions a day is {5 * _days} questions between now and the window.")
 
     promo_card("cs-promo.png", "cs", "CORNERSTONE30", 30,
                "Thirty days of every segment.",

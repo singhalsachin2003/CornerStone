@@ -144,7 +144,7 @@ describe('exam dates', () => {
   it('are ISO and parse to a real date on any engine', () => {
     // Hermes only parses ISO-8601. A human-readable date yields Invalid Date on
     // device while working on web under V8 — this is the regression guard.
-    for (const iso of ['2027-05-17', '2026-11-15']) {
+    for (const iso of ['2027-05-17', '2026-11-14']) {
       const d = parseISODate(iso);
       expect(Number.isFinite(d.getTime())).toBe(true);
       expect(dayKey(d)).toBe(iso);
@@ -153,7 +153,7 @@ describe('exam dates', () => {
 
   it('format for display without leaking NaN', () => {
     expect(formatExamDate('2027-05-17')).toBe('17 May 2027');
-    expect(formatExamDate('2026-11-15')).toBe('15 November 2026');
+    expect(formatExamDate('2026-11-14')).toBe('14 November 2026');
   });
 
   it('go negative once the sitting has passed, rather than clamping to zero', () => {
@@ -173,7 +173,7 @@ describe('exam dates', () => {
   it('counts down to a sitting that has not happened yet', () => {
     jest.useFakeTimers({ now: new Date('2026-11-05T12:00:00Z') });
     try {
-      expect(daysToExam('FRM')).toBe(10); // 2026-11-15
+      expect(daysToExam('FRM')).toBe(9); // 2026-11-14
     } finally {
       jest.useRealTimers();
     }
