@@ -137,9 +137,14 @@ Association of Risk Professionals.
 
 ## Keeping the listing and this file in step
 
-`npm run sync:listing` diffs the three text blocks above against what Play is
-actually serving; `npm run sync:listing -- --commit` sends the doc's version for
-review. Run the dry form whenever this file is edited.
+`npx tsx scripts/sync-store-listing.ts` diffs the three text blocks above against
+what Play is actually serving; the same command with `--commit` sends the doc's
+version for review. Run the dry form whenever this file is edited.
+
+**It is not an `npm run` script on purpose.** `package.json`'s `scripts` block is
+hashed into the `fingerprint` runtime version, so adding one breaks over-the-air
+updates for every binary already built. It was a script briefly, and that alone
+kept two shipped JS fixes off every install. See `docs/RELEASE_CHECKLIST.md`.
 
 It exists because on 27 September 2026 the live full description was **2,282
 characters against this file's 3,362**, missing two whole sections: the

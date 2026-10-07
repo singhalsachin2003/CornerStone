@@ -81,8 +81,7 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "set:regions": "tsx scripts/set-subscription-regions.ts",
     "users": "tsx scripts/supabase-users.ts",
-    "promote": "tsx scripts/promote-release.ts",
-    "sync:listing": "tsx scripts/sync-store-listing.ts"
+    "promote": "tsx scripts/promote-release.ts"
   },
   "overrides": {
     "react-dom": "19.2.3"

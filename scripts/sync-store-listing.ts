@@ -1,11 +1,19 @@
 /**
- * Push the store listing text in `docs/STORE_LISTING.md` to Play. Run with
- * `npm run sync:listing` — which changes nothing — and `-- --commit` to publish.
+ * Push the store listing text in `docs/STORE_LISTING.md` to Play. The bare form
+ * changes nothing; `--commit` publishes.
  *
  * ```bash
- * npm run sync:listing              # diff the doc against what is live
- * npm run sync:listing -- --commit  # send the doc's text to Play for review
+ * npx tsx scripts/sync-store-listing.ts            # diff the doc against what is live
+ * npx tsx scripts/sync-store-listing.ts --commit   # send the doc's text to Play for review
  * ```
+ *
+ * **Deliberately not an npm script.** `package.json`'s `scripts` block is an
+ * input to the `fingerprint` runtime version, so adding one here changes the
+ * runtime and severs over-the-air compatibility with every binary already built.
+ * This script was an npm script from 28 September to 7 October 2026, and in that
+ * window it alone held two shipped JS fixes off every install: the tree
+ * fingerprinted `58873ba5` while production ran `3258c574`. Release tooling that
+ * never ships inside the app does not belong in `scripts`.
  *
  * **Why this exists.** On 27 September 2026 the live listing was found to be
  * 2,282 characters against the doc's 3,362, missing two whole sections — the

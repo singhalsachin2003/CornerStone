@@ -424,15 +424,31 @@ android --clean` then `cd android && ./gradlew :app:processReleaseManifest`, rea
     `eas update --branch production` from that tree would have published an update matching
     **no binary in existence** — inert, and worse, a record implying a fix had shipped.
 
+    **It happened again, and cost a release.** `sync:listing` was added to `scripts`
+    on 28 September, after versionCode 13 (1.2.0) was already live. That one line moved
+    the tree from `3258c5748bf7eafed7e22d597094fd2e5bf283b1` to
+    `58873ba5c001a00d4516284f438dd8d850c3d0dc`, and held two shipped JS-only fixes —
+    reset-progress and the corrected FRM date — off every install for nine days. The
+    fix was to stop it being an npm script at all: release tooling that never ships
+    inside the app is invoked as `npx tsx scripts/<name>.ts`. See `docs/STORE_LISTING.md`.
+
     **Check before publishing an update**, and compare against the binary you intend to
-    reach:
+    reach. **The production env must be exported or the comparison is meaningless** —
+    `app.config.js` folds `REVENUECAT_ANDROID_KEY` into `extra.purchases`, and the Expo
+    config is a fingerprint input, so an unset key produces a hash that matches no build:
 
     ```bash
+    eval "$(npx eas env:list production | grep -E '^[A-Z_]+=' | sed 's/^/export /')"   # or the check lies
     npx expo-updates fingerprint:generate --platform android   # the tree
-    npx eas build:view <build-id> | grep Runtime                # the binary
+    npx eas build:list --platform android --limit 1 --json     # .runtimeVersion of the binary
     ```
 
-    `--debug` on the first lists all 81 fingerprint sources with the reason each is
+    Measured on 2026-10-07: commit `fd84ea6`, the tree versionCode 13 was built from,
+    fingerprinted `b848514d…` with the env unset and `3258c574…` — the binary's actual
+    runtime — with it set. Without the `eval` line, a correct tree looks broken and a
+    broken one can look correct.
+
+    `--debug` on the fingerprint command lists all 81 sources with the reason each is
     included, which is how to find what moved it.
 
 - **Crash and ANR reports** arrive automatically in Play Console → **Quality → Android vitals**.
