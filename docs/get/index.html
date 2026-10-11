@@ -23,7 +23,7 @@
   <script>
     (function () {
       var base = "https://play.google.com/store/apps/details?id=io.cornerstone.study";
-      var ok = ["ig", "x", "yt", "wa", "mail"];
+      var ok = ["ig", "x", "yt", "wa", "mail", "web"];
       var c = (new URLSearchParams(location.search).get("c") || "").toLowerCase();
       var url = ok.indexOf(c) > -1 ? base + "&listing=" + c : base;
       var a = document.getElementById("play");

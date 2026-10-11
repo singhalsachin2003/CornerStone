@@ -717,6 +717,11 @@ if __name__ == "__main__":
              "Follow the stricter Code and Standards",
              "Disclose the practice and proceed",
              "Seek written employer approval"], 1)
+    # 0.95 x 0.01 = 0.0095 true positives against 0.05 x 0.99 = 0.0495 false ones,
+    # so 0.0095 / 0.059 = 16.1%. The base rate does the work, which is the point.
+    cs_quiz("cs-quiz-04-frm-bayes.png", "FRM · Part I",
+            "A test for a rare condition has 95% sensitivity and 95% specificity. The condition affects 1% of the population. Given a positive result, the probability the condition is present is closest to:",
+            ["16%", "48%", "85%", "95%"], 0)
 
     cs_glossary("cs-glossary.png", [
         ("Value at Risk", "VaR",

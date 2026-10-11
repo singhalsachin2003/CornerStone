@@ -124,22 +124,21 @@ runtime, so the 1.3.0 binaries already out there stop receiving updates until a 
 replaces them. That is a release-planning decision, not a code change — do it as part of the
 next OTC Learn release, never on its own.
 
-## 4a. `?c=web` is not in the `/get/` allowlist, so the FRM pages attribute nothing
+## 4a. The `web` channel is wired but inert until a custom listing exists
 
-`docs/get/index.html` routes `?c=<channel>` to a Play custom store listing from the allowlist
-`ig, x, yt, wa, mail`. The generated FRM pages all link through `/get/` with no channel, so
-every install that starts on the website lands on the default listing and is indistinguishable
-from direct traffic.
+`docs/get/index.html` routes `?c=<channel>` to a Play custom store listing. `web` is now in
+the allowlist and `install()` in `scripts/generate-site.ts` appends `?c=web`, so every link
+on the generated FRM pages carries it.
 
-`install()` originally passed `'web'`, which is not in the allowlist and was silently dropped;
-the dead argument was removed in `df68856` rather than guessed at, because **adding a channel
-means creating a custom store listing in the Console** and the Play API cannot read or write
-them (`docs/STORE_LISTING.md`). Decide whether a `web` listing should exist; if it should,
-add it in the Console first, then to the allowlist and to `install()` together.
+**It attributes nothing yet.** A custom store listing named `web` has to be created in the
+Console — Grow users → Store presence → Store listings — and the Play API cannot create or
+read one. Until it exists, Play ignores an unknown `listing` value and serves the default
+listing, so the parameter is inert rather than broken, and it starts working the moment the
+listing is created with no code change.
 
-Worth confirming while in there that `ig, x, yt, wa, mail` each correspond to a listing that
-actually exists. An unknown `listing=` value falls back to the default rather than erroring,
-so five broken channels would look exactly like five working ones.
+Worth confirming in the same sitting that `ig, x, yt, wa, mail` each correspond to a listing
+that actually exists. Because an unknown value falls back silently, five broken channels look
+exactly like five working ones.
 
 ## 5. Cross-repo duplication — ~1,000 lines of identical domain logic
 

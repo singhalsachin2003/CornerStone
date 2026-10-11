@@ -870,7 +870,7 @@ The single discount rate that equates a bond’s price to the present value of i
 
 **Exam angle:** Assumes every coupon is reinvested at the YTM and the bond is held to maturity. Both assumptions usually fail, which is why realised return differs from YTM.
 
-[Get Cornerstone on Google Play (Android)](/CornerStone/get/)
+[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)
 
 [FRM topic map](/CornerStone/frm/)
 

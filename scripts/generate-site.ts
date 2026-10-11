@@ -30,8 +30,11 @@ function esc(s: string): string {
 }
 function install(): string {
   // Through /get/ rather than straight to Play, so the redirector can attribute
-  // the click to a custom store listing.
-  return '[Get Cornerstone on Google Play (Android)](/CornerStone/get/)';
+  // the click to a custom store listing. `web` must also be in the allowlist in
+  // docs/get/index.html, and a custom store listing of that name has to exist in
+  // the Console — the Play API cannot create one. Until it does, Play ignores an
+  // unknown `listing` and serves the default, so this is inert rather than broken.
+  return '[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)';
 }
 function write(rel: string, body: string) {
   const path = join(DOCS, rel);

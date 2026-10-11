@@ -30,7 +30,7 @@ Application — 80 questions, six topic areas
 
 ## Study on your phone
 
-[Get Cornerstone on Google Play (Android)](/CornerStone/get/)
+[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)
 
 [FRM glossary](/CornerStone/glossary/frm/)
 

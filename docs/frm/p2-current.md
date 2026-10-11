@@ -115,7 +115,7 @@ D. Are always fully insured by deposit schemes
 
 The app adds snapshot cards, timed question sessions and a spaced-repetition review queue for this topic area, and works offline.
 
-[Get Cornerstone on Google Play (Android)](/CornerStone/get/)
+[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)
 
 [All FRM topic areas](/CornerStone/frm/) · [FRM glossary](/CornerStone/glossary/frm/)
 
