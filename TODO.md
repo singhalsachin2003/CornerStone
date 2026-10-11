@@ -11,7 +11,8 @@ not:** anything blocking (say so in the moment instead), and anything already de
 a file there becomes a public web page. `PRICING.md` was published by accident for a day that
 way. Working notes stay out of `docs/` unless they are also excluded in `docs/_config.yml`.
 
-Last reviewed: **27 September 2026** · production **versionCode 13** (1.2.0) · 5 open, none
+Last reviewed: **11 October 2026** · production **versionCode 13** (1.2.0), plus the OTA
+published 9 October carrying reset-progress and the corrected FRM date · 6 open, none
 blocking. Item 0 — the in-app account deletion Play requires — is closed and moved to
 **Recently closed**; with it gone this file keeps its own "nothing blocking" rule again.
 
@@ -24,6 +25,17 @@ found three things and failed the build. **They are demoted to warnings in
 `eslint.config.js`, not dismissed** — the reasoning is in the comment there. Demoting avoided
 coupling a security patch to refactoring working, shipped code; the findings are real and
 each should be dealt with on its own.
+
+**Looked at again on 11 October and deliberately left alone.** The honest blocker is that
+nothing can verify the change: `jest.config.js` is `ts-jest` on `testEnvironment: node`, the
+suite is 219 pure domain tests, and **no test renders a component**. Restructuring the
+commit-once effect in `app/results.tsx` means editing the path that writes every user's
+mastery and review queue with no test that would notice a regression.
+
+Adding `@testing-library/react-native` is not a free prerequisite either: dependency changes
+feed the Expo fingerprint, and the OTA channel to versionCode 13 was only just restored in
+`2105a3b` after one npm script severed it. Do this alongside the next store release, where a
+new binary resets the runtime anyway and a device test is already planned — not before.
 
 In the order worth fixing:
 
@@ -91,15 +103,43 @@ curl -s -H "Authorization: Bearer goog_yDKSHtpPjEDkWdJxdjrnFZJjDyv" -H "X-Platfo
 Correct is **one** entry whose `identifier` equals `current_offering_id`, holding both
 `$rc_monthly` and `$rc_annual`.
 
-## 4. `check:play` gives a stale next action
+## 4. OTC Learn's runtime policy is `appVersion`, which fails in the dangerous direction
 
-It still prints _"Check they are in a RevenueCat offering on `premium`"_ now that the offering
-exists and is correct. The script reads the Android Publisher API and has no view of
-RevenueCat, so it cannot know — but printing a step that is already done trains people to
-ignore the line, which is worse than printing nothing.
+Not the same trap Cornerstone had, and worth stating plainly because the obvious reading is
+wrong. `otc-learning-app/app.json` sets `runtimeVersion.policy: "appVersion"`, so its runtime
+is the literal string **`1.3.0`** — its production binary (versionCode 10) reports exactly
+that. Adding an npm script there severs nothing, and **its `sync:listing` script is harmless
+and was deliberately left in place**.
 
-Either drop the line once products exist, or have it say plainly that it cannot see
-RevenueCat and name the curl above.
+The exposure is the mirror image. Under `appVersion`, every 1.3.0 binary accepts every 1.3.0
+update regardless of what changed natively. OTC Learn ships `react-native-purchases`,
+`expo-notifications` and `expo-updates`, and **one OTA has already been published** to that
+branch. So adding a native module without bumping `version` in `app.json` would push JS onto
+binaries that cannot run it — a launch crash for every install, with no store rollback.
+Cornerstone's `app.config.js` carries the comment explaining exactly this, which is why it
+uses `fingerprint`.
+
+Switching OTC Learn to `fingerprint` is the fix, and it is **not** free: it changes the
+runtime, so the 1.3.0 binaries already out there stop receiving updates until a store release
+replaces them. That is a release-planning decision, not a code change — do it as part of the
+next OTC Learn release, never on its own.
+
+## 4a. `?c=web` is not in the `/get/` allowlist, so the FRM pages attribute nothing
+
+`docs/get/index.html` routes `?c=<channel>` to a Play custom store listing from the allowlist
+`ig, x, yt, wa, mail`. The generated FRM pages all link through `/get/` with no channel, so
+every install that starts on the website lands on the default listing and is indistinguishable
+from direct traffic.
+
+`install()` originally passed `'web'`, which is not in the allowlist and was silently dropped;
+the dead argument was removed in `df68856` rather than guessed at, because **adding a channel
+means creating a custom store listing in the Console** and the Play API cannot read or write
+them (`docs/STORE_LISTING.md`). Decide whether a `web` listing should exist; if it should,
+add it in the Console first, then to the allowlist and to `install()` together.
+
+Worth confirming while in there that `ig, x, yt, wa, mail` each correspond to a listing that
+actually exists. An unknown `listing=` value falls back to the default rather than erroring,
+so five broken channels would look exactly like five working ones.
 
 ## 5. Cross-repo duplication — ~1,000 lines of identical domain logic
 
@@ -141,6 +181,12 @@ thresholds need volume. For now **any issue appearing is the signal**, not the r
 ---
 
 ## Recently closed
+
+- **`check:play` printed a step that was already done** — *"Check they are in a RevenueCat
+  offering on `premium`"*, every run, long after the offering was correct. It now says plainly
+  that it reads the Android Publisher API, cannot see RevenueCat, and names the exact curl that
+  can — with the key taken from `eas env:list` rather than written into the repo. A check that
+  prints a stale instruction teaches people to skip the line, which costs more than silence.
 
 - **No in-app account deletion, with the app live** — item 0 of this file, and the only live
   Play policy exposure it ever carried. Shipped in `0019c90`: a **Delete account** row in

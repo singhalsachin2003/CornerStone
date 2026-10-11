@@ -154,7 +154,20 @@ async function main() {
         '  `premium` entitlement. The paywall turns itself on with no code change.',
     );
   } else {
-    console.log('  Products exist. Check they are in a RevenueCat offering on `premium`.');
+    // Deliberately not a step to do. This script reads the Android Publisher API
+    // and has no view of RevenueCat, so it cannot tell whether the offering is
+    // right — and printing an already-done step trains people to skip the line.
+    console.log(
+      '  Nothing, on the Play side. Products exist and the binary can sell them.\n' +
+        '  This script cannot see RevenueCat, so it cannot vouch for the offering.\n' +
+        '  To check that, call the endpoint the SDK itself calls — correct is ONE\n' +
+        '  entry whose identifier equals current_offering_id, holding both\n' +
+        '  $rc_monthly and $rc_annual:\n' +
+        '\n' +
+        "    eval \"$(npx eas env:list production | grep -E '^[A-Z_]+=' | sed 's/^/export /')\"\n" +
+        '    curl -s -H "Authorization: Bearer $REVENUECAT_ANDROID_KEY" -H "X-Platform: android" \\\n' +
+        '      https://api.revenuecat.com/v1/subscribers/probe/offerings | python3 -m json.tool',
+    );
   }
 }
 
