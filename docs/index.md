@@ -10,6 +10,7 @@ existed keeps all of it.
 
 - [FRM topic map with free sample questions](frm/)
 - [FRM glossary](glossary/frm/)
+- [Daily questions on WhatsApp](https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m)
 - [Privacy policy](PRIVACY.md)
 - [Delete your account](DELETE-ACCOUNT.md)
 

@@ -32,6 +32,8 @@ Application — 80 questions, six topic areas
 
 [Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)
 
+[Follow the daily questions on WhatsApp](https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m)
+
 [FRM glossary](/CornerStone/glossary/frm/)
 
 *Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by GARP.*

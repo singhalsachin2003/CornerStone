@@ -34,7 +34,7 @@ function install(): string {
   // docs/get/index.html, and a custom store listing of that name has to exist in
   // the Console — the Play API cannot create one. Until it does, Play ignores an
   // unknown `listing` and serves the default, so this is inert rather than broken.
-  return '[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)';
+  return '[Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)\n\n[Follow the daily questions on WhatsApp](https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m)';
 }
 function write(rel: string, body: string) {
   const path = join(DOCS, rel);

@@ -121,6 +121,8 @@ The app adds snapshot cards, timed question sessions and a spaced-repetition rev
 
 [Get Cornerstone on Google Play (Android)](/CornerStone/get/?c=web)
 
+[Follow the daily questions on WhatsApp](https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m)
+
 [All FRM topic areas](/CornerStone/frm/) · [FRM glossary](/CornerStone/glossary/frm/)
 
 *Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by GARP.*
