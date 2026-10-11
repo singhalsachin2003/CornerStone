@@ -177,7 +177,8 @@ def otc_quiz(fn, catkey, question, options, correct):
             ty += 42
         y += rh + 14
 
-    footer(img, d, "otc", OTC_URL, "Answer + why, in the app", "OTC Learn · free on Google Play", W, H)
+    footer(img, d, "otc", OTC_URL, "Answer + why, in the app",
+           "OTC Learn · free to install on Google Play", W, H)
     save(img, fn)
 
 
@@ -304,7 +305,7 @@ def otc_tiers(fn):
           F(OTC.sans, 30, "Regular"), px, ty, W - 2 * M - 96, 44, "#B8B4AE")
 
     footer(img, d, "otc", OTC_URL, "Read it all without ever seeing a paywall",
-           "OTC Learn · free on Google Play", W, H)
+           "OTC Learn · free to install on Google Play", W, H)
     save(img, fn)
 
 

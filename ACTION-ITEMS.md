@@ -644,12 +644,22 @@ account there is nothing for a user to decline.
 listing denies collecting is the under-declaring direction, and that is what
 Play suspends apps for."* Every change here adds a declaration. None removes one.
 
-### Still open
+### Still open — now one Console click, nothing else
 
 The question *"do you provide a way for users to request that some or all of
 their data be deleted, without requiring them to delete their account?"* is
 **unanswered on Cornerstone** and answered on OTC Learn. Both apps have
-`resetProgress`, so the honest answer is yes for both — but the field wants a URL
-and Cornerstone's `DELETE-ACCOUNT.html` documents only full account deletion.
-Add a section to that page describing the in-app reset, then answer it. It is an
-optional question, which is why it did not block this submission.
+`resetProgress`, so the honest answer is yes for both.
+
+**The prerequisite is done.** This entry used to say Cornerstone's
+`DELETE-ACCOUNT.html` documented only full account deletion and needed a section
+written. It no longer does: `eac44f3` added **"Delete your progress without
+deleting your account"** in the same commit as the feature, naming the exact path
+(**Profile → Account → Reset progress**, matching `app/account.tsx:134,322`),
+what it erases, and that neither the account nor the subscription is touched.
+Verified live on 11 October 2026 at
+<https://singhalsachin2003.github.io/CornerStone/DELETE-ACCOUNT.html>.
+
+So the remaining work is answering the question in the Console with that URL —
+the same one already used for full deletion. It is an optional question, which is
+why it did not block the submission.
