@@ -8,6 +8,8 @@ Everything the app shipped with is free, permanently. An optional subscription o
 study segments added since, and anyone who installed the app before the subscription
 existed keeps all of it.
 
+- [FRM topic map with free sample questions](frm/)
+- [FRM glossary](glossary/frm/)
 - [Privacy policy](PRIVACY.md)
 - [Delete your account](DELETE-ACCOUNT.md)
 

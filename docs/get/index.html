@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Get Cornerstone</title>
 <link rel="canonical" href="https://play.google.com/store/apps/details?id=io.cornerstone.study">
-<meta http-equiv="refresh" content="0; url=https://play.google.com/store/apps/details?id=io.cornerstone.study">
 <meta name="robots" content="noindex">
 <style>
   :root { color-scheme: light dark; }
@@ -19,10 +18,18 @@
 <body>
   <main>
     <p>Taking you to Cornerstone on Google Play&hellip;</p>
-    <p><a href="https://play.google.com/store/apps/details?id=io.cornerstone.study">Open Google Play</a></p>
+    <p><a id="play" href="https://play.google.com/store/apps/details?id=io.cornerstone.study">Open Google Play</a></p>
   </main>
   <script>
-    location.replace("https://play.google.com/store/apps/details?id=io.cornerstone.study");
+    (function () {
+      var base = "https://play.google.com/store/apps/details?id=io.cornerstone.study";
+      var ok = ["ig", "x", "yt", "wa", "mail"];
+      var c = (new URLSearchParams(location.search).get("c") || "").toLowerCase();
+      var url = ok.indexOf(c) > -1 ? base + "&listing=" + c : base;
+      var a = document.getElementById("play");
+      if (a) a.href = url;
+      location.replace(url);
+    })();
   </script>
 </body>
 </html>
