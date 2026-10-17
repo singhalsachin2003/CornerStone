@@ -130,8 +130,9 @@ https://singhalsachin2003.github.io/CornerStone/PRIVACY.html
 - [x] Contact email set to `singhalsachin2003@gmail.com` in `PRIVACY.md`. Play rejects a
       placeholder, and the address must be one you actually monitor — replies to the policy
       and the listing both land there.
-- [x] `docs/index.md` gives the site root a landing page instead of a 404, since Play and
-      users will both trim the URL.
+- [x] `docs/index.html` gives the site root a landing page instead of a 404, since Play and
+      users will both trim the URL. It was `index.md` until the stock-theme render was
+      replaced by a built page; it carries `permalink: /`, which is what holds the root.
 - [x] `docs/_config.yml` keeps this checklist and the store-listing draft out of the built
       site. They stay readable in the repo; they just are not published as web pages.
 
