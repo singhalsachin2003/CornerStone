@@ -24,3 +24,18 @@ COUNTDOWN_ON=2026-10-08 python3 gen2.py
 
 The target is the opening of GARP's FRM Part I window (14 November 2026); Part II
 opens 21 November.
+
+## Reproducibility
+
+Every poster here is an entry in `gen2.py`'s content block, and re-running the
+generator rewrites it byte for byte. A poster that asserts a number carries the
+derivation in a comment beside the entry, so the claim and its working are read
+and changed together. The two dated `cs-frm-countdown-YYYY-MM-DD.png` files are
+the only exceptions, and only in name: they are archived `COUNTDOWN_ON` renders.
+
+The fonts are the one thing this repo does not pin. `fetch-fonts.sh` pulls the
+four variable faces from the tip of Google Fonts, which moves, so a poster
+rendered against an older build of a face no longer comes back byte for byte
+even though nothing here changed — the September posters are in that position.
+Re-rendering one brings it back into line, which is also the reason not to
+re-render a poster you are happy with just because you are in the directory.

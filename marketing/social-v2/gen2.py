@@ -616,6 +616,51 @@ if __name__ == "__main__":
               "The airline receives $5,100,000",
               "Both sides pay gross: $4.75m and $5.10m"], 1)
 
+    # Spread 140bp against a fixed 100bp coupon: the buyer is underpaying by 40bp
+    # a year for five years, so the buyer settles the difference up front. The
+    # coupon is standardised precisely so this is the only moving part.
+    otc_quiz("otc-quiz-05-cds-upfront.png", "credit",
+             "A 5-year CDS has a standard 100bp coupon but trades at a 140bp spread. Who pays the upfront amount at inception?",
+             ["The protection buyer",
+              "The protection seller",
+              "Nobody: the coupon always equals the traded spread",
+              "The clearing house"], 0)
+
+    # 83.00 x 1.07 / 1.05 = 84.58. The currency with the higher rate trades at a
+    # forward discount, so INR weakens in the forward — covered interest parity,
+    # not a forecast.
+    otc_quiz("otc-quiz-06-fx-forward.png", "fx",
+             "USD/INR spot is 83.00. One-year rates are 5% in USD and 7% in INR. The one-year forward is closest to:",
+             ["81.40", "83.00", "84.60", "86.80"], 2)
+
+    # Initial margin is gross and two-way, segregated with a third party, and may
+    # not be rehypothecated — which is exactly what separates it from variation
+    # margin, and why it cannot be netted against it.
+    otc_quiz("otc-quiz-07-umr-im.png", "risk",
+             "Under the uncleared margin rules, which statement about initial margin is correct?",
+             ["Both parties post it, held with a third-party custodian",
+              "Only the weaker credit posts it",
+              "It is netted against variation margin",
+              "The receiver may freely re-hypothecate it"], 0)
+
+    # A receiver swaption receives fixed. The name says which leg the holder
+    # receives, which is the whole of the question.
+    otc_quiz("otc-quiz-08-receiver-swaption.png", "ir",
+             "A receiver swaption gives its holder the right, but not the obligation, to:",
+             ["Enter a swap receiving the fixed rate",
+              "Enter a swap paying the fixed rate",
+              "Cancel an existing swap at par",
+              "Convert a floating-rate bond to fixed"], 0)
+
+    # CVA is a credit charge, not a funding or capital one. The three wrong
+    # answers are the adjustments it is most often confused with: FVA, MVA, KVA.
+    otc_quiz("otc-quiz-09-cva.png", "risk",
+             "What does credit valuation adjustment (CVA) measure?",
+             ["Expected loss from the counterparty defaulting",
+              "The cost of funding uncollateralised positions",
+              "The cost of posting initial margin",
+              "The cost of holding regulatory capital"], 0)
+
     otc_term("otc-term-01-notional.png", "ir", "Notional",
              "The reference amount interest is calculated on. It is never exchanged in a standard swap.")
     otc_term("otc-term-02-vm.png", "foundations", "Variation margin",
@@ -722,6 +767,31 @@ if __name__ == "__main__":
     cs_quiz("cs-quiz-04-frm-bayes.png", "FRM · Part I",
             "A test for a rare condition has 95% sensitivity and 95% specificity. The condition affects 1% of the population. Given a positive result, the probability the condition is present is closest to:",
             ["16%", "48%", "85%", "95%"], 0)
+
+    # Square root of time: 2.0 x sqrt(10) = 6.32. The scaling holds only because
+    # the question grants i.i.d. normal returns with zero mean, which is the
+    # assumption the examiners are testing rather than the arithmetic.
+    cs_quiz("cs-quiz-05-frm-var-scaling.png", "FRM · Part I",
+            "A portfolio has a 1-day 99% VaR of $2.0m. Assuming i.i.d. normal returns with zero mean, the 10-day 99% VaR is closest to:",
+            ["$2.0m", "$4.5m", "$6.3m", "$20.0m"], 2)
+    # -7.0 x 0.0050 = -3.5%. Modified duration is already the percentage change
+    # per 100bp, so the only trap is the sign and the decimal place.
+    cs_quiz("cs-quiz-06-cfa-duration.png", "CFA · Level I",
+            "A bond has a modified duration of 7.0. If its yield rises by 50 bps, the approximate percentage change in price is:",
+            ["+3.5%", "-3.5%", "-0.35%", "-7.0%"], 1)
+    # ES is coherent; VaR fails subadditivity, which is the one property of the
+    # four that it cannot be relied on to satisfy. See the glossary poster.
+    cs_quiz("cs-quiz-07-frm-es.png", "FRM · Part I",
+            "Which of the following risk measures is coherent, because it always satisfies subadditivity?",
+            ["Value at Risk (VaR)",
+             "Expected shortfall (ES)",
+             "Standard deviation of returns",
+             "The 95th-percentile loss"], 1)
+    # DuPont, three-factor: 0.08 x 1.5 x 2.0 = 0.24. Margin x turnover gives ROA,
+    # and the equity multiplier levers it up to ROE.
+    cs_quiz("cs-quiz-08-cfa-dupont.png", "CFA · Level I",
+            "A company has a net profit margin of 8%, asset turnover of 1.5 and an equity multiplier of 2.0. Its ROE is:",
+            ["12%", "16%", "24%", "30%"], 2)
 
     cs_glossary("cs-glossary.png", [
         ("Value at Risk", "VaR",

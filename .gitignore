@@ -75,3 +75,10 @@ Claude outputs/
 # the JPEG is a lossy re-export made for whichever network rejects the PNG, and
 # is regenerated from the PNG rather than tracked beside it.
 marketing/social-v2/*.jpg
+
+# gen2.py's inputs and outputs. fetch-fonts.sh pulls the four variable faces
+# from Google Fonts, and the generator writes every poster to out2/ before the
+# ones worth keeping are copied up beside it. Both are reproducible from the
+# scripts, and the fonts are upstream files this repo should not vendor.
+marketing/social-v2/fonts/
+marketing/social-v2/out2/
