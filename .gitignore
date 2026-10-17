@@ -70,3 +70,8 @@ store/feature-graphic@2x.png
 # Where downloads from a chat session land. The posters that matter live in
 # marketing/social-v2/; this is the unpacked copy they arrived in.
 Claude outputs/
+
+# Upload derivatives. Each poster is committed once as the PNG gen2.py writes;
+# the JPEG is a lossy re-export made for whichever network rejects the PNG, and
+# is regenerated from the PNG rather than tracked beside it.
+marketing/social-v2/*.jpg
