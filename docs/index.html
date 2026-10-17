@@ -1,0 +1,483 @@
+---
+layout: null
+permalink: /
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cornerstone: CFA® and FRM® study app for Android, free and offline</title>
+<meta name="description" content="Snapshot cards, five-question sessions and a spaced-repetition review queue for CFA and FRM candidates. Free on Google Play, works fully offline, no sign-up needed.">
+<link rel="canonical" href="https://singhalsachin2003.github.io/CornerStone/">
+<meta name="theme-color" content="#131B2E">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Cornerstone">
+<meta property="og:title" content="Cornerstone: CFA® and FRM® study app, free on Android">
+<meta property="og:description" content="Fifteen honest minutes beats three distracted hours. Snapshot cards, five-question sessions and spaced repetition. Works offline.">
+<meta property="og:url" content="https://singhalsachin2003.github.io/CornerStone/">
+<meta property="og:image" content="https://singhalsachin2003.github.io/CornerStone/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@getcornerstone">
+<link rel="preload" href="assets/serif-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Source Serif 4";src:url(assets/serif-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Serif 4";src:url(assets/serif-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Archivo";src:url(assets/sans-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Archivo";src:url(assets/sans-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Archivo";src:url(assets/sans-700.woff2) format("woff2");font-weight:700;font-display:swap}
+
+:root{
+  color-scheme:light dark;
+  --bg:#F7F4EE; --surface:#FFFDFA; --ink:#16233B; --body:#3D4A63; --muted:#6F7A90;
+  --accent:#9A6B2F; --accent-soft:#F1E7D6; --line:#E4DED2; --wrong:#9B3B34;
+  --navy:#131B2E; --navy-2:#1B2540; --on-navy:#F5F2EA; --on-navy-sub:#A9B1C2; --gold:#DDB868;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --radius:18px; --wrap:1120px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0E1424; --surface:#161F35; --ink:#F2EEE5; --body:#C5CBD8; --muted:#97A0B3;
+        --accent:#DDB868; --accent-soft:#2A2A2A; --line:#263049;}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--body);font:400 17px/1.6 var(--sans);overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--accent);text-underline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);line-height:1.12;margin:0;letter-spacing:-.01em}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:8px;z-index:9}
+.skip:focus{left:8px}
+.kicker{font:700 13px/1.2 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 16px/1 var(--sans);text-decoration:none;
+     padding:15px 22px;border-radius:999px;border:1.5px solid transparent;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible,summary:focus-visible,.video button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn-gold{background:var(--gold);color:#16233B}
+.btn-gold:hover{background:#E7C77F}
+.btn-ghost{color:var(--on-navy);border-color:rgba(245,242,234,.35)}
+.btn-ghost:hover{border-color:var(--on-navy)}
+.btn-ink{background:var(--ink);color:var(--bg)}
+
+/* header + hero (always dark) */
+.hero{background:var(--navy);color:var(--on-navy);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -20% -40% auto;width:720px;height:720px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(221,184,104,.16),transparent);pointer-events:none}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.brand{display:flex;align-items:center;gap:12px;color:var(--on-navy);text-decoration:none;font:600 22px/1 var(--serif)}
+.brand img{width:40px;height:40px;border-radius:10px}
+.nav{display:flex;align-items:center;gap:22px}
+.nav a{color:var(--on-navy-sub);text-decoration:none;font:600 15px/1 var(--sans)}
+.nav a:hover{color:var(--on-navy)}
+.nav a.btn{padding:11px 16px;font-size:15px;color:#16233B}
+.nav a.btn:hover{color:#16233B}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding:48px 0 88px;position:relative;z-index:1}
+.hero .kicker{color:var(--gold)}
+.hero h1{color:var(--on-navy);font-size:clamp(40px,5.6vw,68px);margin:18px 0 0}
+.hero h1 em{font-style:normal;font-weight:400;color:var(--gold);display:block}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--on-navy-sub);max-width:36em;margin:22px 0 30px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.trust{display:flex;flex-wrap:wrap;gap:8px 18px;margin:26px 0 0;padding:0;list-style:none;font:600 14px/1.4 var(--sans);color:var(--on-navy-sub)}
+.trust li::before{content:"✓";color:var(--gold);margin-right:7px}
+.hero-visual{display:flex;justify-content:center;align-items:flex-end;gap:22px}
+.qr{background:#fff;border-radius:16px;padding:14px;width:150px;text-align:center;color:#16233B;font:700 11px/1.3 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.qr img{width:122px;height:122px;margin:0 auto 10px}
+
+/* phone mock */
+.phone{width:min(280px,72vw);border-radius:40px;background:#0B0F18;padding:10px;
+  box-shadow:0 40px 80px rgba(5,9,20,.45),0 10px 24px rgba(5,9,20,.3)}
+.phone img{border-radius:31px;aspect-ratio:9/16;object-fit:cover;width:100%}
+.phone.sm{width:min(250px,64vw)}
+@media (max-width:960px){.hero-visual .phone{width:min(250px,66vw)}}
+
+/* sections */
+section{padding:96px 0}
+.section-head{max-width:44em;margin:0 0 48px}
+.section-head h2{font-size:clamp(32px,3.6vw,46px);margin:12px 0 0}
+.section-head p{margin:16px 0 0;font-size:18px}
+.alt{background:var(--surface);border-block:1px solid var(--line)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.step{display:flex;flex-direction:column;gap:20px}
+.step .phone{width:100%;max-width:280px;margin:0 auto}
+.step-num{display:inline-flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;
+  background:var(--ink);color:var(--bg);font:700 15px/1 var(--sans);margin-right:10px;flex:none}
+.step h3{font-size:25px;display:flex;align-items:center}
+.step p{margin:8px 0 0}
+.timeline{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding:0;list-style:none}
+.timeline li{font:600 13px/1 var(--sans);padding:8px 11px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.timeline li:first-child{background:var(--wrong);color:#fff}
+
+/* coverage */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:8px 0 28px}
+.stat b{display:block;font:600 clamp(48px,5vw,68px)/1 var(--serif);color:var(--ink)}
+.stat span{display:block;margin-top:6px;font-weight:600;color:var(--body)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px;padding:0;list-style:none}
+.chips li{font:700 14px/1 var(--sans);padding:11px 16px;border-radius:999px;background:var(--ink);color:var(--bg)}
+.chips li.gold{background:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.chips li.gold{color:#16233B}}
+.duo{display:flex;gap:20px;justify-content:center;align-items:flex-start}
+.duo .phone{width:min(240px,42vw)}
+.duo .phone:last-child{margin-top:56px}
+
+/* video */
+.video{max-width:880px;margin:0 auto}
+.video button,.video iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:var(--radius);overflow:hidden}
+.video button{position:relative;padding:0;cursor:pointer;background:#000}
+.video button img{width:100%;height:100%;object-fit:cover;opacity:.92}
+.play{position:absolute;left:24px;bottom:24px;display:inline-flex;align-items:center;gap:12px;padding:10px 20px 10px 10px;border-radius:999px;
+  background:var(--gold);color:#16233B;font:700 16px/1 var(--sans);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.play i{width:44px;height:44px;border-radius:50%;background:#16233B;display:grid;place-items:center}
+.play svg{margin-left:4px}
+.video small{display:block;text-align:center;margin-top:14px;color:var(--muted);font-size:14px}
+
+/* resources */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{display:block;text-decoration:none;color:var(--body);background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px;transition:border-color .15s ease,transform .15s ease}
+.alt .card{background:var(--bg)}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card h3{font-size:24px;margin:10px 0 8px}
+.card .go{display:inline-block;margin-top:14px;font-weight:700;color:var(--accent)}
+
+/* respect */
+.respect{background:var(--navy);color:var(--on-navy);text-align:center}
+.respect h2{color:var(--on-navy);font-size:clamp(34px,4.4vw,56px);font-weight:400}
+.respect h2 b{font-weight:600}
+.respect h2 span{color:var(--gold)}
+.respect p{color:var(--on-navy-sub);max-width:38em;margin:22px auto 32px;font-size:18px}
+.respect .ctas{justify-content:center}
+
+/* faq */
+.faq{max-width:820px}
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;align-items:center;
+  padding:20px 0;font:600 21px/1.3 var(--serif);color:var(--ink)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:400 28px/1 var(--sans);color:var(--accent);flex:none;transition:transform .2s ease}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0 0 22px;max-width:44em}
+
+/* footer */
+footer{padding:56px 0 64px;font-size:15px;color:var(--muted);border-top:1px solid var(--line)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px}
+.foot ul{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0;padding:0;list-style:none}
+.foot a{color:var(--body);text-decoration:none;font-weight:600}
+.foot a:hover{color:var(--accent)}
+footer .brand img{box-shadow:0 0 0 1px var(--line)}
+.disclaimer{margin:28px 0 0;max-width:60em;line-height:1.55}
+
+@media (max-width:960px){
+  .hero-grid,.split{grid-template-columns:1fr;gap:44px}
+  .hero-grid{padding:28px 0 72px}
+  .qr{display:none}
+  .steps,.cards{grid-template-columns:1fr}
+  .steps{gap:56px}
+  .split .duo{order:-1}
+  section{padding:72px 0}
+}
+@media (max-width:640px){
+  .nav a:not(.btn){display:none}
+  .stats{grid-template-columns:1fr 1fr;gap:20px}
+  summary{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="./"><img src="assets/icon-192.png" alt="" width="40" height="40">Cornerstone</a>
+      <nav class="nav" aria-label="Main">
+        <a href="frm/">FRM topic map</a>
+        <a href="glossary/frm/">Glossary</a>
+        <a href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">WhatsApp</a>
+        <a class="btn btn-gold" href="get/?c=web">Get the app</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <p class="kicker">CFA® · FRM® study</p>
+        <h1>Fifteen honest minutes <em>beats three distracted hours.</em></h1>
+        <p class="lead">Cornerstone is a focused study companion for CFA® and FRM® candidates. Pick a topic, read a short set of snapshot cards, then prove it with five questions. That is a session.</p>
+        <div class="ctas">
+          <a class="btn btn-gold" href="get/?c=web">Get it free on Google Play</a>
+          <a class="btn btn-ghost" href="#video">Watch the 55-second intro</a>
+        </div>
+        <ul class="trust">
+          <li>Free to start</li><li>Works fully offline</li><li>No ads</li><li>No sign-up needed</li>
+        </ul>
+      </div>
+      <div class="hero-visual">
+        <div class="phone"><img src="assets/04-home-dashboard.webp" width="600" height="1067" alt="The Cornerstone home screen: syllabus progress, day streak, cards due and the next topic to study"></div>
+        <div class="qr"><img src="assets/qr-web.svg" width="122" height="122" alt="QR code linking to Cornerstone on Google Play">Scan to install</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">How a session works</p>
+        <h2>Read it, prove it, and let the misses come back.</h2>
+        <p>Each session is small enough to finish on a commute and honest enough to tell you where you stand.</p>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <div class="phone"><img src="assets/01-snapshot-card.webp" width="600" height="1067" loading="lazy" alt="A snapshot card showing a concept and its formula"></div>
+          <div>
+            <h3><span class="step-num">1</span>Snapshot cards</h3>
+            <p>The idea, the formula and the exam angle on one short card. Tap to reveal how the examiners actually test it.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="phone"><img src="assets/03-quiz-feedback.webp" width="600" height="1067" loading="lazy" alt="A five-question session showing the explanation after an answer"></div>
+          <div>
+            <h3><span class="step-num">2</span>Five questions</h3>
+            <p>Instant feedback. Every answer, right or wrong, comes with a written explanation and a curriculum reference.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="phone"><img src="assets/06-review-queue.webp" width="600" height="1067" loading="lazy" alt="The review queue listing questions due today"></div>
+          <div>
+            <h3><span class="step-num">3</span>Spaced repetition</h3>
+            <p>What you miss comes back, then less often as it sticks.</p>
+            <ul class="timeline" aria-label="Review schedule">
+              <li>Missed</li><li>Tomorrow</li><li>In 4 days</li><li>In 10 days</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Coverage</p>
+        <h2 style="font-size:clamp(32px,3.6vw,46px);margin:12px 0 28px">Both programmes, weighted the way the exams are.</h2>
+        <div class="stats">
+          <div class="stat"><b>38</b><span>topic areas</span></div>
+          <div class="stat"><b>260</b><span>glossary terms in the app, always free</span></div>
+        </div>
+        <ul class="chips"><li>CFA® Level I · II · III</li><li class="gold">FRM® Part I · II</li></ul>
+        <p>Topics follow the published outlines and exam weight bands. Sitting both? CFA and FRM keep completely separate progress, so one never muddies the other.</p>
+      </div>
+      <div class="duo">
+        <div class="phone"><img src="assets/05-topics-weights.webp" width="600" height="1067" loading="lazy" alt="Topic list with published exam weights"></div>
+        <div class="phone"><img src="assets/07-exam-switcher.webp" width="600" height="1067" loading="lazy" alt="Switching between the CFA and FRM programmes"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="wrap">
+      <div class="section-head" style="text-align:center;margin-inline:auto">
+        <p class="kicker">See it in under a minute</p>
+        <h2>The 55-second tour</h2>
+      </div>
+      <div class="video" data-id="wq4pK-Q1NxM">
+        <button type="button" aria-label="Play the Cornerstone intro video">
+          <img src="assets/video-poster.webp" width="1280" height="720" loading="lazy" alt="">
+          <span class="play"><i><svg width="16" height="18" viewBox="0 0 30 34" aria-hidden="true"><path d="M0 0l30 17L0 34z" fill="#DDB868"/></svg></i>Play the intro · 0:55</span>
+        </button>
+        <small>No sound needed. The video loads from YouTube only when you press play.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Free on this site</p>
+        <h2>Start studying before you install.</h2>
+      </div>
+      <div class="cards">
+        <a class="card" href="frm/">
+          <p class="kicker">FRM® Part I and II</p>
+          <h3>FRM topic map</h3>
+          <p>All ten topic areas with their published weight bands, the official modules and free worked sample questions.</p>
+          <span class="go">Open the map →</span>
+        </a>
+        <a class="card" href="glossary/frm/">
+          <p class="kicker">126 terms</p>
+          <h3>FRM glossary</h3>
+          <p>Risk management terms in plain English, with the formula and the exam angle for each.</p>
+          <span class="go">Browse the glossary →</span>
+        </a>
+        <a class="card" href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">
+          <p class="kicker">WhatsApp channel</p>
+          <h3>A question a day</h3>
+          <p>One practice question with a worked answer, straight to your phone. Free to follow, nothing to sign up for.</p>
+          <span class="go">Follow the channel →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap faq">
+      <div class="section-head">
+        <p class="kicker">Before you install</p>
+        <h2>Questions people ask</h2>
+      </div>
+      <details>
+        <summary>Is Cornerstone free?</summary>
+        <p>Yes, and permanently. Every topic area, snapshot card and question bank the app shipped with is free with no account and no time limit. An optional subscription opens the study segments written since, and anyone who installed the app before the subscription existed keeps those too, permanently.</p>
+      </details>
+      <details>
+        <summary>Does it work offline?</summary>
+        <p>Yes. All content ships inside the app, so a session on the Underground or on a plane behaves exactly like a session at home. Nothing is fetched to read a card or answer a question.</p>
+      </details>
+      <details>
+        <summary>Do I need an account?</summary>
+        <p>No. The app is fully usable without one. An account exists only to back your progress up so a new phone does not start you over, and you can delete it from inside the app at any time — see <a href="DELETE-ACCOUNT.html">Delete your account</a>.</p>
+      </details>
+      <details>
+        <summary>Which exams does it cover?</summary>
+        <p>The CFA® Program — Levels I, II and III, including the Level III pathways — and the FRM® certification, Parts I and II. 38 topic areas in total, each organised by the published topic outlines and exam weight bands.</p>
+      </details>
+      <details>
+        <summary>Is it affiliated with CFA Institute or GARP?</summary>
+        <p>No. Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by CFA Institute or the Global Association of Risk Professionals.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="respect">
+    <div class="wrap">
+      <h2><b>Works fully offline.</b><br>No ads. <span>No sign-up needed.</span></h2>
+      <p>Built to respect your time. Everything the app shipped with is free, permanently, and anyone who installed before the subscription existed keeps all of it.</p>
+      <div class="ctas">
+        <a class="btn btn-gold" href="get/?c=web">Get it free on Google Play</a>
+        <a class="btn btn-ghost" href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">Follow on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="brand" href="./" style="color:var(--ink)"><img src="assets/icon-192.png" alt="" width="40" height="40">Cornerstone</a>
+      <ul>
+        <li><a href="get/?c=web">Google Play</a></li>
+        <li><a href="frm/">FRM topic map</a></li>
+        <li><a href="glossary/frm/">FRM glossary</a></li>
+        <li><a href="https://x.com/getcornerstone">X</a></li>
+        <li><a href="https://www.instagram.com/getcornerstone/">Instagram</a></li>
+        <li><a href="https://www.youtube.com/@getcornerstone">YouTube</a></li>
+        <li><a href="PRIVACY.html">Privacy policy</a></li>
+        <li><a href="DELETE-ACCOUNT.html">Delete your account</a></li>
+        <li><a href="mailto:singhalsachin2003@gmail.com">Contact</a></li>
+      </ul>
+    </div>
+    <p class="disclaimer">Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by CFA Institute or the Global Association of Risk Professionals. CFA® and FRM® are registered trademarks of their respective owners.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.video').forEach(function (box) {
+  var btn = box.querySelector('button');
+  btn.addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.id + '?autoplay=1&rel=0&playsinline=1';
+    f.title = 'Cornerstone intro video';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    btn.replaceWith(f);
+  });
+});
+</script>
+
+<!--
+  Structured data. Every answer below is the answer visible above it, verbatim.
+  A FAQPage block describing content a reader cannot see is a manual-action risk,
+  not an SEO win.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cornerstone: Exam Study",
+  "operatingSystem": "Android",
+  "applicationCategory": "EducationalApplication",
+  "description": "Snapshot cards, focused question sessions and a spaced-repetition review queue for CFA and FRM candidates. Works fully offline.",
+  "url": "https://singhalsachin2003.github.io/CornerStone/",
+  "downloadUrl": "https://play.google.com/store/apps/details?id=io.cornerstone.study",
+  "installUrl": "https://play.google.com/store/apps/details?id=io.cornerstone.study",
+  "inLanguage": "en",
+  "isFamilyFriendly": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free, with an optional subscription for the study segments added since launch."
+  },
+  "author": { "@type": "Person", "name": "Sachin Singhal" },
+  "privacyPolicy": "https://singhalsachin2003.github.io/CornerStone/PRIVACY.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Cornerstone free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, and permanently. Every topic area, snapshot card and question bank the app shipped with is free with no account and no time limit. An optional subscription opens the study segments written since, and anyone who installed the app before the subscription existed keeps those too, permanently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work offline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All content ships inside the app, so a session on the Underground or on a plane behaves exactly like a session at home. Nothing is fetched to read a card or answer a question."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The app is fully usable without one. An account exists only to back your progress up so a new phone does not start you over, and you can delete it from inside the app at any time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which exams does it cover?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The CFA Program — Levels I, II and III, including the Level III pathways — and the FRM certification, Parts I and II. 38 topic areas in total, each organised by the published topic outlines and exam weight bands."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it affiliated with CFA Institute or GARP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by CFA Institute or the Global Association of Risk Professionals."
+      }
+    }
+  ]
+}
+</script>
+</body>
+</html>
