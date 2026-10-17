@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% if page.title and page.title != site.title %}{{ page.title | strip_html | escape }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{{ page.description | default: site.description | strip_html | strip_newlines | escape }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+<meta name="theme-color" content="#131B2E">
+<link rel="icon" type="image/png" sizes="64x64" href="{{ '/assets/favicon-64.png' | relative_url }}">
+<link rel="apple-touch-icon" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cornerstone">
+<meta property="og:title" content="{{ page.title | default: site.title | strip_html | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | strip_html | strip_newlines | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:image" content="{{ '/assets/og.jpg' | absolute_url }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@getcornerstone">
+<link rel="preload" href="{{ '/assets/serif-600.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% assign seg = page.url | split: '/' %}
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="{{ '/' | relative_url }}"><img src="{{ '/assets/icon-192.png' | relative_url }}" alt="" width="34" height="34">Cornerstone</a>
+    <nav class="nav" aria-label="Main">
+      <a href="{{ '/cfa/' | relative_url }}"{% if seg[1] == 'cfa' %} aria-current="page"{% endif %}>CFA topic map</a>
+      <a href="{{ '/frm/' | relative_url }}"{% if seg[1] == 'frm' %} aria-current="page"{% endif %}>FRM topic map</a>
+      <a href="{{ '/glossary/' | relative_url }}"{% if seg[1] == 'glossary' %} aria-current="page"{% endif %}>Glossary</a>
+      <a href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">WhatsApp</a>
+      <a class="cta" href="{{ '/get/?c=web' | relative_url }}">Get the app</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap page">
+  <main id="main" class="prose">
+{{ content }}
+  </main>
+  <aside class="side" aria-label="Get the app">
+    <div class="card">
+      <p class="k">Free on Google Play</p>
+      <h2>Study this on your phone</h2>
+      <p>Snapshot cards, five-question sessions and a spaced-repetition review queue for CFA® and FRM® candidates. Works fully offline, no sign-up needed.</p>
+      <a class="btn gold" href="{{ '/get/?c=web' | relative_url }}">Get Cornerstone</a>
+      <a class="btn ghost" href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">A question a day on WhatsApp</a>
+      <div class="qr"><img src="{{ '/assets/qr-web.svg' | relative_url }}" alt="QR code linking to Cornerstone on Google Play" width="76" height="76">Scan to install on Android</div>
+    </div>
+    <nav class="links" aria-label="Free study pages">
+      <p>Free on this site</p>
+      <ul>
+        <li><a href="{{ '/cfa/' | relative_url }}">CFA® topic map</a></li>
+        <li><a href="{{ '/frm/' | relative_url }}">FRM® topic map</a></li>
+        <li><a href="{{ '/glossary/cfa/' | relative_url }}">CFA® glossary</a></li>
+        <li><a href="{{ '/glossary/frm/' | relative_url }}">FRM® glossary</a></li>
+      </ul>
+    </nav>
+  </aside>
+</div>
+
+<a class="mobile-cta" href="{{ '/get/?c=web' | relative_url }}">Get Cornerstone free on Google Play</a>
+<footer>
+  <div class="wrap">
+    <ul class="foot">
+      <li><a href="{{ '/' | relative_url }}">Home</a></li>
+      <li><a href="{{ '/get/?c=web' | relative_url }}">Google Play</a></li>
+      <li><a href="https://x.com/getcornerstone">X</a></li>
+      <li><a href="https://www.instagram.com/getcornerstone/">Instagram</a></li>
+      <li><a href="https://www.youtube.com/@getcornerstone">YouTube</a></li>
+      <li><a href="{{ '/PRIVACY.html' | relative_url }}">Privacy policy</a></li>
+      <li><a href="{{ '/DELETE-ACCOUNT.html' | relative_url }}">Delete your account</a></li>
+      <li><a href="mailto:singhalsachin2003@gmail.com">Contact</a></li>
+    </ul>
+    <p>Cornerstone is an independent study aid. It is not affiliated with, authorised by, endorsed by or sponsored by CFA Institute or the Global Association of Risk Professionals. CFA® and FRM® are registered trademarks of their respective owners.</p>
+  </div>
+</footer>
+<script>
+/* A bio link such as ?c=x keeps its channel through every install button on the site.
+   The tag lives only in this tab's sessionStorage and only ever reaches Google Play. */
+(function () {
+  var ok = ['ig', 'x', 'yt', 'wa', 'mail'], c = '';
+  try {
+    c = (new URLSearchParams(location.search).get('c') || '').toLowerCase();
+    if (ok.indexOf(c) > -1) sessionStorage.setItem('cs-channel', c);
+    else c = sessionStorage.getItem('cs-channel') || '';
+  } catch (e) {}
+  if (ok.indexOf(c) < 0) return;
+  document.querySelectorAll('a[href*="get/?c=web"]').forEach(function (a) {
+    a.setAttribute('href', a.getAttribute('href').replace('c=web', 'c=' + c));
+  });
+})();
+</script>
+</body>
+</html>

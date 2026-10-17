@@ -31,3 +31,12 @@ exclude:
 # verifiable at the URL it is copied from.
 include:
   - .well-known
+
+# Every Markdown page (including the privacy and account-deletion pages, which have
+# no layout of their own) is wrapped in _layouts/default.html. The landing page opts
+# out with `layout: null`; get/index.html has no front matter so it is served as-is.
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

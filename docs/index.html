@@ -140,7 +140,7 @@ section{padding:96px 0}
 .video small{display:block;text-align:center;margin-top:14px;color:var(--muted);font-size:14px}
 
 /* resources */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .card{display:block;text-decoration:none;color:var(--body);background:var(--surface);border:1px solid var(--line);
   border-radius:var(--radius);padding:28px;transition:border-color .15s ease,transform .15s ease}
 .alt .card{background:var(--bg)}
@@ -180,6 +180,7 @@ footer .brand img{box-shadow:0 0 0 1px var(--line)}
   .hero-grid{padding:28px 0 72px}
   .qr{display:none}
   .steps,.cards{grid-template-columns:1fr}
+  .nav a:not(.btn){display:none}
   .steps{gap:56px}
   .split .duo{order:-1}
   section{padding:72px 0}
@@ -200,8 +201,9 @@ footer .brand img{box-shadow:0 0 0 1px var(--line)}
     <div class="top">
       <a class="brand" href="./"><img src="assets/icon-192.png" alt="" width="40" height="40">Cornerstone</a>
       <nav class="nav" aria-label="Main">
+        <a href="cfa/">CFA topic map</a>
         <a href="frm/">FRM topic map</a>
-        <a href="glossary/frm/">Glossary</a>
+        <a href="glossary/">Glossary</a>
         <a href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">WhatsApp</a>
         <a class="btn btn-gold" href="get/?c=web">Get the app</a>
       </nav>
@@ -306,16 +308,22 @@ footer .brand img{box-shadow:0 0 0 1px var(--line)}
         <h2>Start studying before you install.</h2>
       </div>
       <div class="cards">
+        <a class="card" href="cfa/">
+          <p class="kicker">CFA® Level I, II and III</p>
+          <h3>CFA topic map</h3>
+          <p>Every topic area across the three levels, plus the Level III pathways, with published weight bands, the official modules and free worked sample questions.</p>
+          <span class="go">Open the map →</span>
+        </a>
         <a class="card" href="frm/">
           <p class="kicker">FRM® Part I and II</p>
           <h3>FRM topic map</h3>
           <p>All ten topic areas with their published weight bands, the official modules and free worked sample questions.</p>
           <span class="go">Open the map →</span>
         </a>
-        <a class="card" href="glossary/frm/">
-          <p class="kicker">126 terms</p>
-          <h3>FRM glossary</h3>
-          <p>Risk management terms in plain English, with the formula and the exam angle for each.</p>
+        <a class="card" href="glossary/">
+          <p class="kicker">260 terms</p>
+          <h3>CFA and FRM glossary</h3>
+          <p>Finance and risk terms in plain English, with the formula and the exam angle for each.</p>
           <span class="go">Browse the glossary →</span>
         </a>
         <a class="card" href="https://whatsapp.com/channel/0029Vb9LcPUFXUudEZ6Hm61m">
@@ -375,8 +383,9 @@ footer .brand img{box-shadow:0 0 0 1px var(--line)}
       <a class="brand" href="./" style="color:var(--ink)"><img src="assets/icon-192.png" alt="" width="40" height="40">Cornerstone</a>
       <ul>
         <li><a href="get/?c=web">Google Play</a></li>
+        <li><a href="cfa/">CFA topic map</a></li>
         <li><a href="frm/">FRM topic map</a></li>
-        <li><a href="glossary/frm/">FRM glossary</a></li>
+        <li><a href="glossary/">Glossary</a></li>
         <li><a href="https://x.com/getcornerstone">X</a></li>
         <li><a href="https://www.instagram.com/getcornerstone/">Instagram</a></li>
         <li><a href="https://www.youtube.com/@getcornerstone">YouTube</a></li>
@@ -401,6 +410,20 @@ document.querySelectorAll('.video').forEach(function (box) {
     btn.replaceWith(f);
   });
 });
+/* A bio link such as ?c=x keeps its channel through every install button on the site.
+   The tag lives only in this tab's sessionStorage and only ever reaches Google Play. */
+(function () {
+  var ok = ['ig', 'x', 'yt', 'wa', 'mail'], c = '';
+  try {
+    c = (new URLSearchParams(location.search).get('c') || '').toLowerCase();
+    if (ok.indexOf(c) > -1) sessionStorage.setItem('cs-channel', c);
+    else c = sessionStorage.getItem('cs-channel') || '';
+  } catch (e) {}
+  if (ok.indexOf(c) < 0) return;
+  document.querySelectorAll('a[href*="get/?c=web"]').forEach(function (a) {
+    a.setAttribute('href', a.getAttribute('href').replace('c=web', 'c=' + c));
+  });
+})();
 </script>
 
 <!--
