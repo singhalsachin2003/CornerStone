@@ -26,7 +26,7 @@
  * email and purchase history, and Sign-in details must say Yes and carry the
  * `PLAYREVIEW` route. Both are Console-only — no API reaches them. A build that
  * collects data its listing denies collecting is the under-declaring direction, and
- * that is what Play suspends apps for. See `docs/PRIVACY.md` for the exact answers.
+ * that is what Play suspends apps for. See `docs/PLAY_CONSOLE.md` for the exact answers.
  */
 import { readFileSync } from 'node:fs';
 import { createSign } from 'node:crypto';

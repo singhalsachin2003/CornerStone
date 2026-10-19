@@ -271,7 +271,7 @@ Done:
 - **About & legal** — in-app trademark and curriculum disclaimers at Profile → About & legal.
 - **Store assets** — `store/feature-graphic.png` (1024×500, 24-bit, no alpha) and seven phone
   screenshots in `store/screenshots/`. Regenerate the graphic with `npm run store:graphic`.
-- **Docs** — `docs/PRIVACY.md` (with Play Data Safety answers) and `docs/STORE_LISTING.md`
+- **Docs** — `docs/PRIVACY.md` and `docs/PLAY_CONSOLE.md` (Play Data Safety answers, unpublished) and `docs/STORE_LISTING.md`
   (trademark-safe listing copy, asset status, content-rating guidance).
 - **EAS project linked** — `@singhalsachin2003/cornerstone`; `owner` and `extra.eas.projectId`
   are in `app.json`, and `versionCode` is tracked remotely so it auto-increments.

@@ -239,14 +239,14 @@ Answer honestly; this app should land at **Everyone / PEGI 3**.
   match — but **the range widens the moment a second region is priced**, which is the open
   decision in [`PRICING.md`](PRICING.md). Read it before creating the products.
 - **Target audience** — 18+ (professional certification candidates)
-- **Data safety** — see `docs/PRIVACY.md`. **This form must be corrected before the
+- **Data safety** — see `docs/PLAY_CONSOLE.md`. **This form must be corrected before the
   subscription products go live**, not before the build ships: publishing a Play product
   needs no new binary, so nothing else will ever force it to be revisited. It changed
   again when optional accounts were added — email address, name and study progress all
   became collected data types, each marked optional.
 - **Sign-in details** (formerly "App access") — **Yes, some functionality is restricted.**
   The reviewer route is the `PLAYREVIEW` promotional code; the exact wording to paste is in
-  `docs/PRIVACY.md`.
+  `docs/PLAY_CONSOLE.md`.
 - **Privacy policy URL** — host `docs/PRIVACY.md` at a public URL (GitHub Pages works) and
   paste the link
 - **Government app** — No

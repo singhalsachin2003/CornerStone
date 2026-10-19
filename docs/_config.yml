@@ -18,6 +18,9 @@ plugins:
 exclude:
   - RELEASE_CHECKLIST.md
   - STORE_LISTING.md
+  # Play Console answers and the reviewer promo code: filing notes, moved out of
+  # PRIVACY.md on 2026-10-19 so they are not published.
+  - PLAY_CONSOLE.md
   # Added 2026-09-18, having been published by accident for a day: PRICING.md is
   # the same kind of working note, written after this list and never added to it.
   # It carries the price bands, the markets overridden down and the reasoning —

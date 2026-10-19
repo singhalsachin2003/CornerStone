@@ -298,7 +298,7 @@ order, replacing all eight of the stale ones. Nothing here needs you.
    account and keep email as the fallback — Play asks that the page "prominently
    feature the steps that users should take".
 
-2. **Cornerstone Data safety** — checked against `docs/PRIVACY.md`, and it was
+2. **Cornerstone Data safety** — checked against `docs/PLAY_CONSOLE.md`, and it was
    **not** what was filed. Every data type was marked *"processed ephemerally"*.
    Play does not show ephemeral data on a listing, so the public page read **"No
    data collected"** for an app that stores an email address in Supabase and
@@ -308,7 +308,7 @@ order, replacing all eight of the stale ones. Nothing here needs you.
 
    Corrected on all four types — Name, Email address, Purchase history, Other
    user-generated content — and submitted for review together with the
-   screenshots. The preview now lists exactly what `docs/PRIVACY.md` specifies.
+   screenshots. The preview now lists exactly what `docs/PLAY_CONSOLE.md` specifies.
    **OTC Learn was checked the same way and is correct.**
 
    Ephemeral means "in memory, for the life of the request". Anything written to

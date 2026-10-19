@@ -174,7 +174,7 @@ All under **Policy → App content**. Answers for this app:
 | Content rating     | Complete questionnaire → category **Reference/Education**; answer _No_ to everything (no violence, sex, profanity, drugs, gambling, UGC, location sharing). Expect **Everyone / PEGI 3**                                                         |
 | Target audience    | **18+**. Do not tick any child age band — that triggers Families policy                                                                                                                                                                          |
 | News app           | **No**                                                                                                                                                                                                                                           |
-| Data safety        | **v1.0 was "no data collected". FROM v1.1 THAT IS FALSE** — the app collects email, name, purchase history and backed-up study activity, all optional. Use the answers at the bottom of `docs/PRIVACY.md`, which are current. Filed 18 Sept 2026 |
+| Data safety        | **v1.0 was "no data collected". FROM v1.1 THAT IS FALSE** — the app collects email, name, purchase history and backed-up study activity, all optional. Use the answers in `docs/PLAY_CONSOLE.md`, which are current. Filed 18 Sept 2026 |
 | Government app     | **No**                                                                                                                                                                                                                                           |
 | Financial features | **None.** This is study content _about_ finance, not a financial product. Do not tick anything here                                                                                                                                              |
 | Privacy policy     | Paste the URL from Step 3                                                                                                                                                                                                                        |
@@ -305,7 +305,7 @@ Standard or a Guidance passage.
   **False from v1.1.** The app now makes three optional network calls — an update check, an
   entitlement check if the candidate subscribes, and a progress backup if they create an
   account. The Data Safety declaration was corrected on 18 September 2026 and is in review;
-  `docs/PRIVACY.md` holds the answers that were filed.
+  `docs/PLAY_CONSOLE.md` holds the answers that were filed.
 
 **`npm audit` reports advisories — ignore them, and do not run `npm audit fix --force`.**
 
@@ -380,7 +380,7 @@ script (`npm run store:screenshot`) rather than a hand-built device state — se
     hypothetical into the next mistake waiting to happen.
   - **`PRIVACY.md` was rewritten before this shipped**, as the previous version promised it
     would be. It now describes the update service and the subscription explicitly.
-  - **Data Safety must be corrected** — see `docs/PRIVACY.md` for the exact answers.
+  - **Data Safety must be corrected** — see `docs/PLAY_CONSOLE.md` for the exact answers.
   - `expo-updates` declares `ACCESS_NETWORK_STATE` in its own manifest, and it was on the
     blocked list. **It has been removed from that list** — blocking it strips the permission
     from a library that calls `ConnectivityManager`.
