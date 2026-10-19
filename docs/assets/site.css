@@ -7,7 +7,7 @@
 @font-face{font-family:"Archivo";src:url(sans-700.woff2) format("woff2");font-weight:700;font-display:swap}
 
 :root{
-  color-scheme:light dark;
+  color-scheme:only light;
   --bg:#F7F4EE; --surface:#FFFDFA; --ink:#16233B; --body:#3D4A63; --muted:#6F7A90;
   --accent:#9A6B2F; --accent-soft:#F1E7D6; --line:#E4DED2;
   --navy:#131B2E; --on-navy:#F5F2EA; --on-navy-sub:#A9B1C2; --gold:#DDB868;
@@ -16,7 +16,7 @@
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#0E1424; --surface:#161F35; --ink:#F2EEE5; --body:#C5CBD8; --muted:#97A0B3;
+  :root{color-scheme:dark; --bg:#0E1424; --surface:#161F35; --ink:#F2EEE5; --body:#C5CBD8; --muted:#97A0B3;
         --accent:#DDB868; --accent-soft:#232B40; --line:#263049;}
 }
 *{box-sizing:border-box}
