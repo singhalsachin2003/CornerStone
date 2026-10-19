@@ -33,7 +33,7 @@ permalink: /
 @font-face{font-family:"Archivo";src:url(assets/sans-700.woff2) format("woff2");font-weight:700;font-display:swap}
 
 :root{
-  color-scheme:light dark;
+  color-scheme:only light;
   --bg:#F7F4EE; --surface:#FFFDFA; --ink:#16233B; --body:#3D4A63; --muted:#6F7A90;
   --accent:#9A6B2F; --accent-soft:#F1E7D6; --line:#E4DED2; --wrong:#9B3B34;
   --navy:#131B2E; --navy-2:#1B2540; --on-navy:#F5F2EA; --on-navy-sub:#A9B1C2; --gold:#DDB868;
@@ -42,7 +42,7 @@ permalink: /
   --radius:18px; --wrap:1120px;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#0E1424; --surface:#161F35; --ink:#F2EEE5; --body:#C5CBD8; --muted:#97A0B3;
+  :root{color-scheme:dark; --bg:#0E1424; --surface:#161F35; --ink:#F2EEE5; --body:#C5CBD8; --muted:#97A0B3;
         --accent:#DDB868; --accent-soft:#2A2A2A; --line:#263049;}
 }
 *{box-sizing:border-box}
