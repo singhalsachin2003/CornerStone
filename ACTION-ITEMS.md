@@ -62,8 +62,23 @@ Two repos are involved:
 originally written against were merged on 22 September 2026 — Cornerstone PR #3,
 OTC Learn PR #1, both squashed — and everything they carried shipped to
 production in Cornerstone 1.2.0 and OTC Learn 1.3.0 on 25 September. The
-branches still exist locally and on `origin`; they are history, not a place to
-start from.
+branches are history, not a place to start from, and are being retired.
+
+Because the merges were **squashed**, the hashes this file cites for that work
+(`be19a6e`, `f0c5e48`, `1bf2ecd`, `e097c24` and the rest) are *branch* commits
+and are not reachable from `main` — `git show` on one fails once the branch is
+gone. Each branch tip is therefore tagged, on `origin` as well as locally:
+
+| Repo | Tag | Tip |
+| --- | --- | --- |
+| Cornerstone | `archive/feat-ux-and-compliance` | `190c08a` |
+| OTC Learn | `archive/feat-ux-and-compliance` | `de3d5a1` |
+| OTC Learn | `archive/pre-reinit-history` | `ea848a5` — orphaned early history, separate root, never pushed as a branch |
+
+So `git log archive/feat-ux-and-compliance` reaches every hash below, and
+`git branch <name> archive/feat-ux-and-compliance` brings a branch back if one
+is ever needed. Hashes marked `(OTC)` or `(CS)` live in that repo only; a hash
+from the other app will not resolve here.
 
 ---
 
