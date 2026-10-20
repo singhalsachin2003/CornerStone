@@ -16,7 +16,7 @@ This is the whole process and it needs no email.
 
 ## Or by email
 
-If you no longer have the app installed, email **singhalsachin2003@gmail.com** from the
+If you no longer have the app installed, email **contactgroundlearn@gmail.com** from the
 address your account uses, with the subject **Delete my account**. You will get a reply
 confirming the deletion. If you email from a different address, you will be asked to confirm
 ownership of the account address first — otherwise anyone could delete anyone's data by
@@ -85,4 +85,4 @@ email and they will be deleted too.
 ## Related
 
 - [Privacy policy](PRIVACY.md) — what is collected, by whom, and why
-- Questions: **singhalsachin2003@gmail.com**
+- Questions: **contactgroundlearn@gmail.com**
